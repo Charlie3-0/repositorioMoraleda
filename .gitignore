@@ -1,0 +1,23 @@
+# Sistema
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Editor
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# PHP
+/vendor/
+.env
+
+# NodeJS (si usas)
+node_modules/
+
+# Otros
+*.zip
