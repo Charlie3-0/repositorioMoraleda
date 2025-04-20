@@ -195,9 +195,14 @@
                 </div>
             -->
 
-            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
+                <!-- Esto lo dejamos fuera del if, para poder usarlo en otras partes del codigo -->
+                <?php
+                    $daoPU = new Peliculas_usuariosDAO($conn);
+                ?>
+
+                <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
                     <?php
-                        $daoPU = new Peliculas_usuariosDAO($conn);
+                        //$daoPU = new Peliculas_usuariosDAO($conn);
                         $puntuacionUsuario = $daoPU->obtenerPuntuacionUsuario($pelicula->getId(), Sesion::getUsuario()->getId());
                     ?>
                     <div class="col-md-6">
@@ -232,11 +237,16 @@
                         <strong>Media: <?= $mediaPelicula ?>/10</strong>
                     <?php endif; ?>
                 </p>
+                
                 <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
                     <?php for ($i = 10; $i >= 1; $i--): ?>
                         <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-warning' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-warning' : 'bi-star text-secondary') ?>"></i>
                     <?php endfor; ?>
                 </div>
+
+                <p id="numeroVotos" class="text-muted small mt-1">
+                    <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
+                </p>
 
                 
                 <br>
@@ -306,8 +316,9 @@
             
 
             <br><br>
-            <!-- Aquí indicamos si existe Sesion, si la pelicula no está Reservada o si la Reserva es mía(del usuario que está logeado)
-            entonces se puede si existe reserva quitarla o sino existe ponerla. -->
+            <!-- Permitimos a los usuarios con rol "U" gestionar reservas de películas si hay una sesión activa. Si
+            la película no está reservada o la reserva es del usuario conectado, se muestra un botón para "Quitar Reserva"
+            o "Poner Reserva", según corresponda. -->
             <?php if(Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U' && ( !$peliculaReservada || $existeReserva )): ?>
                 <?php if($existeReserva): ?>
                     <button class="quitarReserva" data-idPelicula="<?= $pelicula->getId()?>" id="botonReserva">Quitar Reserva</button>
@@ -319,18 +330,8 @@
 
             <br><br>
 
-            <!-- Aquí indicamos si existe Sesion, si la pelicula no está "Vista" o si la marca de " la Pelicula vista" es mía(del usuario que está logeado)
-            entonces puede quitarla(cambiar/editar el estado de vista de la pelicula_usuario) o sino existe ponerla. -->
-        <!--    <?php if(Sesion::existeSesion() && (!$peliculaVista || $existeVista)): ?>
-                <?php if($existeVista): ?>
-                    <button class="quitarVista" data-idPelicula="<?= $pelicula->getId()?>" id="botonVista">Quitar Vista</button>
-                <?php else: ?>
-                    <button class="ponerVista" data-idPelicula="<?= $pelicula->getId()?>" id="botonVista">Marcar Vista</button>
-                <?php endif; ?>
-            <?php endif; ?>
-        -->
-
-
+            <!-- Verificamos si hay una sesión activa con un usuario que tiene el rol "U". Si es así, permite
+            al usuario marcar una película como "vista" o "no vista" haciendo clic en el icono. -->
             <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
                 <span class="estado-vista">
                     <?php if ($marcadaVista): ?>
@@ -347,7 +348,8 @@
                         title="Marcar como vista"></i>
                     <?php endif; ?>
 
-                    <!-- Siempre se muestra este span, visible solo si ya estaba marcada como vista -->
+                    <!-- Siempre se muestra este span junto al icono al marcar la vista o si ya estaba
+                    marcada como vista -->
                     <span class="texto-visto<?= $marcadaVista ? '' : ' oculto' ?>">
                         <i class="fas fa-check-circle icono-confirmacion"></i> Vista
                     </span>

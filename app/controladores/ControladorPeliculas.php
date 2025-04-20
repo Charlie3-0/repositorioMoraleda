@@ -81,6 +81,10 @@ class ControladorPeliculas {
         $usuarioReservado = null;
         $usuarioPrestamo = null;
 
+        //$mediaPelicula = $peliculasUsuariosDAO->obtenerPuntuacionMedia($pelicula->getId());
+        $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
+
+
         // Solo si hay sesión
         if (Sesion::existeSesion()) {
             $usuario = Sesion::getUsuario();

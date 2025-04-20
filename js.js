@@ -180,8 +180,15 @@ document.querySelectorAll('.star-rating input[type="radio"]').forEach(input => {
                 if (data.nuevaMedia) {
                     const mediaElemento = document.getElementById('mediaPuntuacion');
                     if (mediaElemento) {
-                        mediaElemento.innerHTML = `Media: ${data.nuevaMedia}/10`;
+                        mediaElemento.innerHTML = `<strong>Media: ${data.nuevaMedia}/10</strong>`;
                     }
+
+                    const votosElemento = document.getElementById('numeroVotos');
+                    if (votosElemento && data.votos !== undefined) {
+                        votosElemento.innerHTML = `<i class="bi bi-people-fill"></i> ${data.votos} voto${data.votos != 1 ? 's' : ''}`;
+                    }
+
+                    actualizarMediaVisual(data.nuevaMedia); // Aquí se actualizan las estrellas visuales
                 }
             } else {
                 console.error('Error al guardar puntuación:', data.respuesta);
@@ -229,4 +236,26 @@ estrellas.forEach(estrella => {
         tooltip.style.display = 'none';
     });
 });
+
+
+// Mostrar media visual de la película
+function actualizarMediaVisual(media) {
+    const contenedorEstrellas = document.getElementById('mediaVisualEstrellas');
+    if (!contenedorEstrellas) return;
+
+    contenedorEstrellas.innerHTML = '';
+
+    for (let i = 10; i >= 1; i--) {
+        let clase = 'bi-star text-secondary';
+        if (media >= i) {
+            clase = 'bi-star-fill text-warning';
+        } else if (media >= i - 0.5) {
+            clase = 'bi-star-half text-warning';
+        }
+        const estrella = document.createElement('i');
+        estrella.className = `bi ${clase}`;
+        estrella.style.marginRight = '6px'; // Espacio entre estrellas
+        contenedorEstrellas.appendChild(estrella);
+    }
+}
 

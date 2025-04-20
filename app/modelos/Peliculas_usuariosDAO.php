@@ -420,5 +420,17 @@ class Peliculas_usuariosDAO {
     } */
     
 
+    /**
+     * Obtener la cantidad de votos (puntuaciones) de una película
+     */
+    public function contarVotosPelicula($idPelicula) {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM peliculas_usuarios WHERE idPelicula = ? AND puntuacion IS NOT NULL");
+        $stmt->bind_param("i", $idPelicula);
+        $stmt->execute();
+        $resultado = $stmt->get_result()->fetch_assoc();
+        return $resultado['total'];
+    }
+    
+
 
 }

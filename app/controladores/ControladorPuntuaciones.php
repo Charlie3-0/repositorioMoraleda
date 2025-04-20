@@ -25,9 +25,11 @@ class ControladorPuntuaciones {
 
         if ($peliculas_usuariosDAO->ponerEditarPuntuacion($idUsuario, $idPelicula, $puntuacion)) {
             $media = $peliculas_usuariosDAO->obtenerPuntuacionMedia($idPelicula);
+            $votos = $peliculas_usuariosDAO->contarVotosPelicula($idPelicula);
             echo json_encode([
                 'respuesta' => 'ok',
-                'nuevaMedia' => $media
+                'nuevaMedia' => $media,
+                'votos' => $votos
             ]);
         } else {
             print json_encode(['respuesta' => 'error']);
