@@ -324,7 +324,7 @@ class Peliculas_usuariosDAO {
     /**
      * Guarda o actualiza el comentario de un usuario sobre una película
      */
-    public function guardarComentario($idUsuario, $idPelicula, $comentario) {
+    public function ponerComentario($idUsuario, $idPelicula, $comentario) {
         $fechaComentario = date('Y-m-d H:i:s');
 
         // Comprobamos si ya existe el registro
@@ -347,6 +347,29 @@ class Peliculas_usuariosDAO {
         }
     }
 
+
+    /**
+     * Obtener comentarios de usuarios sobre una pelicula
+     */
+    public function getComentariosPorPelicula($idPelicula) {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idPelicula = ? AND comentario IS NOT NULL ORDER BY fecha_comentario DESC")) {
+            echo "Error en la SQL: " . $this->conn->error;
+            return [];
+        }
+    
+        $stmt->bind_param("i", $idPelicula);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $comentarios = [];
+
+        while ($row = $result->fetch_object()) {
+            $comentarios[] = $row; // objeto con ->comentario, ->email, ->fecha_comentario
+        }
+
+        return $comentarios;
+    }
+    
 
 
     // PUNTUACIONES

@@ -103,6 +103,9 @@ $mapa = array(
     'guardar_puntuacion'=>array('controlador'=>'ControladorPuntuaciones',
                                 'metodo'=>'guardarPuntuacion',
                                 'privada'=>false),
+    'guardar_comentario'=>array('controlador'=>'ControladorComentarios',
+                                'metodo'=>'guardarComentario',
+                                'privada'=>false),
                                         
 );
 

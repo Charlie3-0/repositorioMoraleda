@@ -248,9 +248,9 @@ function actualizarMediaVisual(media) {
     for (let i = 10; i >= 1; i--) {
         let clase = 'bi-star text-secondary';
         if (media >= i) {
-            clase = 'bi-star-fill text-warning';
+            clase = 'bi-star-fill text-secondary';
         } else if (media >= i - 0.5) {
-            clase = 'bi-star-half text-warning';
+            clase = 'bi-star-half text-secondary';
         }
         const estrella = document.createElement('i');
         estrella.className = `bi ${clase}`;
@@ -258,4 +258,55 @@ function actualizarMediaVisual(media) {
         contenedorEstrellas.appendChild(estrella);
     }
 }
+
+
+
+// Script para los comentarios
+const formularioComentario = document.getElementById('formComentario');
+if (formularioComentario) {
+    formularioComentario.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const comentario = document.getElementById('comentarioTexto').value.trim();
+        const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
+
+        if (!comentario) {
+            mostrarMensajeComentario('El comentario no puede estar vacío', 'danger');
+            return;
+        }
+
+        fetch(`index.php?accion=guardar_comentario&id=${idPelicula}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `comentario=${encodeURIComponent(comentario)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.respuesta === 'ok') {
+                mostrarMensajeComentario('Comentario guardado correctamente', 'success');
+            } else if (data.respuesta === 'comentario_vacio') {
+                mostrarMensajeComentario('Debes escribir algo antes de enviar', 'warning');
+            } else if (data.respuesta === 'no_sesion') {
+                mostrarMensajeComentario('Debes iniciar sesión para comentar', 'warning');
+            } else {
+                mostrarMensajeComentario('Error al guardar el comentario', 'danger');
+            }
+        })
+        .catch(err => {
+            console.error('Error en la solicitud:', err);
+            mostrarMensajeComentario('Error de red', 'danger');
+        });
+    });
+}
+
+/* function mostrarMensajeComentario(mensaje, tipo) {
+    const contenedor = document.getElementById('estadoComentarioContenedor');
+    if (!contenedor) return;
+
+    contenedor.innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
+    setTimeout(() => contenedor.innerHTML = '', 3000);
+} */
+
+
 

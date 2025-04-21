@@ -84,6 +84,8 @@ class ControladorPeliculas {
         //$mediaPelicula = $peliculasUsuariosDAO->obtenerPuntuacionMedia($pelicula->getId());
         $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
 
+        // Obtener comentarios de esta película
+        $comentarios = $peliculasUsuariosDAO->getComentariosPorPelicula($idPelicula);
 
         // Solo si hay sesión
         if (Sesion::existeSesion()) {

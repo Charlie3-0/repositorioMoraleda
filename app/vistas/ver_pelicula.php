@@ -6,8 +6,11 @@
     <title>Ver Pelicula</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
+        /* ESTILOS PELICULA_VISTA */
         /* Colores personalizados */
         .icono-visto {
             color: black;
@@ -63,7 +66,7 @@
         }
 
         
-        /* Estilos puntuaciones */
+        /* ESTILOS PUNTUACIONES */
         .star-rating {
             direction: rtl;
             display: inline-block;
@@ -94,10 +97,91 @@
             margin-right: 2px;
         }
 
+        /* ESTILOS COMENTARIOS */
+        .comment-section {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+            border: 1px solid #e9ecef;
+        }
+
+        .comment-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-input {
+            border-radius: 20px;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+        .comment-input:focus {
+            box-shadow: none;
+            border-color: #86b7fe;
+        }
+
+        .btn-comment {
+            border-radius: 20px;
+            padding: 8px 25px;
+            background: #0d6efd;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-comment:hover {
+            background: #0b5ed7;
+            transform: translateY(-1px);
+        }
+
+        .comment-actions {
+            font-size: 0.9rem;
+        }
+
+        .comment-actions a {
+            color: #6c757d;
+            text-decoration: none;
+            margin-right: 15px;
+            transition: color 0.2s;
+        }
+
+        .comment-actions a:hover {
+            color: #0d6efd;
+        }
+
+        .comment-time {
+            color: #adb5bd;
+            font-size: 0.85rem;
+        }
+
+        .reply-section {
+            margin-left: 60px;
+            border-left: 2px solid #e9ecef;
+            padding-left: 20px;
+        }
 
     </style>
 </head>
-<body>
+<body class="p-2">
     <header>
         <h1 class="tituloPagina">
             <?php if (Sesion::getUsuario() && Sesion::getUsuario()->getRol() === 'A'): ?>
@@ -165,7 +249,7 @@
 
                 <br>
 
-            <!--    <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <div class="rating-card p-4">
                         <h5 class="mb-4">Calificación de estrellas interactiva</h5>
                         <div class="star-rating animated-stars">
@@ -192,8 +276,8 @@
                         </div>
                         <p class="text-muted mt-2">Haga clic para calificar</p>
                     </div>
-                </div>
-            -->
+                    </div>
+                -->
 
                 <!-- Esto lo dejamos fuera del if, para poder usarlo en otras partes del codigo -->
                 <?php
@@ -240,7 +324,7 @@
                 
                 <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
                     <?php for ($i = 10; $i >= 1; $i--): ?>
-                        <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-warning' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-warning' : 'bi-star text-secondary') ?>"></i>
+                        <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-secondary' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-warning' : 'bi-star text-secondary') ?>"></i>
                     <?php endfor; ?>
                 </div>
 
@@ -262,17 +346,17 @@
                 <div id="estadoReservaContenedor">
                     <?php if ($peliculaReservada): ?>
                         <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                            <strong class="estadoReservado text-warning">
+                            <strong class="estadoReservado text-dark">
                                 Película Reservada
                                 <?php if ($usuarioReservado): ?>
                                     <i>por: <?= $usuarioReservado->getEmail() ?></i>
                                 <?php endif; ?>
                             </strong>
                         <?php elseif (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                            <strong class="estadoReservado text-warning">Película Reservada</strong>
+                            <strong class="estadoReservado text-dark">Película Reservada</strong>
                         <?php endif; ?>
                     <?php else: ?>
-                        <strong class="text-warning">Película disponible para Reserva</strong>
+                        <strong class="text-dark">Película disponible para Reserva</strong>
                     <?php endif; ?>
                 </div>
 
@@ -283,17 +367,17 @@
                     <?php if ($peliculaPrestada): ?>
                         <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
                             <?php if ($usuarioPrestamo != null): ?>
-                                <strong class="estadoPrestado text-warning">Película Prestada
+                                <strong class="estadoPrestado text-dark">Película Prestada
                                     <i>a: <?= $usuarioPrestamo->getEmail() ?></i>
                                 </strong>
                             <?php else: ?>
-                                <strong class="text-warning">Película Disponible para ser Prestada</strong>
+                                <strong class="text-dark">Película Disponible para ser Prestada</strong>
                             <?php endif; ?>
                         <?php elseif (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                            <strong class="estadoPrestado text-warning">Película Prestada</strong>
+                            <strong class="estadoPrestado text-dark">Película Prestada</strong>
                         <?php endif; ?>
                     <?php else: ?>
-                        <strong class="text-warning">Película Disponible para ser Prestada</strong>
+                        <strong class="text-dark">Película Disponible para ser Prestada</strong>
                     <?php endif; ?>
                 </div>
 
@@ -355,6 +439,112 @@
                     </span>
                 </span>
             <?php endif; ?>
+
+            <br><br>
+            
+            <!--<div class="container">
+                <div class="comment-section">
+                     Nuevo Comentario Form 
+                    <div class="mb-4">
+                        <div class="d-flex gap-3">
+                        <i class="fa-solid fa-user"></i>
+                            <span class="emailUsuario">
+                                <?= Sesion::getUsuario()->getEmail() ?>
+                                <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
+                                    <strong>(ADMIN)</strong>
+                                <?php endif; ?>
+                            </span>
+                            <div class="flex-grow-1">
+                                <textarea class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
+                                <div class="mt-3 text-end">
+                                    <button class="btn btn-comment text-white">Publicar Comentario</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                     Comentario de ejemplo 
+                    <div class="comment-box">
+                        <div class="d-flex gap-3">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">Mike Johnson(aquí iría el email del usuario de este comentario)</h6>
+                                    <span class="comment-time">3 hours ago</span>
+                                </div>
+                                <p class="mb-2">¡Excelente discusión! Me gustaría añadir que este tema tiene muchos aspectos
+                                interesantes que podríamos explorar más a fondo.</p>
+                                <div class="comment-actions">
+                                    <a href="#">Editar(solo el mismo usuario conectado puede editar su comentario)</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div> -->
+
+
+            <div class="container mt-5">
+                <div class="comment-section">
+                    <h4 class="text-center"><span></span> Comentarios</h4>
+                </div>
+            </div>
+            <hr>
+            <?php if (Sesion::existeSesion() ): ?>
+                <div class="container mt-5">
+                    <div class="comment-section">
+                        <!-- Formulario para comentar -->
+                        <form id="formComentario" class="mb-4" data-idPelicula="<?= $pelicula->getId(); ?>">
+                            <div class="d-flex gap-3">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail(); ?></span>
+                                <div class="flex-grow-1">
+                                    <textarea id="comentarioTexto" class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
+                                    <div class="mt-3 text-end">
+                                        <button type="submit" class="btn btn-comment text-white">Publicar Comentario</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Lista de comentarios -->
+            <div class="container">
+                <div class="comment-section">
+                    <?php if (!empty($comentarios)): ?>
+                        <?php foreach ($comentarios as $comentario): ?>
+                            <div class="comment-box mb-3">
+                                <div class="d-flex gap-3">
+                                    <i class="fa-solid fa-user"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="mb-0"><?= htmlspecialchars($comentario->email ?? 'Anónimo') ?></h6>
+                                            <span class="comment-time">
+                                                <?= isset($comentario->fecha_comentario) ? date("d/m/Y H:i", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?>
+                                            </span>
+                                        </div>
+                                        <p class="mb-2"><?= nl2br(htmlspecialchars($comentario->comentario)) ?></p>
+
+                                        <?php if (Sesion::existeSesion()): ?>
+                                            <div class="comment-actions">
+                                                <a href="#" class="editar-comentario">Editar</a>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay comentarios aún. Sé el primero en comentar esta película.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+
+            
 
 
             <br><br>
