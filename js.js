@@ -310,3 +310,102 @@ if (formularioComentario) {
 
 
 
+
+
+/* document.addEventListener("DOMContentLoaded", function () {
+    const formComentario = document.getElementById('formComentario');
+    if (formComentario) {
+        formComentario.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const idPelicula = this.getAttribute('data-idPelicula');
+            const comentario = document.getElementById('comentarioTexto').value;
+
+            fetch('index.php?accion=guardar_comentario', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: idPelicula, comentario })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.respuesta === 'ok') {
+                    console.log('Comentario guardado');
+
+                    const nuevoComentario = document.createElement('div');
+                    nuevoComentario.classList.add('comment-box', 'mb-3');
+                    nuevoComentario.innerHTML = `
+                        <div class="d-flex gap-3">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">${data.email}</h6>
+                                    <span class="comment-time">${data.fecha_comentario}</span>
+                                </div>
+                                <p class="mb-2">${data.comentario.replace(/\n/g, '<br>')}</p>
+                                <div class="comment-actions">
+                                    <a href="#" class="editar-comentario">Editar</a>
+                                </div>
+                            </div>
+                        </div>`;
+                    document.querySelector('.comment-section').appendChild(nuevoComentario);
+
+                    // Ocultamos el formulario
+                    formComentario.remove();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('editar-comentario')) {
+            e.preventDefault();
+            const comentarioBox = e.target.closest('.comment-box');
+            const textoParrafo = comentarioBox.querySelector('p');
+            const textoActual = textoParrafo.textContent;
+
+            const textarea = document.createElement('textarea');
+            textarea.classList.add('form-control', 'comment-input');
+            textarea.rows = 3;
+            textarea.value = textoActual;
+
+            const btnGuardar = document.createElement('button');
+            btnGuardar.textContent = 'Guardar';
+            btnGuardar.classList.add('btn', 'btn-comment', 'text-white', 'mt-2');
+
+            comentarioBox.querySelector('.comment-actions').replaceChildren();
+            textoParrafo.replaceWith(textarea);
+            comentarioBox.querySelector('.flex-grow-1').appendChild(btnGuardar);
+
+            btnGuardar.addEventListener('click', function () {
+                const comentarioEditado = textarea.value;
+                const idPelicula = document.getElementById('formComentario')?.getAttribute('data-idPelicula') ||
+                                   document.querySelector('[data-idPelicula]')?.getAttribute('data-idPelicula');
+
+                fetch('index.php?accion=guardar_comentario', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: idPelicula, comentario: comentarioEditado })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.respuesta === 'ok') {
+                        const nuevoParrafo = document.createElement('p');
+                        nuevoParrafo.classList.add('mb-2');
+                        nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, '<br>');
+
+                        textarea.replaceWith(nuevoParrafo);
+                        comentarioBox.querySelector('.comment-time').textContent = data.fecha_comentario;
+
+                        const nuevaAccion = document.createElement('div');
+                        nuevaAccion.classList.add('comment-actions');
+                        nuevaAccion.innerHTML = '<a href="#" class="editar-comentario">Editar</a>';
+                        comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
+                    }
+                })
+                .catch(error => console.error('Error al actualizar:', error));
+            });
+        }
+    });
+}); */
+
+

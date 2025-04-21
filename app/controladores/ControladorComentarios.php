@@ -30,6 +30,30 @@ class ControladorComentarios {
         }
     }
     
+    /* public function guardarComentario() {
+        $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
+        if (isset($_POST['idPelicula']) && isset($_POST['comentario'])) {
+            $idPelicula = $_POST['idPelicula'];
+            $comentario = $_POST['comentario'];
+            $fechaComentario = date('Y-m-d H:i:s');
+    
+            $usuario = Sesion::getUsuario();
+            if (!$usuario) {
+                echo json_encode(['success' => false, 'error' => 'No hay sesión activa.']);
+                return;
+            }
+    
+            $idUsuario = $usuario->getId();
+    
+            $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+            $peliculas_usuariosDAO->ponerComentario($idPelicula, $idUsuario, $comentario, $fechaComentario);
+    
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Datos incompletos.']);
+        }
+    } */
+    
     
 
 

@@ -450,9 +450,6 @@
                         <i class="fa-solid fa-user"></i>
                             <span class="emailUsuario">
                                 <?= Sesion::getUsuario()->getEmail() ?>
-                                <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
-                                    <strong>(ADMIN)</strong>
-                                <?php endif; ?>
                             </span>
                             <div class="flex-grow-1">
                                 <textarea class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
@@ -491,7 +488,9 @@
                 </div>
             </div>
             <hr>
-            <?php if (Sesion::existeSesion() ): ?>
+
+            
+            <?php if (Sesion::existeSesion() && !$comentarioUsuarioActual): ?>
                 <div class="container mt-5">
                     <div class="comment-section">
                         <!-- Formulario para comentar -->

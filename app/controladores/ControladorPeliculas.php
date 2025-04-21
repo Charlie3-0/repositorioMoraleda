@@ -54,7 +54,7 @@ class ControladorPeliculas {
         $prestamosDAO = new PrestamosDAO($conn);
         $peliculasVistasDAO = new Peliculas_vistasDAO($conn);
         $peliculasUsuariosDAO = new Peliculas_usuariosDAO($conn);
-        $comentariosDAO = new ComentariosDAO($conn);
+        //$comentariosDAO = new ComentariosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
         // Obtener la pelicula
@@ -82,14 +82,23 @@ class ControladorPeliculas {
         $usuarioPrestamo = null;
 
         //$mediaPelicula = $peliculasUsuariosDAO->obtenerPuntuacionMedia($pelicula->getId());
-        $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
+        /* $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
 
         // Obtener comentarios de esta película
         $comentarios = $peliculasUsuariosDAO->getComentariosPorPelicula($idPelicula);
+        $comentarioUsuarioActual = $peliculasUsuariosDAO->getComentarioPorUsuario($idPelicula, $usuario->getId()); */
+
 
         // Solo si hay sesión
         if (Sesion::existeSesion()) {
             $usuario = Sesion::getUsuario();
+
+            //$mediaPelicula = $peliculasUsuariosDAO->obtenerPuntuacionMedia($pelicula->getId());
+            $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
+
+            // Obtener comentarios de esta película
+            $comentarios = $peliculasUsuariosDAO->getComentariosPorPelicula($idPelicula);
+            $comentarioUsuarioActual = $peliculasUsuariosDAO->getComentarioPorUsuario($idPelicula, $usuario->getId());
 
             if ($usuario->getRol() === 'U') {
                 // Lógica para usuarios normales

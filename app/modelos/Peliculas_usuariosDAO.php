@@ -371,6 +371,19 @@ class Peliculas_usuariosDAO {
     }
     
 
+    /**
+     * Obtener el comentario de un usuario sobre una película específica
+     */
+    public function getComentarioPorUsuario($idPelicula, $idUsuario) {
+        $sql = "SELECT comentario, fecha_comentario FROM peliculas_usuarios WHERE idPelicula = ? AND idUsuario = ? AND comentario IS NOT NULL";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $idPelicula, $idUsuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        return $resultado->fetch_assoc();
+    }
+    
+
 
     // PUNTUACIONES
     /**
