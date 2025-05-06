@@ -352,7 +352,13 @@ class Peliculas_usuariosDAO {
      * Obtener comentarios de usuarios sobre una pelicula
      */
     public function getComentariosPorPelicula($idPelicula) {
-        if (!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idPelicula = ? AND comentario IS NOT NULL ORDER BY fecha_comentario DESC")) {
+        if (!$stmt = $this->conn->prepare("SELECT peliculas_usuarios.comentario, peliculas_usuarios.fecha_comentario, usuarios.email 
+            FROM peliculas_usuarios 
+            JOIN usuarios ON peliculas_usuarios.idUsuario = usuarios.id 
+            WHERE peliculas_usuarios.idPelicula = ? 
+            AND peliculas_usuarios.comentario IS NOT NULL 
+            ORDER BY peliculas_usuarios.fecha_comentario DESC
+            ")) {
             echo "Error en la SQL: " . $this->conn->error;
             return [];
         }
@@ -364,7 +370,7 @@ class Peliculas_usuariosDAO {
         $comentarios = [];
 
         while ($row = $result->fetch_object()) {
-            $comentarios[] = $row; // objeto con ->comentario, ->email, ->fecha_comentario
+            $comentarios[] = $row; // objeto con ->comentario, ->fecha_comentario, ->email
         }
 
         return $comentarios;
@@ -377,9 +383,11 @@ class Peliculas_usuariosDAO {
     public function getComentarioPorUsuario($idPelicula, $idUsuario) {
         $sql = "SELECT comentario, fecha_comentario FROM peliculas_usuarios WHERE idPelicula = ? AND idUsuario = ? AND comentario IS NOT NULL";
         $stmt = $this->conn->prepare($sql);
+
         $stmt->bind_param("ii", $idPelicula, $idUsuario);
         $stmt->execute();
         $resultado = $stmt->get_result();
+
         return $resultado->fetch_assoc();
     }
     

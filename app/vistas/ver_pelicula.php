@@ -324,7 +324,7 @@
                 
                 <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
                     <?php for ($i = 10; $i >= 1; $i--): ?>
-                        <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-secondary' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-warning' : 'bi-star text-secondary') ?>"></i>
+                        <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-secondary' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
                     <?php endfor; ?>
                 </div>
 
