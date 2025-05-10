@@ -1006,7 +1006,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             // Mostrar de nuevo el formulario de comentar
                             if (!document.getElementById('formComentario')) {
-                                const insertComent = document.querySelectorAll('#insertarComentario');
                                 const nuevoForm = document.createElement('form');
                                 nuevoForm.id = 'formComentario';
                                 nuevoForm.setAttribute('data-idPelicula', idPelicula);
@@ -1024,6 +1023,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     </div>
                                 `;
                                 
+
                                 commentSection.appendChild(nuevoForm);
 
                                 nuevoForm.addEventListener('submit', function (e) {
@@ -1039,24 +1039,88 @@ document.addEventListener("DOMContentLoaded", function () {
                                     .then(res => res.json())
                                     .then(data => {
                                         if (data.respuesta === 'ok') {
-                                            location.reload();
+                                            mostrarMensajeComentario('Comentario guardado correctamente', 'success');
+
+                                            // Eliminar el formulario directamente (nuevoForm)
+                                            nuevoForm.remove();
+
+                                            // También podrías eliminar su contenedor si existe
+                                            const contenedorInsertar = document.getElementById('insertarComentario');
+                                            if (contenedorInsertar) contenedorInsertar.innerHTML = '';
+
+                                            // Si hay comentarios, eliminar el mensaje de "sin comentarios"
+                                            const sinComentarios = document.querySelector('.sin-comentarios');
+                                            if (sinComentarios) {
+                                                sinComentarios.remove();
+                                            }
+
+                                            // Crear comentario dinámicamente
+                                            const nuevoComentario = document.createElement('div');
+                                            nuevoComentario.classList.add('comment-box', 'mb-3');
+                                            nuevoComentario.innerHTML = `
+                                                <div class="d-flex gap-3">
+                                                    <i class="fa-solid fa-user"></i>
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <h6 class="mb-0">${data.email}</h6>
+                                                            <span class="comment-time">${data.fecha}</span>
+                                                        </div>
+                                                        <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>
+                                                        <div class="comment-actions">
+                                                            <a href="#" class="editar-comentario text-primary">Editar</a>
+                                                            <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            `;
+
+                                            nuevoComentario.style.opacity = 0;
+                                            commentSection.prepend(nuevoComentario);
+                                            setTimeout(() => {
+                                                nuevoComentario.style.transition = 'opacity 0.5s';
+                                                nuevoComentario.style.opacity = 1;
+                                            }, 10);
+
+                                            // Reasignar eventos a los nuevos botones
+                                            asignarEventosComentarios();
+                                        } else {
+                                            mostrarMensajeComentario('Error al guardar el comentario', 'danger');
                                         }
+                                    
+
                                     });
                                 });
+                                
                             }
 
                             // Comprobar si ya no hay más comentarios visibles
                             const comentariosRestantes = document.querySelectorAll('#listaComentarios .comment-box');
                             if (comentariosRestantes.length === 0) {
-                                // Crear y añadir el mensaje de "sin comentarios"
+                                // Eliminar mensaje viejo si existía
+                                const mensajeExistente = document.querySelector('#listaComentarios .sin-comentarios');
+                                if (mensajeExistente) mensajeExistente.remove();
+
+                                // Si no existe el contenedor de comentarios, lo creamos
+                                let contenedorComentarios = document.getElementById('listaComentarios');
+                                if (!contenedorComentarios) {
+                                    contenedorComentarios = document.createElement('div');
+                                    contenedorComentarios.classList.add('comment-section');
+                                    contenedorComentarios.id = 'listaComentarios';
+
+                                    // Insertamos debajo del contenedor del formulario
+                                    const contenedorFormulario = document.getElementById('insertarComentario');
+                                    contenedorFormulario.insertAdjacentElement('afterend', contenedorComentarios);
+                                }
+
+                                // Crear y añadir el mensaje
                                 const mensaje = document.createElement('p');
                                 mensaje.classList.add('sin-comentarios');
                                 mensaje.textContent = 'No hay comentarios aún. Sé el primero en comentar esta película.';
 
-                                // Insertar el mensaje en el contenedor general de comentarios
-                                const contenedor = document.getElementById('listaComentarios');
-                                contenedor.appendChild(mensaje);
+                                contenedorComentarios.appendChild(mensaje);
                             }
+
+                            
                         }
                     });
 
