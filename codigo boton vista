@@ -341,7 +341,43 @@ function actualizarEstadoVista(estado) {
 
 
 
+<!-- Aquí está en la vista de la pelicula los comentarios con la ultima parte que tenemos hecha pero funciona editar comentario -->
+<div class="container mt-5" data-idPelicula="<?= $pelicula->getId(); ?>">
+    <h4 class="mb-3">Comentarios</h4>
 
+    <div class="comment-section">
+        <?php foreach ($comentarios as $comentario): ?>
+            <div class="comment-box mb-3">
+                <div class="d-flex gap-3">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0"><?= htmlspecialchars($comentario->email ?? 'Anónimo') ?></h6>
+                            <span class="comment-time"><?= isset($comentario->fecha_comentario) ? date("d/m/Y H:i", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?></span>
+                        </div>
+                        <p class="mb-2"><?= nl2br(htmlspecialchars($comentario->comentario)) ?></p>
+                        <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getEmail() === $comentario->email): ?>
+                            <div class="comment-actions">
+                                <a href="#" class="editar-comentario">Editar</a>
+                            </div>
+                        <?php endif; ?>
+                        
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <?php if (!$comentarioDelUsuario): ?>
+        <form id="formComentario" data-idPelicula="<?= $pelicula->getId(); ?>" class="mt-4">
+            <div class="mb-3">
+                <label for="comentarioTexto" class="form-label">Tu comentario:</label>
+                <textarea class="form-control" id="comentarioTexto" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Comentar</button>
+        </form>
+    <?php endif; ?>
+</div>
 
 
 

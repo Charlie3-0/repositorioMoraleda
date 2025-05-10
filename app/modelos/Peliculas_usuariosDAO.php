@@ -348,6 +348,51 @@ class Peliculas_usuariosDAO {
     }
 
 
+    /* public function ponerComentario($idUsuario, $idPelicula, $comentario)
+{
+    $stmt = $this->conn->prepare("
+        INSERT INTO peliculas_usuarios (idUsuario, idPelicula, comentario, fecha_comentario)
+        VALUES (?, ?, ?, NOW())
+        ON DUPLICATE KEY UPDATE comentario = VALUES(comentario), fechaComentario = NOW()
+    ");
+    $stmt->bind_param("iis", $idUsuario, $idPelicula, $comentario);
+    $stmt->execute();
+} */
+
+
+
+    /**
+     * Edita exclusivamente un comentario existente
+     */
+    public function editarComentario($idUsuario, $idPelicula, $comentario) {
+        $fechaComentario = date('Y-m-d H:i:s');
+
+        $sql = "UPDATE peliculas_usuarios 
+                SET comentario = ?, fecha_comentario = ? 
+                WHERE idUsuario = ? AND idPelicula = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idPelicula);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Eliminar el comentario de un usuario sobre una película
+     */
+    public function quitarComentario($idUsuario, $idPelicula) {
+        $sql = "UPDATE peliculas_usuarios 
+                SET comentario = NULL, fecha_comentario = NULL 
+                WHERE idUsuario = ? AND idPelicula = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $idUsuario, $idPelicula);
+    
+        return $stmt->execute();
+    }
+    
+
+
     /**
      * Obtener comentarios de usuarios sobre una pelicula
      */

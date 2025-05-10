@@ -483,7 +483,7 @@
 
 
             <div class="container mt-5">
-                <div class="comment-section">
+                <div class="comment-section" id="tituloComentarios">
                     <h4 class="text-center"><span></span> Comentarios</h4>
                 </div>
             </div>
@@ -492,7 +492,7 @@
             
             <?php if (Sesion::existeSesion() && !$comentarioUsuarioActual): ?>
                 <div class="container mt-5">
-                    <div class="comment-section">
+                    <div class="comment-section" id="insertarComentario">
                         <!-- Formulario para comentar -->
                         <form id="formComentario" class="mb-4" data-idPelicula="<?= $pelicula->getId(); ?>">
                             <div class="d-flex gap-3">
@@ -511,8 +511,8 @@
             <?php endif; ?>
 
             <!-- Lista de comentarios -->
-            <div class="container">
-                <div class="comment-section">
+            <div class="container" data-idPelicula="<?= $pelicula->getId(); ?>">
+                <div class="comment-section" id="listaComentarios">
                     <?php if (!empty($comentarios)): ?>
                         <?php foreach ($comentarios as $comentario): ?>
                             <div class="comment-box mb-3">
@@ -525,11 +525,15 @@
                                                 <?= isset($comentario->fecha_comentario) ? date("d/m/Y H:i", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?>
                                             </span>
                                         </div>
+
+                                        <!-- Texto del comentario -->
                                         <p class="mb-2"><?= nl2br(htmlspecialchars($comentario->comentario)) ?></p>
 
-                                        <?php if (Sesion::existeSesion()): ?>
+                                        <!-- Solo muestra el enlace "Editar comentario" si es del usuario logueado -->
+                                        <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getEmail() === $comentario->email): ?>
                                             <div class="comment-actions">
-                                                <a href="#" class="editar-comentario">Editar</a>
+                                                <a href="#" class="editar-comentario text-primary">Editar</a>
+                                                <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
                                             </div>
                                         <?php endif; ?>
                                     </div>
@@ -537,10 +541,11 @@
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p>No hay comentarios aún. Sé el primero en comentar esta película.</p>
+                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar esta película.</p>
                     <?php endif; ?>
                 </div>
             </div>
+
 
 
             
@@ -553,6 +558,10 @@
     
 
     <script src="js.js"></script>
+
+    <script>
+        const usuarioEmail = "<?= Sesion::existeSesion() ? Sesion::getUsuario()->getEmail() : '' ?>";
+    </script>
 
 
 </body>

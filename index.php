@@ -106,7 +106,12 @@ $mapa = array(
     'guardar_comentario'=>array('controlador'=>'ControladorComentarios',
                                 'metodo'=>'guardarComentario',
                                 'privada'=>false),
-                                        
+    'editar_comentario'=>array('controlador'=>'ControladorComentarios',
+                                'metodo'=>'editarComentario',
+                                'privada'=>false),
+    'eliminar_comentario'=>array('controlador'=>'ControladorComentarios',
+                                'metodo'=>'eliminarComentario',
+                                'privada'=>false),                                  
 );
 
 
