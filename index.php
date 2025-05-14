@@ -2,12 +2,10 @@
 
 require_once 'app/config/config.php';
 require_once 'app/modelos/ConnexionDB.php';
-require_once 'app/modelos/Pelicula.php';
-require_once 'app/modelos/PeliculasDAO.php';
+require_once 'app/modelos/Videojuego.php';
+require_once 'app/modelos/VideojuegosDAO.php';
 require_once 'app/modelos/Usuario.php';
 require_once 'app/modelos/UsuariosDAO.php';
-require_once 'app/modelos/Administrador.php';
-require_once 'app/modelos/AdministradoresDAO.php';
 require_once 'app/modelos/Categoria.php';
 require_once 'app/modelos/CategoriasDAO.php';
 require_once 'app/modelos/Prestamo.php';
@@ -16,17 +14,14 @@ require_once 'app/modelos/Reserva.php';
 require_once 'app/modelos/ReservasDAO.php';
 require_once 'app/modelos/Comentario.php';
 require_once 'app/modelos/ComentariosDAO.php';
-require_once 'app/modelos/Pelicula_vista.php';
-require_once 'app/modelos/Peliculas_vistasDAO.php';
-require_once 'app/modelos/Pelicula_usuario.php';
-require_once 'app/modelos/Peliculas_usuariosDAO.php';
+require_once 'app/modelos/Videojuego_probado.php';
+require_once 'app/modelos/Videojuegos_probadosDAO.php';
 require_once 'app/controladores/ControladorUsuarios.php';
-require_once 'app/controladores/ControladorPeliculas.php';
-require_once 'app/controladores/ControladorAdministradores.php';
+require_once 'app/controladores/ControladorVideojuegos.php';
 require_once 'app/controladores/ControladorReservas.php';
 require_once 'app/controladores/ControladorPrestamos.php';
 require_once 'app/controladores/ControladorComentarios.php';
-require_once 'app/controladores/ControladorPeliculasVistas.php';
+require_once 'app/controladores/ControladorVideojuegosProbados.php';
 require_once 'app/controladores/ControladorPuntuaciones.php';
 
 require_once 'app/utils/funciones.php';
@@ -37,20 +32,20 @@ session_start();
 
 //Mapa de enrutamiento
 $mapa = array(
-    'inicio'=>array('controlador'=>'ControladorPeliculas',
+    'inicio'=>array('controlador'=>'ControladorVideojuegos',
                     'metodo'=>'inicio',
                     'privada'=>false),
-    'ver_pelicula'=>array('controlador'=>'ControladorPeliculas',
-                         'metodo'=>'verPelicula', 
+    'ver_videojuego'=>array('controlador'=>'ControladorVideojuegos',
+                         'metodo'=>'verVideojuego', 
                          'privada'=>false),
-    'insertar_pelicula'=>array('controlador'=>'ControladorPeliculas',
-                                'metodo'=>'insertarPelicula',
+    'insertar_videojuego'=>array('controlador'=>'ControladorVideojuegos',
+                                'metodo'=>'insertarVideojuego',
                                 'privada'=>true),
-    'editar_pelicula'=>array('controlador'=>'ControladorPeliculas',
-                            'metodo'=>'editarPelicula', 
+    'editar_videojuego'=>array('controlador'=>'ControladorVideojuegos',
+                            'metodo'=>'editarVideojuego', 
                             'privada'=>true),
-    'eliminar_pelicula'=>array('controlador'=>'ControladorPeliculas',
-                            'metodo'=>'eliminarPelicula',
+    'eliminar_videojuego'=>array('controlador'=>'ControladorVideojuegos',
+                            'metodo'=>'eliminarVideojuego',
                             'privada'=>true),
     'login'=>array('controlador'=>'ControladorUsuarios', 
                    'metodo'=>'login', 
@@ -61,8 +56,8 @@ $mapa = array(
     'registrar'=>array('controlador'=>'ControladorUsuarios', 
                        'metodo'=>'registrar', 
                        'privada'=>false),
-    'peliculas_por_categoria'=>array('controlador'=>'ControladorPeliculas',
-                                    'metodo'=>'verPeliculasPorCategoria',
+    'videojuegos_por_categoria'=>array('controlador'=>'ControladorVideojuegos',
+                                    'metodo'=>'verVideojuegosPorCategoria',
                                     'privada'=>false),
     'poner_reserva'=>array('controlador'=>'ControladorReservas',
                             'metodo'=>'insertarReserva',
@@ -79,8 +74,8 @@ $mapa = array(
     'poner_prestamo'=>array('controlador'=>'ControladorPrestamos',
                             'metodo'=>'insertarPrestamo',
                             'privada'=>false),
-    'devolver_pelicula'=>array('controlador'=>'ControladorPrestamos', 
-                            'metodo'=>'devolverPelicula',
+    'devolver_videojuego'=>array('controlador'=>'ControladorPrestamos', 
+                            'metodo'=>'devolverVideojuego',
                             'privada'=>false),
     'ver_prestamos'=>array('controlador'=>'ControladorPrestamos', 
                             'metodo'=>'verPrestamos',
@@ -88,17 +83,17 @@ $mapa = array(
     'ver_todos_prestamos'=>array('controlador'=>'ControladorPrestamos', 
                             'metodo'=>'verTodosPrestamos',
                             'privada'=>false),
-    'poner_pelicula_vista'=>array('controlador'=>'ControladorPeliculasVistas',
-                                  'metodo'=>'ponerPeliculaVista',
+    'poner_videojuego_probado'=>array('controlador'=>'ControladorVideojuegosProbados',
+                                  'metodo'=>'ponerVideojuegoProbado',
                                   'privada'=>false),
-    'quitar_pelicula_vista'=>array('controlador'=>'ControladorPeliculasVistas', 
-                                    'metodo'=>'quitarPeliculaVista',
+    'quitar_videojuego_probado'=>array('controlador'=>'ControladorVideojuegosProbados', 
+                                    'metodo'=>'quitarVideojuegoProbado',
                                     'privada'=>false),
-    'ver_peliculas_vistas'=>array('controlador'=>'ControladorPeliculasVistas',
-                                    'metodo'=>'verPeliculasVistas',
+    'ver_videojuegos_probados'=>array('controlador'=>'ControladorVideojuegosProbados',
+                                    'metodo'=>'verVideojuegosProbados',
                                     'privada'=>false),
-    'ver_todas_peliculas_vistas'=>array('controlador'=>'ControladorPeliculasVistas',
-                                        'metodo'=>'verTodasPeliculasVistas',
+    'ver_todos_videojuegos_probados'=>array('controlador'=>'ControladorVideojuegosProbados',
+                                        'metodo'=>'verTodosVideojuegosProbados',
                                         'privada'=>false),
     'guardar_puntuacion'=>array('controlador'=>'ControladorPuntuaciones',
                                 'metodo'=>'guardarPuntuacion',

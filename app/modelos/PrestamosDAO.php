@@ -119,14 +119,14 @@ class PrestamosDAO {
      * @return idPrestamo Devuelve el id autonumérico que se le ha asignado al prestamo o false en caso de error
      */
     function insertar(Prestamo $prestamo): int|bool{
-        if(!$stmt = $this->conn->prepare("INSERT INTO prestamos (fecha, devuelta, idUsuario, idPelicula) VALUES (?,?,?,?)")){
+        if(!$stmt = $this->conn->prepare("INSERT INTO prestamos (fecha_prestamo, devuelto, idUsuario, idVideojuego) VALUES (?,?,?,?)")){
             die("Error al preparar la consulta insertar: " . $this->conn->error );
         }
-        $fecha = $prestamo->getFecha();
-        $devuelta = $prestamo->getDevuelta();
+        $fechaPrestamo = $prestamo->getFechaPrestamo();
+        $devuelto = $prestamo->getDevuelto();
         $idUsuario = $prestamo->getIdUsuario();
-        $idPelicula = $prestamo->getIdPelicula();
-        $stmt->bind_param('siii',$fecha ,$devuelta, $idUsuario, $idPelicula);
+        $idPelicula = $prestamo->getIdVideojuego();
+        $stmt->bind_param('siii',$fechaPrestamo ,$devuelto, $idUsuario, $idPelicula);
         if($stmt->execute()){
             return $stmt->insert_id;
         }
@@ -137,14 +137,14 @@ class PrestamosDAO {
 
 
     /**
-     * Función para contar el número de Peliculas prestadas, aunque la hemos usado para ver si hay el préstamo de una pelicula,
-     * ya que nosotros estamos contemplando que solo hay una unidad de cada pelicula
+     * Función para contar el número de Videojuegos prestados, aunque la hemos usado para ver si tenemos el préstamo de un videojuego,
+     * ya que nosotros estamos contemplando que solo hay una unidad de cada videojuego
      */
-    public function countByIdPelicula($idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumPrestamos FROM prestamos WHERE idPelicula = ?")){
+    public function countByIdVideojego($idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumPrestamos FROM prestamos WHERE idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('i',$idPelicula);
+        $stmt->bind_param('i',$idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         $fila = $result->fetch_assoc();
@@ -152,14 +152,14 @@ class PrestamosDAO {
     }
 
     /**
-     * Función que comprueba si existe un préstamo con idUsuario e idPelicula
+     * Función que comprueba si existe un préstamo con idUsuario e idVideojuego
      * Devuelve true si existe y false si no existe
      */
-    public function existByIdUsuarioIdPelicula($idUsuario, $idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT * FROM prestamos WHERE idUsuario=? and idPelicula = ?")){
+    public function existByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM prestamos WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         if($result->num_rows>=1){
@@ -170,18 +170,18 @@ class PrestamosDAO {
     }
 
     /**
-     * Función que obtiene el usuario que tiene prestado una pelicula específica y no la ha devuelto.
-     * @param int $idPelicula - Parámetro del ID de la pelicula para la cual se desea obtener el usuario que la ha tomado prestada.
+     * Función que obtiene el usuario que tiene prestado un videojuego específico y no lo ha devuelto.
+     * @param int $idVideojuego - Parámetro del ID del videojuego para el cual se desea obtener el usuario que lo ha tomado prestado.
      * @return Usuario|null - Devuelve un objeto Usuario si se encuentra un préstamo activo, o null si no hay ningún préstamo activo.
      */
-    public function getUsuarioPrestamoPorPeliculaId($idPelicula) {
-        // Preparamos la consulta SQL para obtener el usuario que tiene prestado la pelicula con el ID dado y no ha sido devuelta
-        if(!$stmt = $this->conn->prepare("SELECT usuarios.* FROM usuarios JOIN prestamos ON usuarios.id = prestamos.idUsuario WHERE prestamos.idPelicula = ? AND prestamos.devuelta = 0 LIMIT 1")){
+    public function getUsuarioPrestamoPorVideojuegoId($idVideojuego) {
+        // Preparamos la consulta SQL para obtener el usuario que tiene prestado el videojuego con el ID dado y no ha sido devuelto
+        if(!$stmt = $this->conn->prepare("SELECT usuarios.* FROM usuarios JOIN prestamos ON usuarios.id = prestamos.idUsuario WHERE prestamos.idVideojuego = ? AND prestamos.devuelto = 0 LIMIT 1")){
             echo "Error en la SQL para obtener el usuario que tiene prestado la película: " . $this->conn->error;
         }
         
-        // Vinculamos el parámetro $idPelicula a la consulta SQL
-        $stmt->bind_param("i", $idPelicula);
+        // Vinculamos el parámetro $idVideojuego a la consulta SQL
+        $stmt->bind_param("i", $idVideojuego);
         // Ejecutamos la consulta
         $stmt->execute();
         // Obtenemos el resultado de la consulta
@@ -208,13 +208,13 @@ class PrestamosDAO {
     
 
     /**
-     * Función para obtener un préstamo con idUsuario e IdPelicula
+     * Función para obtener un préstamo con idUsuario e idVideojuego
      */
-    public function getByIdUsuarioIdPelicula($idUsuario, $idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT * FROM prestamos WHERE idUsuario=? and idPelicula = ?")){
+    public function getByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM prestamos WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         
@@ -227,10 +227,10 @@ class PrestamosDAO {
     }
     
 
-    /* Recogemos las peliculas que no han sido prestadas, es decir,
-    las que han sido devueltas, que será para el booleano un 0(devuelta), para poder prestarlas después de nuevo. */
-    public function obtenerPeliculasDisponibles():array { 
-        if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas WHERE id NOT IN(SELECT IdPelicula from prestamos WHERE devuelta=false)")){
+    /* Recogemos los videojuegos que no han sido prestados, es decir,
+    los que han sido devueltos, que será para el booleano un 0(devuelto), para poder prestarlos después de nuevo. */
+    public function obtenerVideojuegosDisponibles():array { 
+        if(!$stmt = $this->conn->prepare("SELECT * FROM videojuegos WHERE id NOT IN(SELECT idVideojuego from prestamos WHERE devuelto=false)")){
             echo "Error en la SQL: " . $this->conn->error;
         }
         //Ejecutamos la SQL
@@ -238,12 +238,12 @@ class PrestamosDAO {
         //Obtener el objeto mysql_result
         $result = $stmt->get_result();
 
-        $array_peliculas = array();
+        $array_videojuegos = array();
         
-        while($pelicula = $result->fetch_object(Pelicula::class)){
-            $array_peliculas[] = $pelicula;
+        while($videojuego = $result->fetch_object(Videojuego::class)){
+            $array_videojuegos[] = $videojuego;
         }
-        return $array_peliculas;
+        return $array_videojuegos;
     }
 
 

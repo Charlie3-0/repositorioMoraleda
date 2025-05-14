@@ -1,14 +1,13 @@
 <?php 
 
-class Reserva {
+class Puntuacion {
     private $id;
-    private $fecha_reserva;
-    private $tramitado;
+    private $puntuacion;
     private $idUsuario;
     private $idVideojuego;
-    
-    
 
+
+    
     /**
      * Get the value of id
      */
@@ -28,37 +27,19 @@ class Reserva {
     }
 
     /**
-     * Get the value of fecha_reserva
+     * Get the value of puntuacion
      */
-    public function getFechaReserva()
+    public function getPuntuacion()
     {
-        return $this->fecha_reserva;
+        return $this->puntuacion;
     }
 
     /**
-     * Set the value of fecha_reserva
+     * Set the value of puntuacion
      */
-    public function setFechaReserva($fecha_reserva): self
+    public function setPuntuacion($puntuacion): self
     {
-        $this->fecha_reserva = $fecha_reserva;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of tramitado
-     */
-    public function getTramitado()
-    {
-        return $this->tramitado;
-    }
-
-    /**
-     * Set the value of tramitado
-     */
-    public function setTramitado($tramitado): self
-    {
-        $this->tramitado = $tramitado;
+        $this->puntuacion = $puntuacion;
 
         return $this;
     }
@@ -99,4 +80,3 @@ class Reserva {
         return $this;
     }
 }
-

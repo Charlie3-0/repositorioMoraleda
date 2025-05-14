@@ -7,14 +7,14 @@ class ControladorReservas {
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
 
-        $idPelicula = filter_var($_GET['id'],FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'],FILTER_SANITIZE_NUMBER_INT);
         $reservasDAO = new ReservasDAO($conn);
         $reserva = new Reserva();
-        $reserva->setIdPelicula($idPelicula);
+        $reserva->setIdVideojuego($idVideojuego);
         $reserva->setIdUsuario(Sesion::getUsuario()->getId());
         if($reservasDAO->insert($reserva)){
-            $peliculaReservada = $reservasDAO->countByIdPelicula($idPelicula);
-            print json_encode(['respuesta'=>'ok','peliculaReservada'=>$peliculaReservada]);
+            $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego);
+            print json_encode(['respuesta'=>'ok','videojuegoReservado'=>$videojuegoReservado]);
         }else{
             print json_encode(['respuesta'=>'error']);
         }
@@ -25,16 +25,16 @@ class ControladorReservas {
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
 
-        $idPelicula = filter_var($_GET['id'],FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'],FILTER_SANITIZE_NUMBER_INT);
         $reservasDAO = new ReservasDAO($conn);
-        if(!$reserva = $reservasDAO->getByIdUsuarioIdPelicula(Sesion::getUsuario()->getId(),$idPelicula)){
+        if(!$reserva = $reservasDAO->getByIdUsuarioIdVideojuego(Sesion::getUsuario()->getId(),$idVideojuego)){
             print json_encode(['respuesta'=>'error', 'mensaje'=>'la reserva no existe']);
             die();
         }
         
         if($reservasDAO->delete($reserva)){
-            $peliculaReservada = $reservasDAO->countByIdPelicula($idPelicula);
-            print json_encode(['respuesta'=>'ok','peliculaReservada'=>$peliculaReservada]);
+            $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego);
+            print json_encode(['respuesta'=>'ok','videojuegoReservado'=>$videojuegoReservado]);
         }else{
             print json_encode(['respuesta'=>'error']);
         }
@@ -47,7 +47,7 @@ class ControladorReservas {
         $conn = $connexionDB->getConnexion();
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $reservasDAO = new ReservasDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
@@ -59,9 +59,9 @@ class ControladorReservas {
         // Obtener las reservas
         $reservas = $reservasDAO->obtenerReservasByIdUsuario($idUsuario);
         
-        // Asignar la pelicula a cada reserva
+        // Asignar el videojuego a cada reserva
         foreach ($reservas as $reserva) {
-            $reserva->pelicula = $peliculasDAO->getById($reserva->getIdPelicula());
+            $reserva->videojuego = $videojuegosDAO->getById($reserva->getIdVideojuego());
         }
 
         require 'app/vistas/ver_reservas.php';
@@ -74,7 +74,7 @@ class ControladorReservas {
         $conn = $connexionDB->getConnexion();
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $reservasDAO = new ReservasDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
@@ -83,7 +83,7 @@ class ControladorReservas {
         
         
         foreach ($todasLasReservas as $reserva) {
-            $reserva->pelicula = $peliculasDAO->getById($reserva->getIdPelicula()); // Asignar la pelicula a cada reserva
+            $reserva->videojuego = $videojuegosDAO->getById($reserva->getIdVideojuego()); // Asignar el videojuego a cada reserva
             $reserva->usuario = $usuariosDAO->getById($reserva->getIdUsuario()); // Asignar el usuario a la reserva
         }
 

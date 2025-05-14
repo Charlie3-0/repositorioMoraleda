@@ -2,12 +2,12 @@
 
 class Comentario {
     private $id;
-    private $idPelicula;
+    private $idVideojuego;
     private $idUsuario;
-    private $idAdmin;
-    private $texto;
-    private $fecha;
+    private $comentario;
+    private $fecha_comentario;
 
+    
 
     /**
      * Get the value of id
@@ -28,19 +28,19 @@ class Comentario {
     }
 
     /**
-     * Get the value of idPelicula
+     * Get the value of idVideojuego
      */
-    public function getIdPelicula()
+    public function getIdVideojuego()
     {
-        return $this->idPelicula;
+        return $this->idVideojuego;
     }
 
     /**
-     * Set the value of idPelicula
+     * Set the value of idVideojuego
      */
-    public function setIdPelicula($idPelicula): self
+    public function setIdVideojuego($idVideojuego): self
     {
-        $this->idPelicula = $idPelicula;
+        $this->idVideojuego = $idVideojuego;
 
         return $this;
     }
@@ -64,55 +64,37 @@ class Comentario {
     }
 
     /**
-     * Get the value of idAdmin
+     * Get the value of comentario
      */
-    public function getIdAdmin()
+    public function getComentario()
     {
-        return $this->idAdmin;
+        return $this->comentario;
     }
 
     /**
-     * Set the value of idAdmin
+     * Set the value of comentario
      */
-    public function setIdAdmin($idAdmin): self
+    public function setComentario($comentario): self
     {
-        $this->idAdmin = $idAdmin;
+        $this->comentario = $comentario;
 
         return $this;
     }
 
     /**
-     * Get the value of texto
+     * Get the value of fecha_comentario
      */
-    public function getTexto()
+    public function getFechaComentario()
     {
-        return $this->texto;
+        return $this->fecha_comentario;
     }
 
     /**
-     * Set the value of texto
+     * Set the value of fecha_comentario
      */
-    public function setTexto($texto): self
+    public function setFechaComentario($fecha_comentario): self
     {
-        $this->texto = $texto;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of fecha
-     */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
-
-    /**
-     * Set the value of fecha
-     */
-    public function setFecha($fecha): self
-    {
-        $this->fecha = $fecha;
+        $this->fecha_comentario = $fecha_comentario;
 
         return $this;
     }

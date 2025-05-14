@@ -3,11 +3,11 @@
 class ControladorComentarios {
 
     /**
-     * Guardar un comentario de una película por un usuario
+     * Guardar un comentario de un videojuego
      */
     function guardarComentario() {
         $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $comentariosDAO = new ComentariosDAO($conn);
     
         if (!Sesion::existeSesion()) {
             echo json_encode(['respuesta' => 'no_sesion']);
@@ -15,7 +15,7 @@ class ControladorComentarios {
         }
     
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
         $comentario = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
     
         if (empty($comentario)) {
@@ -23,7 +23,7 @@ class ControladorComentarios {
             exit;
         }
     
-        if ($peliculas_usuariosDAO->ponerComentario($idUsuario, $idPelicula, $comentario)) {
+        if ($comentariosDAO->ponerComentario($idUsuario, $idVideojuego, $comentario)) {
             echo json_encode([
                 'respuesta' => 'ok',
                 'email' => Sesion::getUsuario()->getEmail(),
@@ -66,11 +66,11 @@ class ControladorComentarios {
 
 
     /**
-     * Editar un comentario de una película por un usuario
+     * Editar un comentario de un videojuego por un usuario
      */
     function editarComentario() {
         $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $comentariosDAO = new ComentariosDAO($conn);
 
         if (!Sesion::existeSesion()) {
             echo json_encode(['respuesta' => 'no_sesion']);
@@ -78,7 +78,7 @@ class ControladorComentarios {
         }
 
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
         $comentario = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
         if (empty($comentario)) {
@@ -86,7 +86,7 @@ class ControladorComentarios {
             exit;
         }
 
-        $resultado = $peliculas_usuariosDAO->editarComentario($idUsuario, $idPelicula, $comentario);
+        $resultado = $comentariosDAO->editarComentario($idUsuario, $idVideojuego, $comentario);
 
         if ($resultado) {
             echo json_encode([
@@ -101,11 +101,11 @@ class ControladorComentarios {
 
 
     /**
-     * Eliminar comentario de una película
+     * Eliminar comentario de un videojuego por un usuario
      */
     function eliminarComentario() {
         $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $comentariosDAO = new ComentariosDAO($conn);
 
         if (!Sesion::existeSesion()) {
             echo json_encode(['respuesta' => 'no_sesion']);
@@ -113,9 +113,9 @@ class ControladorComentarios {
         }
 
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
-        $resultado = $peliculas_usuariosDAO->quitarComentario($idUsuario, $idPelicula);
+        $resultado = $comentariosDAO->quitarComentario($idUsuario, $idVideojuego);
 
         if ($resultado) {
             echo json_encode(['respuesta' => 'ok']);

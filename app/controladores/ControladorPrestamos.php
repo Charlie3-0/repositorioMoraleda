@@ -8,14 +8,14 @@ class ControladorPrestamos {
         $conn = $connexionDB->getConnexion();
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $reservasDAO = new ReservasDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
-        // Obtener la pelicula
-        /* $idPelicula = htmlspecialchars($_GET['id']);
-        $pelicula = $peliculasDAO->getById($idPelicula); */
+        // Obtener el videojuego
+        /* $idVideojuego = htmlspecialchars($_GET['id']);
+        $videojuego = $videojuegosDAO->getById($idVideojuego); */
 
         $idUsuario =htmlspecialchars($_GET['id']);
         $usuario = $usuariosDAO->getById($idUsuario);
@@ -24,9 +24,9 @@ class ControladorPrestamos {
         // Obtener los préstamos
         $prestamos = $prestamosDAO->obtenerPrestamosByIdUsuario($idUsuario);
         
-        // Asignar la pelicula a cada préstamo
+        // Asignar el videojuego a cada préstamo
         foreach ($prestamos as $prestamo) {
-            $prestamo->pelicula = $peliculasDAO->getById($prestamo->getIdPelicula());
+            $prestamo->videojuego = $videojuegosDAO->getById($prestamo->getIdVideojuego());
         }
 
         require 'app/vistas/ver_prestados.php';
@@ -39,7 +39,7 @@ class ControladorPrestamos {
         $conn = $connexionDB->getConnexion();
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $reservasDAO = new ReservasDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
@@ -49,7 +49,7 @@ class ControladorPrestamos {
 
         
         foreach ($todosLosPrestamos as $prestamo) {
-            $prestamo->pelicula = $peliculasDAO->getById($prestamo->getIdPelicula()); // Asignar la pelicula a cada préstamo
+            $prestamo->videojuego = $videojuegosDAO->getById($prestamo->getIdVideojuego()); // Asignar el videojuego a cada préstamo
             $prestamo->usuario = $usuariosDAO->getById($prestamo->getIdUsuario()); // Asignar el usuario al préstamo
         }
 
@@ -69,47 +69,47 @@ class ControladorPrestamos {
     
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
         $usuariosDAO = new UsuariosDAO($conn);
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
     
-        // Obtener todos los usuarios y peliculas
+        // Obtener todos los usuarios y videojuegos
         $usuarios = $usuariosDAO->getAll();
-        $peliculas = $peliculasDAO->getAll();
+        $videojuegos = $videojuegosDAO->getAll();
     
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Limpiamos los datos que vienen del formulario
             $idUsuario = htmlspecialchars($_POST['idUsuario']); // Es necesario si queremos seleccionar usuario en el desplegable
-            $idPelicula = htmlspecialchars($_POST['idPelicula']); // Es necesario si queremos seleccionar pelicula en el desplegable
-            $fecha = date('Y-m-d'); // Fecha actual
-            $devuelta = 0; // Por defecto, la pelicula NO está devuelta
+            $idVideojuego = htmlspecialchars($_POST['idVideojuego']); // Es necesario si queremos seleccionar videojuego en el desplegable
+            $fecha_prestamo = date('Y-m-d'); // Fecha actual
+            $devuelto = 0; // Por defecto, el videojuego NO está devuelto
     
-            // Obtener el número de préstamos para la pelicula(en nuestro caso será solo 1)
-            // $peliculaPrestada = $prestamosDAO->countByIdPelicula($idPelicula);
+            // Obtener el número de préstamos para el videojuego(en nuestro caso será solo 1)
+            // $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
 
 
-            // Modificar para obtener el préstamo activo(NO DEVUELTO) de la pelicula
-            if (!$stmt = $conn->prepare("SELECT COUNT(*) FROM prestamos WHERE idPelicula = ? AND devuelta = 0")) {
+            // Modificar para obtener el préstamo activo(NO DEVUELTO) del videojuego
+            if (!$stmt = $conn->prepare("SELECT COUNT(*) FROM prestamos WHERE idVideojuego = ? AND devuelto = 0")) {
                 echo "Error en la SQL: " . $conn->error;
             }
-            $stmt->bind_param("i", $idPelicula);
+            $stmt->bind_param("i", $idVideojuego);
             $stmt->execute();
-            $stmt->bind_result($peliculaPrestada);
+            $stmt->bind_result($videojuegoPrestado);
             $stmt->fetch();
             $stmt->close();
 
     
-            // Validamos los datos(modificar esto para que permita insertar los prestamos si la pelicula no tiene prestamos o el prestamo tenga la pelicula devuelta)
-            if (empty($idUsuario) || empty($idPelicula)) {
-                $error = "Los campos de usuario y pelicula son obligatorios.";
-            } elseif ($peliculaPrestada > 0) {
-                $error = "La pelicula ya está prestada.";
+            // Validamos los datos(modificar esto para que permita insertar los prestamos si el videojuego no tiene prestamos o el prestamo tenga el videojuego devuelto)
+            if (empty($idUsuario) || empty($idVideojuego)) {
+                $error = "Los campos de usuario y videojuego son obligatorios.";
+            } elseif ($videojuegoPrestado > 0) {
+                $error = "El videojuego ya está prestado.";
             } else {
                 // Insertamos el préstamo
                 $prestamo = new Prestamo();
                 $prestamo->setIdUsuario($idUsuario);
-                $prestamo->setIdPelicula($idPelicula);
-                $prestamo->setFecha($fecha);
-                $prestamo->setDevuelta($devuelta);
+                $prestamo->setIdVideojuego($idVideojuego);
+                $prestamo->setFechaPrestamo($fecha_prestamo);
+                $prestamo->setDevuelto($devuelto);
     
                 if ($prestamosDAO->insertar($prestamo)) {
                     echo "El préstamo se ha insertado correctamente.";
@@ -131,7 +131,7 @@ class ControladorPrestamos {
     /* Función para cambiar el estado del prestamo de NO DEVUELTO A DEVUELTO, para poder realizar más prestamos
     y así no tener que borrar los prestamos realizados y se queden guardados en la Base de Datos y de esta forma se
     puedan visualizar en la vista de mostrarTodosPrestamos. */
-    public function devolverPelicula() {
+    public function devolverVideojuego() {
         $error = '';
     
         // Creamos la conexión utilizando la clase que hemos creado
@@ -140,7 +140,7 @@ class ControladorPrestamos {
     
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
         $prestamosDAO = new PrestamosDAO($conn);
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
     
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Limpiamos los datos que vienen del formulario

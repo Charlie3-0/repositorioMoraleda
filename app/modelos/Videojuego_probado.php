@@ -1,12 +1,11 @@
 <?php 
 
-class Reserva {
+class Videojuego_probado {
     private $id;
-    private $fecha_reserva;
-    private $tramitado;
     private $idUsuario;
     private $idVideojuego;
-    
+    private $fecha_probado;
+
     
 
     /**
@@ -23,42 +22,6 @@ class Reserva {
     public function setId($id): self
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of fecha_reserva
-     */
-    public function getFechaReserva()
-    {
-        return $this->fecha_reserva;
-    }
-
-    /**
-     * Set the value of fecha_reserva
-     */
-    public function setFechaReserva($fecha_reserva): self
-    {
-        $this->fecha_reserva = $fecha_reserva;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of tramitado
-     */
-    public function getTramitado()
-    {
-        return $this->tramitado;
-    }
-
-    /**
-     * Set the value of tramitado
-     */
-    public function setTramitado($tramitado): self
-    {
-        $this->tramitado = $tramitado;
 
         return $this;
     }
@@ -98,5 +61,22 @@ class Reserva {
 
         return $this;
     }
-}
 
+    /**
+     * Get the value of fecha_probado
+     */
+    public function getFechaProbado()
+    {
+        return $this->fecha_probado;
+    }
+
+    /**
+     * Set the value of fecha_probado
+     */
+    public function setFechaProbado($fecha_probado): self
+    {
+        $this->fecha_probado = $fecha_probado;
+
+        return $this;
+    }
+}

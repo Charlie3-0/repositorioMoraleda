@@ -3,11 +3,11 @@
 class ControladorPuntuaciones {
 
     /**
-     * Puntuar una película por un usuario
+     * Puntuar un videojuego por un usuario
      */
     function guardarPuntuacion() {
         $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $puntuacionesDAO = new PuntuacionesDAO($conn);
 
         if (!Sesion::existeSesion()) {
             print json_encode(['respuesta' => 'no_sesion']);
@@ -15,7 +15,7 @@ class ControladorPuntuaciones {
         }
 
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
         $puntuacion = filter_var($_POST['puntuacion'], FILTER_SANITIZE_NUMBER_INT);
 
         if ($puntuacion < 1 || $puntuacion > 10) {
@@ -23,9 +23,9 @@ class ControladorPuntuaciones {
             exit;
         }
 
-        if ($peliculas_usuariosDAO->ponerEditarPuntuacion($idUsuario, $idPelicula, $puntuacion)) {
-            $media = $peliculas_usuariosDAO->obtenerPuntuacionMedia($idPelicula);
-            $votos = $peliculas_usuariosDAO->contarVotosPelicula($idPelicula);
+        if ($puntuacionesDAO->ponerEditarPuntuacion($idUsuario, $idVideojuego, $puntuacion)) {
+            $media = $puntuacionesDAO->obtenerPuntuacionMedia($idVideojuego);
+            $votos = $puntuacionesDAO->contarVotosVideojuego($idVideojuego);
             echo json_encode([
                 'respuesta' => 'ok',
                 'nuevaMedia' => $media,

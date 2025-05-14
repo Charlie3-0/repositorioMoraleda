@@ -62,13 +62,13 @@ class ReservasDAO {
      * Insertar una Reserva
      */
     public function insert($reserva){
-        if($this->existByIdUsuarioIdPelicula($reserva->getIdUsuario(), $reserva->getIdPelicula()));
-        if(!$stmt = $this->conn->prepare("INSERT INTO reservas (idUsuario, idPelicula) VALUES (?,?)")){
+        if($this->existByIdUsuarioIdVideojuego($reserva->getIdUsuario(), $reserva->getIdVideojuego()));
+        if(!$stmt = $this->conn->prepare("INSERT INTO reservas (idUsuario, idVideojuego) VALUES (?,?)")){
             die("Error al preparar la consulta insert: " . $this->conn->error );
         }
         $idUsuario = $reserva->getIdUsuario();
-        $idPelicula = $reserva->getIdPelicula();
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $idVideojuego = $reserva->getIdVideojuego();
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         if($stmt->execute()){
             $reserva->setId($stmt->insert_id);
             return $stmt->insert_id;
@@ -97,14 +97,14 @@ class ReservasDAO {
     }
 
     /**
-     * Función para contar el número de Peliculas reservadas, aunque la hemos usado para ver si hay la reserva de una pelicula,
-     * ya que nosotros estamos contemplando que solo hay una unidad de cada pelicula
+     * Función para contar el número de Videojuegos reservados, aunque la hemos usado para ver si tenemos la reserva de un videojuego,
+     * ya que nosotros estamos contemplando que solo hay una unidad de cada videojuego
      */
-    public function countByIdPelicula($idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumReservas FROM reservas WHERE idPelicula = ?")){
+    public function countByIdVideojuego($idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumReservas FROM reservas WHERE idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('i',$idPelicula);
+        $stmt->bind_param('i',$idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         $fila = $result->fetch_assoc();
@@ -112,14 +112,14 @@ class ReservasDAO {
     }
 
     /**
-     * Función que comprueba si existe una reserva con idUsuario e idPelicula
+     * Función que comprueba si existe una reserva con idUsuario e idVideojuego
      * Devuelve true si existe y false si no existe
      */
-    public function existByIdUsuarioIdPelicula($idUsuario, $idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario=? and idPelicula = ?")){
+    public function existByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select: " . $this->conn->error );
         }
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         if($result->num_rows>=1){
@@ -130,18 +130,18 @@ class ReservasDAO {
     }
 
     /**
-     * Función que obtiene el usuario que ha reservado una pelicula específica.
-     * @param int $idPelicula - Parámetro del ID de la pelicula para la cual se desea obtener el usuario que la reservó.
+     * Función que obtiene el usuario que ha reservado un videojuego específico.
+     * @param int $idVideojuego - Parámetro del ID del videojuego para el cual se desea obtener el usuario que lo reservó.
      * @return Usuario|null - Devuelve un objeto Usuario si se encuentra una reserva, o null si no hay ninguna reserva.
      */
-    public function getUsuarioReservaPorPeliculaId($idPelicula) {
-        // Preparamos la consulta SQL para obtener el usuario que ha reservado la pelicula con el ID dado
-        if(!$stmt = $this->conn->prepare("SELECT usuarios.* FROM usuarios JOIN reservas ON usuarios.id = reservas.idUsuario WHERE reservas.idPelicula = ?")){
-            echo "Error en la SQL para obtener el usuario que ha reservado la pelicula: " . $this->conn->error;
+    public function getUsuarioReservaPorVideojuegoId($idVideojuego) {
+        // Preparamos la consulta SQL para obtener el usuario que ha reservado el videojuego con el ID dado
+        if(!$stmt = $this->conn->prepare("SELECT usuarios.* FROM usuarios JOIN reservas ON usuarios.id = reservas.idUsuario WHERE reservas.idVideojuego = ?")){
+            echo "Error en la SQL para obtener el usuario que ha reservado el videojuego: " . $this->conn->error;
         }
         
-        // Vinculamos el parámetro $idPelicula a la consulta SQL
-        $stmt->bind_param("i", $idPelicula);
+        // Vinculamos el parámetro $idVideojuego a la consulta SQL
+        $stmt->bind_param("i", $idVideojuego);
         // Ejecutamos la consulta
         $stmt->execute();
         // Obtenemos el resultado de la consulta
@@ -168,13 +168,13 @@ class ReservasDAO {
 
 
     /**
-     * Función para obtener una reserva con idUsuario e IdPelicula
+     * Función para obtener una reserva con idUsuario e idVideojuego
      */
-    public function getByIdUsuarioIdPelicula($idUsuario, $idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario=? and idPelicula = ?")){
+    public function getByIdUsuarioIdVideojuego($idUsuario, $idPelicula){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         

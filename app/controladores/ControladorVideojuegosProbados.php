@@ -1,17 +1,17 @@
 <?php 
 
-class ControladorPeliculasVistas {
+class ControladorVideojuegosProbados {
 
     /**
-     * Ver las películas vistas por un usuario específico
+     * Ver los videojuegos probados por un usuario específico
      */
-    public function verPeliculasVistas() {
+    public function verVideojuegosProbados() {
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new PeliculasDAO($conn);
+        $videojuegosDAO = new VideojuegosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
         $peliculasUsuariosDAO = new Peliculas_usuariosDAO($conn);
 
@@ -23,7 +23,7 @@ class ControladorPeliculasVistas {
 
         // Asignar la pelicula a cada pelicula vista
         foreach ($peliculasVistas as $peliculaVista) {
-            $peliculaVista->pelicula = $peliculasDAO->getById($peliculaVista->getIdPelicula());
+            $peliculaVista->pelicula = $videojuegosDAO->getById($peliculaVista->getIdPelicula());
         }
 
         require 'app/vistas/ver_peliculas_vistas.php';

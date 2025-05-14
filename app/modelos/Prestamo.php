@@ -2,12 +2,13 @@
 
 class Prestamo {
     private $id;
-    private $fecha;
-    private $devuelta;
+    private $fecha_prestamo;
+    private $devuelto;
     private $idUsuario;
-    private $idPelicula;
-
+    private $idVideojuego;
     
+    
+
     /**
      * Get the value of id
      */
@@ -27,37 +28,37 @@ class Prestamo {
     }
 
     /**
-     * Get the value of fecha
+     * Get the value of fecha_prestamo
      */
-    public function getFecha()
+    public function getFechaPrestamo()
     {
-        return $this->fecha;
+        return $this->fecha_prestamo;
     }
 
     /**
-     * Set the value of fecha
+     * Set the value of fecha_prestamo
      */
-    public function setFecha($fecha): self
+    public function setFechaPrestamo($fecha_prestamo): self
     {
-        $this->fecha = $fecha;
+        $this->fecha_prestamo = $fecha_prestamo;
 
         return $this;
     }
 
     /**
-     * Get the value of devuelta
+     * Get the value of devuelto
      */
-    public function getDevuelta()
+    public function getDevuelto()
     {
-        return $this->devuelta;
+        return $this->devuelto;
     }
 
     /**
-     * Set the value of devuelta
+     * Set the value of devuelto
      */
-    public function setDevuelta($devuelta): self
+    public function setDevuelto($devuelto): self
     {
-        $this->devuelta = $devuelta;
+        $this->devuelto = $devuelto;
 
         return $this;
     }
@@ -81,19 +82,19 @@ class Prestamo {
     }
 
     /**
-     * Get the value of idPelicula
+     * Get the value of idVideojuego
      */
-    public function getIdPelicula()
+    public function getIdVideojuego()
     {
-        return $this->idPelicula;
+        return $this->idVideojuego;
     }
 
     /**
-     * Set the value of idPelicula
+     * Set the value of idVideojuego
      */
-    public function setIdPelicula($idPelicula): self
+    public function setIdVideojuego($idVideojuego): self
     {
-        $this->idPelicula = $idPelicula;
+        $this->idVideojuego = $idVideojuego;
 
         return $this;
     }

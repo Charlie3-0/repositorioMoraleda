@@ -1,14 +1,17 @@
 <?php 
 
-class Pelicula {
+class Videojuego {
     private $id;
     private $titulo;
-    private $director;
+    private $desarrollador;
     private $descripcion;
     private $foto;
     private $idCategoria;
+    private $fecha_lanzamiento;
+    private $trailer;
 
     
+
     /**
      * Get the value of id
      */
@@ -46,19 +49,19 @@ class Pelicula {
     }
 
     /**
-     * Get the value of director
+     * Get the value of desarrollador
      */
-    public function getDirector()
+    public function getDesarrollador()
     {
-        return $this->director;
+        return $this->desarrollador;
     }
 
     /**
-     * Set the value of director
+     * Set the value of desarrollador
      */
-    public function setDirector($director): self
+    public function setDesarrollador($desarrollador): self
     {
-        $this->director = $director;
+        $this->desarrollador = $desarrollador;
 
         return $this;
     }
@@ -113,6 +116,42 @@ class Pelicula {
     public function setIdCategoria($idCategoria): self
     {
         $this->idCategoria = $idCategoria;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fecha_lanzamiento
+     */
+    public function getFechaLanzamiento()
+    {
+        return $this->fecha_lanzamiento;
+    }
+
+    /**
+     * Set the value of fecha_lanzamiento
+     */
+    public function setFechaLanzamiento($fecha_lanzamiento): self
+    {
+        $this->fecha_lanzamiento = $fecha_lanzamiento;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of trailer
+     */
+    public function getTrailer()
+    {
+        return $this->trailer;
+    }
+
+    /**
+     * Set the value of trailer
+     */
+    public function setTrailer($trailer): self
+    {
+        $this->trailer = $trailer;
 
         return $this;
     }

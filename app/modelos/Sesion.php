@@ -34,34 +34,8 @@ class Sesion {
         }
     }
 
-
-
-    // MÉTODOS PARA ADMINISTRADOR
-    static public function getAdmin():Administrador|false{
-        if(isset($_SESSION['administrador'])){
-            return unserialize($_SESSION['administrador']); 
-        }else{
-            return false;
-        }
-    }
-
-    static public function iniciarSesionAdmin($administrador){
-        $_SESSION['administrador'] = serialize($administrador);
-    }
-
-    static public function cerrarSesionAdmin(){
-        unset($_SESSION['administrador']);
-        
-    }
-
-    static public function existeSesionAdmin(){
-        if(isset($_SESSION['administrador'])){
-            return true;
-        }else{
-            return false;
-        }
-    }
 }
+
 /**
  * Para iniciar sesión: Sesion::iniciarSesion($usuario);
  * Para cerrar sesión: Sesion::cerrarSesion();

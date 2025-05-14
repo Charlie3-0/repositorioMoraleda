@@ -1,6 +1,6 @@
 <?php 
 
-class Peliculas_usuariosDAO {
+class Videojuegos_probadosDAO {
     private mysqli $conn;
 
     public function __construct($conn) {
@@ -9,11 +9,11 @@ class Peliculas_usuariosDAO {
 
 
     /**
-     * Obtener una pelicula_usuario de la BD en función del id pasado
-     * @return Pelicula_usuario Devuelve el objeto Pelicula_usuario o null si no lo encuentra
+     * Obtener un videojuego_probado de la BD en función del id pasado
+     * @return Videojuego_probado Devuelve el objeto Videojuego_probado o null si no lo encuentra
      */
-    public function getById($id):Pelicula_usuario|null {
-        if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE id = ?")) {
+    public function getById($id):Videojuego_probado|null {
+        if(!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE id = ?")) {
             echo "Error en la SQL: " . $this->conn->error;
         }
         //Asociar las variables a las interrogaciones(parámetros)
@@ -23,10 +23,10 @@ class Peliculas_usuariosDAO {
         //Obtener el objeto mysql_result
         $result = $stmt->get_result();
 
-        //Si ha encontrado algún resultado devolvemos un objeto de la clase Pelicula_usuario, sino null
+        //Si ha encontrado algún resultado devolvemos un objeto de la clase Videojuego_probado, sino null
         if($result->num_rows == 1){
-            $pelicula_usuario = $result->fetch_object(Pelicula_usuario::class);
-            return $pelicula_usuario;
+            $videojuego_probado = $result->fetch_object(Videojuego_probado::class);
+            return $videojuego_probado;
         }
         else{
             return null;
@@ -35,11 +35,11 @@ class Peliculas_usuariosDAO {
 
 
     /**
-     * Obtener todas las peliculas_usuarios de la tabla peliculas_usuarios
-     * @return array Devuelve un array de objetos Pelicula_usuario
+     * Obtener todas los videojuegos_probados de la tabla videojuegos_probados
+     * @return array Devuelve un array de objetos Videojuego_probado
      */
     public function getAll():array {
-        if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios"))
+        if(!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados"))
         {
             echo "Error en la SQL: " . $this->conn->error;
         }
@@ -48,14 +48,57 @@ class Peliculas_usuariosDAO {
         //Obtener el objeto mysql_result
         $result = $stmt->get_result();
 
-        $array_peliculas_usuarios = array();
+        $array_videojuegos_probados = array();
         
-        while($pelicula_usuario = $result->fetch_object(Pelicula_usuario::class)){
-            $array_peliculas_usuarios[] = $pelicula_usuario;
+        while($videojuego_probado = $result->fetch_object(Videojuego_probado::class)){
+            $array_videojuegos_probados[] = $videojuego_probado;
         }
-        return $array_peliculas_usuarios;
+        return $array_videojuegos_probados;
     }
 
+
+    /**
+     * Insertar una Reserva
+     */
+    public function insert($reserva){
+        if($this->existByIdUsuarioIdPelicula($reserva->getIdUsuario(), $reserva->getIdPelicula()));
+        if(!$stmt = $this->conn->prepare("INSERT INTO reservas (idUsuario, idPelicula) VALUES (?,?)")){
+            die("Error al preparar la consulta insert: " . $this->conn->error );
+        }
+        $idUsuario = $reserva->getIdUsuario();
+        $idPelicula = $reserva->getIdPelicula();
+        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        if($stmt->execute()){
+            $reserva->setId($stmt->insert_id);
+            return $stmt->insert_id;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     /**
      * Obtener todas las peliculas_usuarios marcadas como vistas (vista = 1)
@@ -282,25 +325,24 @@ class Peliculas_usuariosDAO {
 
 
     /**
-     * Agrupar las peliculas vistas de peliculas_usuarios por Usuario para una mejor visualización para el administrador/
-     * lista donde se vea cada usuario con sus películas vistas debajo, todo agrupado y limpio(para bootstrap mirar si podemos
-     * usar un desplegable o un acordeon para ver los usuarios y al hacer click para ver las peliculas vistas del usuario ese usuario
+     * Agrupar los videojuegos probados de videojuegos_probados por Usuario para una mejor visualización para el administrador/
+     * lista donde se vea cada usuario con sus videojuegos probados debajo, todo agrupado y limpio(para bootstrap mirar si podemos
+     * usar un desplegable o un acordeon para ver los usuarios y al hacer click para ver los videojuegos probados del usuario, ese usuario
      * y así con todos)
      */
-    public function getPeliculasVistasAgrupadasPorUsuario() {
-        $sql = "SELECT * FROM peliculas_usuarios WHERE vista = 1 ORDER BY idUsuario, fecha_vista";
+    public function getVideojuegosProbadosAgrupadosPorUsuario() {
+        $sql = "SELECT * FROM videojuegos_probados WHERE vista = 1 ORDER BY idUsuario, fecha_probado";
         $result = $this->conn->query($sql);
     
         $usuariosDAO = new UsuariosDAO($this->conn);
-        /* $peliculasDAO = new PeliculasDAO($this->conn); Está comentado porque da error ya que no existe la clase y objeto Pelicula
-         y PeliculasDAO */
+        $videojuegosDAO = new VideojuegosDAO($this->conn);
     
         $agrupado = [];
     
         while ($fila = $result->fetch_assoc()) {
             $idUsuario = $fila['idUsuario'];
-            $idPelicula = $fila['idPelicula'];
-            $fechaVista = $fila['fecha_vista'];
+            $idVideojuego = $fila['idVideojuego'];
+            $fechaProbado = $fila['fecha_probado'];
     
             // Si aún no hemos agregado a este usuario, lo añadimos
             if (!isset($agrupado[$idUsuario])) {
@@ -310,215 +352,14 @@ class Peliculas_usuariosDAO {
                 ];
             }
     
-            // Añadimos la película vista a este usuario
+            // Añadimos el videojuego probado a este usuario
             $agrupado[$idUsuario]['peliculas'][] = [
-                /* 'pelicula' => $peliculasDAO->getById($idPelicula), Está comentado por lo mismo que tenemos PeliculasDAO */
-                'fecha' => $fechaVista
+                'pelicula' => $videojuegosDAO->getById($idVideojuego),
+                'fecha' => $fechaProbado
             ];
         }
     
         return array_values($agrupado); // Para tener índices numéricos
-    }
-
-
-    // COMENTARIOS
-    /**
-     * Guarda o actualiza el comentario de un usuario sobre una película
-     */
-    public function ponerComentario($idUsuario, $idPelicula, $comentario) {
-        $fechaComentario = date('Y-m-d H:i:s');
-
-        // Comprobamos si ya existe el registro
-        $sql = "SELECT id FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            // Ya existe: actualizar
-            $update = $this->conn->prepare("UPDATE peliculas_usuarios SET comentario = ?, fecha_comentario = ? WHERE idUsuario = ? AND idPelicula = ?");
-            $update->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idPelicula);
-            return $update->execute();
-        } else {
-            // No existe: insertar con vista = 0 por defecto
-            $insert = $this->conn->prepare("INSERT INTO peliculas_usuarios (idUsuario, idPelicula, comentario, fecha_comentario, vista) VALUES (?, ?, ?, ?, 0)");
-            $insert->bind_param("iiss", $idUsuario, $idPelicula, $comentario, $fechaComentario);
-            return $insert->execute();
-        }
-    }
-
-
-    /* public function ponerComentario($idUsuario, $idPelicula, $comentario)
-{
-    $stmt = $this->conn->prepare("
-        INSERT INTO peliculas_usuarios (idUsuario, idPelicula, comentario, fecha_comentario)
-        VALUES (?, ?, ?, NOW())
-        ON DUPLICATE KEY UPDATE comentario = VALUES(comentario), fechaComentario = NOW()
-    ");
-    $stmt->bind_param("iis", $idUsuario, $idPelicula, $comentario);
-    $stmt->execute();
-} */
-
-
-
-    /**
-     * Edita exclusivamente un comentario existente
-     */
-    public function editarComentario($idUsuario, $idPelicula, $comentario) {
-        $fechaComentario = date('Y-m-d H:i:s');
-
-        $sql = "UPDATE peliculas_usuarios 
-                SET comentario = ?, fecha_comentario = ? 
-                WHERE idUsuario = ? AND idPelicula = ?";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idPelicula);
-
-        return $stmt->execute();
-    }
-
-    /**
-     * Eliminar el comentario de un usuario sobre una película
-     */
-    public function quitarComentario($idUsuario, $idPelicula) {
-        $sql = "UPDATE peliculas_usuarios 
-                SET comentario = NULL, fecha_comentario = NULL 
-                WHERE idUsuario = ? AND idPelicula = ?";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
-    
-        return $stmt->execute();
-    }
-    
-
-
-    /**
-     * Obtener comentarios de usuarios sobre una pelicula
-     */
-    public function getComentariosPorPelicula($idPelicula) {
-        if (!$stmt = $this->conn->prepare("SELECT peliculas_usuarios.comentario, peliculas_usuarios.fecha_comentario, usuarios.email 
-            FROM peliculas_usuarios 
-            JOIN usuarios ON peliculas_usuarios.idUsuario = usuarios.id 
-            WHERE peliculas_usuarios.idPelicula = ? 
-            AND peliculas_usuarios.comentario IS NOT NULL 
-            ORDER BY peliculas_usuarios.fecha_comentario DESC
-            ")) {
-            echo "Error en la SQL: " . $this->conn->error;
-            return [];
-        }
-    
-        $stmt->bind_param("i", $idPelicula);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $comentarios = [];
-
-        while ($row = $result->fetch_object()) {
-            $comentarios[] = $row; // objeto con ->comentario, ->fecha_comentario, ->email
-        }
-
-        return $comentarios;
-    }
-    
-
-    /**
-     * Obtener el comentario de un usuario sobre una película específica
-     */
-    public function getComentarioPorUsuario($idPelicula, $idUsuario) {
-        $sql = "SELECT comentario, fecha_comentario FROM peliculas_usuarios WHERE idPelicula = ? AND idUsuario = ? AND comentario IS NOT NULL";
-        $stmt = $this->conn->prepare($sql);
-
-        $stmt->bind_param("ii", $idPelicula, $idUsuario);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        return $resultado->fetch_assoc();
-    }
-    
-
-
-    // PUNTUACIONES
-    /**
-     * Guarda o actualiza la puntuación de un usuario sobre una película
-     */
-    public function ponerEditarPuntuacion($idUsuario, $idPelicula, $puntuacion) {
-        // Aseguraramos que la puntuación esté entre 1 y 10
-        if ($puntuacion < 1 || $puntuacion > 10) {
-            return false;
-        }
-
-        // Comprobamos si ya existe el registro
-        $sql = "SELECT id FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            // Ya existe: actualizar puntuación
-            $update = $this->conn->prepare("UPDATE peliculas_usuarios SET puntuacion = ? WHERE idUsuario = ? AND idPelicula = ?");
-            $update->bind_param("iii", $puntuacion, $idUsuario, $idPelicula);
-            return $update->execute();
-        } else {
-            // No existe: insertar con vista = 0 por defecto
-            $insert = $this->conn->prepare("INSERT INTO peliculas_usuarios (idUsuario, idPelicula, puntuacion, vista) VALUES (?, ?, ?, 0)");
-            $insert->bind_param("iii", $idUsuario, $idPelicula, $puntuacion);
-            return $insert->execute();
-        }
-    }
-
-
-    /**
-     * Recuperamos la puntuación de un usuario sobre una película específica
-     */
-    public function obtenerPuntuacionUsuario($idPelicula, $idUsuario) {
-        $stmt = $this->conn->prepare("SELECT puntuacion FROM peliculas_usuarios WHERE idPelicula = ? AND idUsuario = ?");
-        $stmt->bind_param("ii", $idPelicula, $idUsuario);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-    
-        if ($fila = $resultado->fetch_assoc()) {
-            return (int)$fila['puntuacion'];
-        }
-    
-        return null; // No hay puntuación
-    }
-    
-
-
-    /**
-     * Obtener la puntuación media de una película
-     */
-    public function obtenerPuntuacionMedia($idPelicula) {
-        $sql = "SELECT AVG(puntuacion) as media FROM peliculas_usuarios WHERE idPelicula = ? AND puntuacion IS NOT NULL";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $idPelicula);
-        $stmt->execute();
-        $result = $stmt->get_result()->fetch_assoc();
-        return round($result['media'], 1); // ejemplo: 8.3
-    }
-    
-    /* public function obtenerPuntuacionMedia($idPelicula) {
-        $sql = "SELECT AVG(puntuacion) as media FROM peliculas_usuarios WHERE idPelicula = ? AND puntuacion IS NOT NULL";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $idPelicula);
-        $stmt->execute();
-        $result = $stmt->get_result()->fetch_assoc();
-        return $result['media'] !== null ? round($result['media'], 1) : null;
-    } */
-    
-
-    /**
-     * Obtener la cantidad de votos (puntuaciones) de una película
-     */
-    public function contarVotosPelicula($idPelicula) {
-        $stmt = $this->conn->prepare("SELECT COUNT(*) as total FROM peliculas_usuarios WHERE idPelicula = ? AND puntuacion IS NOT NULL");
-        $stmt->bind_param("i", $idPelicula);
-        $stmt->execute();
-        $resultado = $stmt->get_result()->fetch_assoc();
-        return $resultado['total'];
     }
     
 
