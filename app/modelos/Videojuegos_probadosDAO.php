@@ -60,7 +60,7 @@ class Videojuegos_probadosDAO {
     /**
      * Insertar una Reserva
      */
-    public function insert($reserva){
+    /* public function insert($reserva){
         if($this->existByIdUsuarioIdPelicula($reserva->getIdUsuario(), $reserva->getIdPelicula()));
         if(!$stmt = $this->conn->prepare("INSERT INTO reservas (idUsuario, idPelicula) VALUES (?,?)")){
             die("Error al preparar la consulta insert: " . $this->conn->error );
@@ -75,7 +75,7 @@ class Videojuegos_probadosDAO {
         else{
             return false;
         }
-    }
+    } */
 
 
 
@@ -101,11 +101,11 @@ class Videojuegos_probadosDAO {
     
 
     /**
-     * Obtener todas las peliculas_usuarios marcadas como vistas (vista = 1)
-     * @return array Devuelve un array de objetos Pelicula_usuario
+     * Obtener todos los videojuegos_probados marcados como probados (probado = 1)
+     * @return array Devuelve un array de objetos Videojuego_probado
      */
-    public function getAllVistasMarcadas():array {
-        if (!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE vista = 1")) {
+    public function getAllProbadosMarcados():array {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE probado = 1")) {
             echo "Error en la SQL: " . $this->conn->error;
         }
         //Ejecutamos la SQL
@@ -113,24 +113,24 @@ class Videojuegos_probadosDAO {
         //Obtener el objeto mysql_result
         $result = $stmt->get_result();
 
-        $array_peliculas_usuarios = array();
+        $array_videojuegos_probados = array();
         
-        while ($pelicula_usuario = $result->fetch_object(Pelicula_usuario::class)) {
-            $array_peliculas_usuarios[] = $pelicula_usuario;
+        while ($videojuego_probado = $result->fetch_object(Videojuego_probado::class)) {
+            $array_videojuegos_probados[] = $videojuego_probado;
         }
 
-        return $array_peliculas_usuarios;
+        return $array_videojuegos_probados;
     }
 
 
 
     /**
-     * Obtener todas las peliculas_usuarios de la tabla peliculas_usuarios por el ID de usuario
-     * @param int $idUsuario El ID del usuario del que deseamos obtener las peliculas_usuarios
-     * @return array Devuelve un array de objetos Pelicula_usuario
+     * Obtener todos los videojuegos_probados de la tabla videojuegos_probados por el ID de usuario
+     * @param int $idUsuario El ID del usuario del que deseamos obtener los videojuegos_probados
+     * @return array Devuelve un array de objetos Videojuego_probado
      */
-    public function obtenerPeliculasUsuariosByIdUsuario($idUsuario): array {
-        if (!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idUsuario = ?")) {
+    public function obtenerVideojuegosProbadosByIdUsuario($idUsuario): array {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE idUsuario = ?")) {
             echo "Error en la SQL: " . $this->conn->error;
         }
 
@@ -143,24 +143,24 @@ class Videojuegos_probadosDAO {
         // Obtener el objeto mysql_result
         $result = $stmt->get_result();
 
-        $array_peliculas_usuarios = array();
+        $array_videojuegos_probados = array();
 
-        // Mientras pelicula_usuario es igual al resultado, se crea un array de Pelicula_usuario
-        while ($pelicula_usuario = $result->fetch_object(Pelicula_usuario::class)) {
-            $array_peliculas_usuarios[] = $pelicula_usuario;
+        // Mientras videojuego_probado es igual al resultado, se crea un array de Videojuego_probado
+        while ($videojuego_probado = $result->fetch_object(Videojuego_probado::class)) {
+            $array_videojuegos_probados[] = $videojuego_probado;
         }
 
-        return $array_peliculas_usuarios;
+        return $array_videojuegos_probados;
     }
 
 
     /**
-     * Obtener todas las películas_usuarios marcadas como vistas (vista = 1) por el ID del usuario
+     * Obtener todos los videojuegos_probados marcados como probados (probado = 1) por el ID del usuario
      * @param int $idUsuario El ID del usuario
-     * @return array Devuelve un array de objetos Pelicula_usuario
+     * @return array Devuelve un array de objetos Videojuego_probado
      */
-    public function obtenerPeliculasVistasMarcadasByIdUsuario($idUsuario): array {
-        if (!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idUsuario = ? AND vista = 1")) {
+    public function obtenerVideojuegosProbadosMarcadosByIdUsuario($idUsuario): array {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE idUsuario = ? AND probado = 1")) {
             echo "Error en la SQL: " . $this->conn->error;
         }
 
@@ -173,31 +173,31 @@ class Videojuegos_probadosDAO {
         // Obtenemos el resultado
         $result = $stmt->get_result();
 
-        $array_peliculas_usuarios = array();
+        $array_videojuegos_probados = array();
 
-        // Construimos el array de objetos Pelicula_usuario
-        while ($pelicula_usuario = $result->fetch_object(Pelicula_usuario::class)) {
-            $array_peliculas_usuarios[] = $pelicula_usuario;
+        // Construimos el array de objetos Videojuego_probado
+        while ($videojuego_probado = $result->fetch_object(Videojuego_probado::class)) {
+            $array_videojuegos_probados[] = $videojuego_probado;
         }
 
-        return $array_peliculas_usuarios;
+        return $array_videojuegos_probados;
     }
 
 
 
     /**
-     * Función para obtener todas peliculas_usuarios con idUsuario e IdPelicula
+     * Función para obtener todos videojuegos_probados con idUsuario e IdVideojuego
      */
-    public function getByIdUsuarioIdPelicula($idUsuario, $idPelicula): ? Pelicula_usuario {
-        if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idUsuario=? and idPelicula = ?")){
+    public function getByIdUsuarioIdVideojuego($idUsuario, $idVideojuego): ? Videojuego_probado {
+        if(!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select: " . $this->conn->error );
         }
-        $stmt->bind_param('ii', $idUsuario, $idPelicula);
+        $stmt->bind_param('ii', $idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         
-        if($pelicula_usuario = $result->fetch_object(Pelicula_usuario::class)){
-            return $pelicula_usuario;
+        if($videojuego_probado = $result->fetch_object(Videojuego_probado::class)){
+            return $videojuego_probado;
         } else {
             return null; // En lugar de false, devolvemos null
         }
@@ -205,14 +205,14 @@ class Videojuegos_probadosDAO {
 
     
     /**
-     * Función para saber si está marcada la pelicula_usuario como vista
+     * Función para saber si está probado el videojuego_probado como probado
      */
-    public function estaMarcadaComoVista($idUsuario, $idPelicula) {
-        if (!$stmt = $this->conn->prepare("SELECT 1 FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ? AND vista = 1 LIMIT 1")) {
-            die("Error al preparar la consulta select está marcada como vista: " . $this->conn->error);
+    public function estaMarcadoComoProbado($idUsuario, $idVideojuego) {
+        if (!$stmt = $this->conn->prepare("SELECT 1 FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1 LIMIT 1")) {
+            die("Error al preparar la consulta select está marcado como probado: " . $this->conn->error);
         }
     
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
     
@@ -221,14 +221,14 @@ class Videojuegos_probadosDAO {
     
 
     /**
-     * Función que comprueba la existencia general de una pelicula_usuario con idUsuario e idPelicula
+     * Función que comprueba la existencia general de un videojuego_probado con idUsuario e idVideojuego
      * Devuelve true si existe y false si no existe
      */
-    public function existByIdUsuarioIdPelicula($idUsuario, $idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ?")){
+    public function existByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?")){
             die("Error al preparar la consulta select exist: " . $this->conn->error );
         }
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         if($result->num_rows>=1){
@@ -240,13 +240,13 @@ class Videojuegos_probadosDAO {
     
 
     /**
-     * Función para obtener una pelicula_usuario con idUsuario e IdPelicula
+     * Función para obtener un videojuego_probado con idUsuario e idVideojuego
      */
-    public function getVistaPorUsuarioYPelicula($idUsuario, $idPelicula) {
-        if(!$stmt = $this->conn->prepare("SELECT vista FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ?")){
+    public function getVistaPorUsuarioYPelicula($idUsuario, $idVideojuego) {
+        if(!$stmt = $this->conn->prepare("SELECT probado FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?")){
             die("Error al preparar la consulta select para la vista: " . $this->conn->error );
         }
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
@@ -257,68 +257,68 @@ class Videojuegos_probadosDAO {
     
 
     /**
-     * Función para contar el número de Peliculas_usuarios, aunque la hemos usado para ver si hay una vista de una pelicula,
-     * ya que nosotros estamos contemplando que solo se puede tener una vista de cada pelicula por usuario
+     * Función para contar el número de Videojuegos_probados, aunque la hemos usado para ver si tenemos un probado de un videojuego,
+     * ya que nosotros estamos contemplando que solo se puede tener un probado de cada videojuego por usuario
      */
-    public function countByIdPelicula($idPelicula){
-        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumVistas FROM peliculas_usuarios WHERE idPelicula = ?")){
+    public function countByIdVideojuego($idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumProbados FROM videojuegos_probados WHERE idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
-        $stmt->bind_param('i',$idPelicula);
+        $stmt->bind_param('i',$idVideojuego);
         $stmt->execute();
         $result = $stmt->get_result();
         $fila = $result->fetch_assoc();
-        return $fila['NumVistas'];
+        return $fila['NumProbados'];
     }
 
 
     /**
-     * Insertar la pelicula_usuario "vista" en la base de datos
+     * Insertar el videojuego_probado "probado" en la base de datos
      */
-    public function marcarComoVista($idUsuario, $idPelicula) {
-        $fechaVista = date('Y-m-d H:i:s');
+    public function marcarComoProbado($idUsuario, $idVideojuego) {
+        $fechaProbado = date('Y-m-d H:i:s');
     
         // Verificamos si ya existe un registro para esa combinación
-        $query = "SELECT id, vista FROM peliculas_usuarios WHERE idUsuario = ? AND idPelicula = ?";
+        $query = "SELECT id, probado FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
         $stmt->execute();
         $resultado = $stmt->get_result();
     
         if ($resultado->num_rows > 0) {
             $fila = $resultado->fetch_assoc();
-            if ($fila['vista'] == 1) {
-                // Ya está marcada como vista, no hacemos nada
+            if ($fila['probado'] == 1) {
+                // Ya está marcado como probado, no hacemos nada
                 return false;
             } else {
-                // Existe pero no estaba marcada como vista, la actualizamos
-                $updateQuery = "UPDATE peliculas_usuarios SET vista = 1, fecha_vista = ? WHERE id = ?";
+                // Existe pero no estaba marcado como probado, lo actualizamos
+                $updateQuery = "UPDATE videojuegos_probados SET probado = 1, fecha_probado = ? WHERE id = ?";
                 $updateStmt = $this->conn->prepare($updateQuery);
-                $updateStmt->bind_param("si", $fechaVista, $fila['id']);
+                $updateStmt->bind_param("si", $fechaProbado, $fila['id']);
                 return $updateStmt->execute();
             }
         } else {
             // No existe aún, la insertamos
-            $insertQuery = "INSERT INTO peliculas_usuarios (idUsuario, idPelicula, vista, fecha_vista) VALUES (?, ?, 1, ?)";
+            $insertQuery = "INSERT INTO videojuegos_probados (idUsuario, idVideojuego, probado, fecha_probado) VALUES (?, ?, 1, ?)";
             $insertStmt = $this->conn->prepare($insertQuery);
-            $insertStmt->bind_param("iis", $idUsuario, $idPelicula, $fechaVista);
+            $insertStmt->bind_param("iis", $idUsuario, $idVideojuego, $fechaProbado);
             return $insertStmt->execute();
         }
     }
     
 
     /**
-     * Actualiza el estado de vista, a pelicula_usuario no vista
+     * Actualiza el estado de probado, a videojuego_probado no probado
      * @param int $idUsuario ID del usuario
-     * @param int $idPelicula ID de la película
-     * @param int $nuevoEstado Estado de vista (1 = vista, 0 = no vista)
+     * @param int $idVideojuego ID del videojuego
+     * @param int $nuevoEstado Estado de probado (1 = probado, 0 = no probado)
      */
-    public function quitarVista($idUsuario, $idPelicula) {
-        if (!$stmt = $this->conn->prepare("UPDATE peliculas_usuarios SET vista = 0 WHERE idUsuario = ? AND idPelicula = ? AND vista = 1")) {
+    public function quitarProbado($idUsuario, $idVideojuego) {
+        if (!$stmt = $this->conn->prepare("UPDATE videojuegos_probados SET probado = 0 WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1")) {
             die("Error al preparar la consulta update: " . $this->conn->error);
         }
     
-        $stmt->bind_param("ii", $idUsuario, $idPelicula);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
     
         return $stmt->execute();
     }

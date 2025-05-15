@@ -16,6 +16,8 @@ require_once 'app/modelos/Comentario.php';
 require_once 'app/modelos/ComentariosDAO.php';
 require_once 'app/modelos/Videojuego_probado.php';
 require_once 'app/modelos/Videojuegos_probadosDAO.php';
+require_once 'app/modelos/Puntuacion.php';
+require_once 'app/modelos/PuntuacionesDAO.php';
 require_once 'app/controladores/ControladorUsuarios.php';
 require_once 'app/controladores/ControladorVideojuegos.php';
 require_once 'app/controladores/ControladorReservas.php';

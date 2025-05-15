@@ -57,6 +57,7 @@ class ControladorVideojuegos {
         $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0
         $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
         $videojuegoProbado = $videojuegosProbadosDAO->countByIdVideojuego($idVideojuego);
+        /* $puntuacionVideojuego = $puntuacionesDAO->countByIdVideojuego($idVideojuego); */
         /* $peliculaVista = $peliculasUsuariosDAO->countByIdPelicula($idVideojuego); */
         $marcadoProbado = false;
         $existeReserva = false;
@@ -78,7 +79,7 @@ class ControladorVideojuegos {
             //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
             $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
-            // Obtener comentarios de esta película
+            // Obtener comentarios de este videojuego
             $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego);
             $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId());
 
@@ -86,10 +87,10 @@ class ControladorVideojuegos {
                 // Lógica para usuarios normales
                 $existeReserva = $reservasDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego);
                 /* $marcadaVista = $peliculasVistasDAO->estaMarcadaComoVista($usuario->getId(), $idVideojuego); */
-                $marcadoProbado = $videojuegosProbadosDAO->estaMarcadaComoVista($usuario->getId(), $idVideojuego);
+                $marcadoProbado = $videojuegosProbadosDAO->estaMarcadoComoProbado($usuario->getId(), $idVideojuego);
 
             } elseif ($usuario->getRol() === 'A') {
-                // Lógica extra para admins
+                // Lógica para admins
                 $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
                 $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego);
             }

@@ -10,8 +10,8 @@ let reservaOff = document.querySelector('.ponerReserva');
     }
         
 function ponerReserva() {
-    let idPelicula = this.getAttribute('data-idPelicula');
-    fetch('index.php?accion=poner_reserva&id=' + idPelicula)
+    let idVideojuego = this.getAttribute('data-idVideojuego');
+    fetch('index.php?accion=poner_reserva&id=' + idVideojuego)
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -30,8 +30,8 @@ function ponerReserva() {
 }
 
 function quitarReserva() {
-    let idPelicula = this.getAttribute('data-idPelicula');
-    fetch('index.php?accion=quitar_reserva&id=' + idPelicula)
+    let idVideojuego = this.getAttribute('data-idVideojuego');
+    fetch('index.php?accion=quitar_reserva&id=' + idVideojuego)
         .then(response => response.json())
         .then(data => {
             console.log(data);
@@ -48,11 +48,11 @@ function quitarReserva() {
         });
 }
 
-// Función para actualizar el estado de reserva de la pelicula
+// Función para actualizar el estado de reserva del videojuego
 function actualizarEstadoReserva(estado) {
     const estadoReservaContenedor = document.getElementById('estadoReservaContenedor');
     if (estado === 'reservado') {
-        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado text-warning">Pelicula Reservada</strong>';
+        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado text-warning">Videojuego Reservado</strong>';
     } else {
         estadoReservaContenedor.innerHTML = '';
     }
@@ -62,86 +62,86 @@ function actualizarEstadoReserva(estado) {
 
 
 
-/* Funciones para marcar y quitar película vista con AJAX asignando icono */
-let vistaOn = document.querySelector('.quitarVista');
-if (vistaOn != null) {
-    vistaOn.addEventListener('click', quitarVista);
+/* Funciones para marcar y quitar videojuego probado con AJAX asignando icono */
+let probadoOn = document.querySelector('.quitarProbado');
+if (probadoOn != null) {
+    probadoOn.addEventListener('click', quitarProbado);
 }
 
-let vistaOff = document.querySelector('.ponerVista');
-if (vistaOff != null) {
-    vistaOff.addEventListener('click', ponerVista);
+let probadoOff = document.querySelector('.ponerProbado');
+if (probadoOff != null) {
+    probadoOff.addEventListener('click', ponerProbado);
 }
 
-function ponerVista() {
-    let idPelicula = this.getAttribute('data-idPelicula');
-    fetch('index.php?accion=poner_pelicula_vista&id=' + idPelicula)
+function ponerProbado() {
+    let idVideojuego = this.getAttribute('data-idVideojuego');
+    fetch('index.php?accion=poner_videojuego_probado&id=' + idVideojuego)
         .then(response => response.json())
         .then(data => {
             if (data.respuesta === 'ok') {
-                console.log('Vista puesta con éxito');
-                actualizarEstadoVista('vista');
+                console.log('Probado puesto con éxito');
+                actualizarEstadoProbado('probado');
 
-                let botonVista = document.getElementById('botonVista');
-                let textoVista = document.querySelector('.texto-visto');
+                let botonProbado = document.getElementById('botonProbado');
+                let textoProbado = document.querySelector('.texto-probado');
 
-                botonVista.classList.add('icono-animado');
-                setTimeout(() => botonVista.classList.remove('icono-animado'), 300);
+                botonProbado.classList.add('icono-animado');
+                setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
-                botonVista.classList.remove('ponerVista', 'icono-no-visto', 'fa-eye-slash');
-                botonVista.classList.add('quitarVista', 'icono-visto', 'fa-eye');
-                botonVista.setAttribute('title', 'Quitar vista');
-                botonVista.removeEventListener('click', ponerVista);
-                botonVista.addEventListener('click', quitarVista);
+                botonProbado.classList.remove('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
+                botonProbado.classList.add('quitarProbado', 'icono-probado', 'fa-eye');
+                botonProbado.setAttribute('title', 'Quitar probado');
+                botonProbado.removeEventListener('click', ponerProbado);
+                botonProbado.addEventListener('click', quitarProbado);
 
-                if (textoVista) {
-                    textoVista.classList.remove('oculto');
+                if (textoProbado) {
+                    textoProbado.classList.remove('oculto');
                 }
             } else {
-                console.error('Error al marcar película como vista');
+                console.error('Error al marcar videojuego como probado');
             }
         })
         .catch(error => console.error('Error en la solicitud:', error));
 }
 
-function quitarVista() {
-    let idPelicula = this.getAttribute('data-idPelicula');
-    fetch('index.php?accion=quitar_pelicula_vista&id=' + idPelicula)
+function quitarProbado() {
+    let idVideojuego = this.getAttribute('data-idVideojuego');
+    fetch('index.php?accion=quitar_videojuego_probado&id=' + idVideojuego)
         .then(response => response.json())
         .then(data => {
             if (data.respuesta === 'ok') {
-                console.log('Vista quitada con éxito');
-                actualizarEstadoVista('no_vista');
+                console.log('Probado quitado con éxito');
+                actualizarEstadoProbado('no_probado');
 
-                let botonVista = document.getElementById('botonVista');
-                let textoVista = document.querySelector('.texto-visto');
+                let botonProbado = document.getElementById('botonProbado');
+                let textoProbado = document.querySelector('.texto-probado');
 
-                botonVista.classList.add('icono-animado');
-                setTimeout(() => botonVista.classList.remove('icono-animado'), 300);
+                botonProbado.classList.add('icono-animado');
+                setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
-                botonVista.classList.remove('quitarVista', 'icono-visto', 'fa-eye');
-                botonVista.classList.add('ponerVista', 'icono-no-visto', 'fa-eye-slash');
-                botonVista.setAttribute('title', 'Marcar como vista');
-                botonVista.removeEventListener('click', quitarVista);
-                botonVista.addEventListener('click', ponerVista);
+                botonProbado.classList.remove('quitarProbado', 'icono-probado', 'fa-eye');
+                botonProbado.classList.add('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
+                botonProbado.setAttribute('title', 'Marcar como probado');
+                botonProbado.removeEventListener('click', quitarProbado);
+                botonProbado.addEventListener('click', ponerProbado);
 
-                if (textoVista) {
-                    textoVista.classList.add('oculto');
+                if (textoProbado) {
+                    textoProbado.classList.add('oculto');
                 }
             } else {
-                console.error('Error al quitar estado de vista');
+                console.error('Error al quitar estado de probado');
             }
         })
         .catch(error => console.error('Error en la solicitud:', error));
 }
 
-// Función para actualizar el estado visual de pelicula vista
-function actualizarEstadoVista(estado) {
-    const estadoVistaContenedor = document.getElementById('estadoVistaContenedor');
-    if (estado === 'vista') {
-        estadoVistaContenedor.innerHTML = '<strong class="estadoVista text-success">Película Vista</strong>';
+// Función para actualizar el estado de probado de videojuego probado
+function actualizarEstadoProbado(estado) {
+    const estadoProbadoContenedor = document.getElementById('estadoProbadoContenedor');
+    if (estado === 'probado') {
+        estadoProbadoContenedor.innerHTML = '<strong class="estadoProbado text-success">Videojuego Probado</strong>';
     } else {
-        estadoVistaContenedor.innerHTML = '';
+        estadoProbadoContenedor.innerHTML = '';
     }
 }
 
@@ -162,9 +162,9 @@ document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
 document.querySelectorAll('.star-rating input[type="radio"]').forEach(input => {
     input.addEventListener('change', function () {
         const puntuacion = this.value;
-        const idPelicula = this.getAttribute('data-idPelicula');
+        const idVideojuego = this.getAttribute('data-idVideojuego');
 
-        fetch(`index.php?accion=guardar_puntuacion&id=${idPelicula}`, {
+        fetch(`index.php?accion=guardar_puntuacion&id=${idVideojuego}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -238,7 +238,7 @@ estrellas.forEach(estrella => {
 });
 
 
-// Mostrar media visual de la película
+// Mostrar media visual del videojuego
 function actualizarMediaVisual(media) {
     const contenedorEstrellas = document.getElementById('mediaVisualEstrellas');
     if (!contenedorEstrellas) return;

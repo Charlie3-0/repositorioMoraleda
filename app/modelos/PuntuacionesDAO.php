@@ -58,6 +58,90 @@ class PuntuacionesDAO {
 
 
     /**
+     * Función para contar el número de Puntuaciones, aunque la hemos usado para ver si tenemos una puntuacion de un videojuego,
+     * ya que nosotros estamos contemplando que solo se puede tener una puntuacion de cada videojuego por usuario
+     */
+    public function countByIdVideojuego($idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT count(*) as NumPuntuaciones FROM puntuaciones WHERE idVideojuego = ?")){
+            die("Error al preparar la consulta select count: " . $this->conn->error );
+        }
+        $stmt->bind_param('i',$idVideojuego);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $fila = $result->fetch_assoc();
+        return $fila['NumPuntuaciones'];
+    }
+
+
+    /**
+     * Obtener todas las puntuaciones de la tabla puntuaciones por el ID de usuario
+     * @param int $idUsuario El ID del usuario del que deseamos obtener las puntuaciones
+     * @return array Devuelve un array de objetos Puntuacion
+     */
+    public function obtenerPuntuacionesByIdUsuario($idUsuario): array {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM puntuaciones WHERE idUsuario = ?")) {
+            echo "Error en la SQL: " . $this->conn->error;
+        }
+
+        // Obtener parámetro del ID
+        $stmt->bind_param('i', $idUsuario);
+
+        // Ejecutamos la consulta
+        $stmt->execute();
+
+        // Obtener el objeto mysql_result
+        $result = $stmt->get_result();
+
+        $array_puntuaciones = array();
+
+        // Mientras puntuacion es igual al resultado, se crea un array de Puntuacion
+        while ($puntuacion = $result->fetch_object(Puntuacion::class)) {
+            $array_puntuaciones[] = $puntuacion;
+        }
+
+        return $array_puntuaciones;
+    }
+
+
+    /**
+     * Función que comprueba la existencia general de una puntuacion con idUsuario e idVideojuego
+     * Devuelve true si existe y false si no existe
+     */
+    public function existByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
+        if(!$stmt = $this->conn->prepare("SELECT * FROM puntuaciones WHERE idUsuario = ? AND idVideojuego = ?")){
+            die("Error al preparar la consulta select exist: " . $this->conn->error );
+        }
+        $stmt->bind_param('ii',$idUsuario, $idVideojuego);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows>=1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    /**
+     * Función para obtener todas puntuaciones con idUsuario e idVideojuego
+     */
+    public function getByIdUsuarioIdVideojuego($idUsuario, $idVideojuego): ? Puntuacion {
+        if(!$stmt = $this->conn->prepare("SELECT * FROM puntuaciones WHERE idUsuario=? and idVideojuego = ?")){
+            die("Error al preparar la consulta select: " . $this->conn->error );
+        }
+        $stmt->bind_param('ii', $idUsuario, $idVideojuego);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if($puntuacion = $result->fetch_object(Puntuacion::class)){
+            return $puntuacion;
+        } else {
+            return null; // En lugar de false, devolvemos null
+        }
+    }
+
+
+    /**
      * Guarda o actualiza la puntuación de un usuario sobre un videojuego
      */
     public function ponerEditarPuntuacion($idUsuario, $idVideojuego, $puntuacion) {

@@ -125,8 +125,8 @@ class PrestamosDAO {
         $fechaPrestamo = $prestamo->getFechaPrestamo();
         $devuelto = $prestamo->getDevuelto();
         $idUsuario = $prestamo->getIdUsuario();
-        $idPelicula = $prestamo->getIdVideojuego();
-        $stmt->bind_param('siii',$fechaPrestamo ,$devuelto, $idUsuario, $idPelicula);
+        $idVideojuego = $prestamo->getIdVideojuego();
+        $stmt->bind_param('siii',$fechaPrestamo ,$devuelto, $idUsuario, $idVideojuego);
         if($stmt->execute()){
             return $stmt->insert_id;
         }
@@ -140,7 +140,7 @@ class PrestamosDAO {
      * Función para contar el número de Videojuegos prestados, aunque la hemos usado para ver si tenemos el préstamo de un videojuego,
      * ya que nosotros estamos contemplando que solo hay una unidad de cada videojuego
      */
-    public function countByIdVideojego($idVideojuego){
+    public function countByIdVideojuego($idVideojuego){
         if(!$stmt = $this->conn->prepare("SELECT count(*) as NumPrestamos FROM prestamos WHERE idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
@@ -249,7 +249,7 @@ class PrestamosDAO {
 
     // Método para marcar el préstamo como devuelto
     public function marcarComoDevuelto($idPrestamo) {
-        $sql = "UPDATE prestamos SET devuelta = 1 WHERE id = ?";
+        $sql = "UPDATE prestamos SET devuelto = 1 WHERE id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("i", $idPrestamo);
 

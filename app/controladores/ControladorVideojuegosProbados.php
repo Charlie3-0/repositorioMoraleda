@@ -13,20 +13,20 @@ class ControladorVideojuegosProbados {
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
         $videojuegosDAO = new VideojuegosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
-        $peliculasUsuariosDAO = new Peliculas_usuariosDAO($conn);
+        $videojuegosProbadosDAO = new Videojuegos_probadosDAO($conn);
 
         $idUsuario = htmlspecialchars($_GET['id']);
         $usuario = $usuariosDAO->getById($idUsuario);
 
-        // Obtener las peliculas vistas
-        $peliculasVistas = $peliculasUsuariosDAO->obtenerPeliculasVistasMarcadasByIdUsuario($idUsuario);
+        // Obtener los videojuegos probados
+        $videojuegosProbados = $videojuegosProbadosDAO->obtenerVideojuegosProbadosMarcadosByIdUsuario($idUsuario);
 
-        // Asignar la pelicula a cada pelicula vista
-        foreach ($peliculasVistas as $peliculaVista) {
-            $peliculaVista->pelicula = $videojuegosDAO->getById($peliculaVista->getIdPelicula());
+        // Asignar el videojuego a cada videojuego probado
+        foreach ($videojuegosProbados as $videojuegoProbado) {
+            $videojuegoProbado->videojuego = $videojuegosDAO->getById($videojuegoProbado->getIdVideojuego());
         }
 
-        require 'app/vistas/ver_peliculas_vistas.php';
+        require 'app/vistas/ver_videojuegos_probados.php';
     }
 
     /**
@@ -106,33 +106,33 @@ class ControladorVideojuegosProbados {
     } */
 
     /**
-     * Ver todas las películas marcadas como vistas en la base de datos
+     * Ver todos los videojuegos probados como probados en la base de datos
      */
-    public function verTodasPeliculasVistas() {
+    public function verTodosVideojuegosProbados() {
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
     
-        $peliculasUsuariosDAO = new Peliculas_usuariosDAO($conn);
+        $videojuegosProbadosDAO = new Videojuegos_probadosDAO($conn);
     
-        // Obtenemos las películas agrupadas por usuario
-        $peliculasVistasAgrupadasPorUsuario = $peliculasUsuariosDAO->getPeliculasVistasAgrupadasPorUsuario();
+        // Obtenemos los videojuegos agrupados por usuario
+        $videojuegosProbadosAgrupadosPorUsuario = $videojuegosProbadosDAO->getVideojuegosProbadosAgrupadosPorUsuario();
     
         // Pasamos los datos a la vista
-        require 'app/vistas/ver_todas_peliculas_vistas.php';
+        require 'app/vistas/ver_todos_videojuegos_probados.php';
     }
     
 
     /**
-     * Marcar una película como vista por un usuario
+     * Marcar un videojuego como probado por un usuario
      */
-    function ponerPeliculaVista(){
+    function ponerVideojuegoProbado(){
         $conn = (new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $videojuegosProbadosDAO = new Videojuegos_probadosDAO($conn);
 
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
 
-        if($peliculas_usuariosDAO->marcarComoVista($idUsuario, $idPelicula)){
+        if($videojuegosProbadosDAO->marcarComoProbado($idUsuario, $idVideojuego)){
             print json_encode(['respuesta' => 'ok']);
         } else {
             print json_encode(['respuesta' => 'error']);
@@ -140,16 +140,16 @@ class ControladorVideojuegosProbados {
     }
 
     /**
-     * Desmarcar una película como vista (cambiar estado en vez de eliminar)
+     * Desmarcar un videojuego como probado (cambiar estado en vez de eliminar)
      */
-    function quitarPeliculaVista(){
+    function quitarVideojuegoProbado(){
         $conn = (new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB))->getConnexion();
-        $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
+        $videojuegosProbadosDAO = new Videojuegos_probadosDAO($conn);
     
         $idUsuario = Sesion::getUsuario()->getId();
-        $idPelicula = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
     
-        if($peliculas_usuariosDAO->quitarVista($idUsuario, $idPelicula)){
+        if($videojuegosProbadosDAO->quitarProbado($idUsuario, $idVideojuego)){
             print json_encode(['respuesta' => 'ok']);
         } else {
             print json_encode(['respuesta' => 'error']);

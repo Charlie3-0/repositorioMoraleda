@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ver Pelicula</title>
+    <title>Ver Videojuego</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,11 +12,11 @@
     <style>
         /* ESTILOS VIDEOJUEGO_PROBADO */
         /* Colores personalizados */
-        .icono-visto {
+        .icono-probado {
             color: black;
         }
 
-        .icono-no-visto {
+        .icono-no-probado {
             color: gray;
         }
 
@@ -31,16 +31,16 @@
             100% { transform: scale(1); }
         }
 
-        .estado-vista {
+        .estado-probado {
             display: inline-flex;
             align-items: center;
             gap: 5px;
             margin-top: 5px;
         }
 
-        .texto-visto {
+        .texto-probado {
             font-size: 1em;
-            color: black; /* mismo tono que icono-visto */
+            color: black; /* mismo tono que icono-probado */
             font-weight: bold;
             margin-left: 8px;
             display: inline-block;
@@ -53,7 +53,7 @@
             transition: opacity 0.7s ease, visibility 0.7s ease, transform 0.7s ease;
         }
 
-        .texto-visto.oculto {
+        .texto-probado.oculto {
             opacity: 0;
             visibility: hidden;
 
@@ -185,9 +185,9 @@
     <header>
         <h1 class="tituloPagina">
             <?php if (Sesion::getUsuario() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                CINEMA_CLICK ADMIN
+                TESTPLAY ADMIN
             <?php else: ?>
-                CINEMA_CLICK
+                TESTPLAY
             <?php endif; ?>
         </h1>
 
@@ -202,26 +202,26 @@
 
             <?php if (Sesion::getUsuario()->getRol() === 'U'): ?>
                 <br><br>
-                <a href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Prestadas</a>
+                <a href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Préstamos</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Reservadas</a>
+                <a href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Reservas</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_peliculas_vistas&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Vistas</a>
+                <a href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">Videojuegos Probados</a>
 
             <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
                 <br><br>
-                <a href="index.php?accion=ver_todos_prestamos">Ver Todos los Préstamos</a>
+                <a href="index.php?accion=ver_todos_prestamos">Todos los Préstamos</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_todas_reservas">Ver Todas las Reservas</a>
+                <a href="index.php?accion=ver_todas_reservas">Todas las Reservas</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_todas_peliculas_vistas">Ver Todas las Películas Vistas</a>
+                <a href="index.php?accion=ver_todos_videojuegos_probados">Todos los Videojuegos Probados</a>
 
                 <br><br>
-                <a href="index.php?accion=insertar_pelicula">Insertar Película</a>
+                <a href="index.php?accion=insertar_videojuego">Insertar Videojuego</a>
             <?php endif; ?>
 
         <?php else: ?>
@@ -237,13 +237,13 @@
     <br><br>
 
     <main>
-        <div class="ver_pelicula">
-            <?php if ($pelicula!= null) : ?>
-                <h2 class="titulo"><?= $pelicula->getTitulo() ?> </h2>
-                <div class="director">Director: <?= $pelicula->getDirector() ?> </div>
-                <div class="descripcion">Descripción: <?= $pelicula->getDescripcion() ?> </div>
+        <div class="ver_videojuego">
+            <?php if ($videojuego!= null) : ?>
+                <h2 class="titulo"><?= $videojuego->getTitulo() ?> </h2>
+                <div class="desarrollador">Desarrollador: <?= $videojuego->getDesarrollador() ?> </div>
+                <div class="descripcion">Descripción: <?= $videojuego->getDescripcion() ?> </div>
                 <div class="foto">
-                    <img src="web/images/<?=$pelicula->getFoto() ?>" style="height: 300px; border: 1px solid black";>
+                    <img src="web/images/<?=$videojuego->getFoto() ?>" style="height: 300px; border: 1px solid black";>
                 </div>
                 <div class="nombreCategoria">Categoría: <?= $categoria->getNombre()?></div>
 
@@ -281,13 +281,13 @@
 
                 <!-- Esto lo dejamos fuera del if, para poder usarlo en otras partes del codigo -->
                 <?php
-                    $daoPU = new Peliculas_usuariosDAO($conn);
+                    $daoPU = new PuntuacionesDAO($conn);
                 ?>
 
                 <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
                     <?php
-                        //$daoPU = new Peliculas_usuariosDAO($conn);
-                        $puntuacionUsuario = $daoPU->obtenerPuntuacionUsuario($pelicula->getId(), Sesion::getUsuario()->getId());
+                        //$daoPU = new PuntuacionesDAO($conn);
+                        $puntuacionUsuario = $daoPU->obtenerPuntuacionUsuario($videojuego->getId(), Sesion::getUsuario()->getId());
                     ?>
                     <div class="col-md-6">
                         <div class="rating-card p-4">
@@ -298,7 +298,7 @@
                                         id="star<?= $i ?>"
                                         name="rating"
                                         value="<?= $i ?>"
-                                        data-idPelicula="<?= $pelicula->getId() ?>"
+                                        data-idVideojuego="<?= $videojuego->getId() ?>"
                                         <?= ($puntuacionUsuario == $i) ? 'checked' : '' ?>>
                                     <label for="star<?= $i ?>" class="bi bi-star-fill"></label>
                                 <?php endfor; ?>
@@ -314,17 +314,17 @@
                 <?php endif; ?>
 
                 <?php
-                    $mediaPelicula = $daoPU->obtenerPuntuacionMedia($pelicula->getId());
+                    $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
                 ?>
                 <p id="mediaPuntuacion" class="mt-1">
-                    <?php if ($mediaPelicula): ?>
-                        <strong>Media: <?= $mediaPelicula ?>/10</strong>
+                    <?php if ($mediaVideojuego): ?>
+                        <strong>Media: <?= $mediaVideojuego ?>/10</strong>
                     <?php endif; ?>
                 </p>
                 
                 <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
                     <?php for ($i = 10; $i >= 1; $i--): ?>
-                        <i class="bi <?= ($mediaPelicula >= $i) ? 'bi-star-fill text-secondary' : (($mediaPelicula >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
+                        <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
                     <?php endfor; ?>
                 </div>
 
@@ -336,7 +336,7 @@
                 <br>
 
                 <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                    <a href="index.php?accion=editar_pelicula&id=<?= $pelicula->getId() ?>">Editar Película</a>
+                    <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>">Editar Videojuego</a>
                 <?php endif; ?>
 
 
@@ -344,19 +344,19 @@
                 
 
                 <div id="estadoReservaContenedor">
-                    <?php if ($peliculaReservada): ?>
+                    <?php if ($videojuegoReservado): ?>
                         <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
                             <strong class="estadoReservado text-dark">
-                                Película Reservada
+                                Videojuego Reservado
                                 <?php if ($usuarioReservado): ?>
                                     <i>por: <?= $usuarioReservado->getEmail() ?></i>
                                 <?php endif; ?>
                             </strong>
                         <?php elseif (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                            <strong class="estadoReservado text-dark">Película Reservada</strong>
+                            <strong class="estadoReservado text-dark">Videojuego Reservado</strong>
                         <?php endif; ?>
                     <?php else: ?>
-                        <strong class="text-dark">Película disponible para Reserva</strong>
+                        <strong class="text-dark">Videojuego disponible para Reserva</strong>
                     <?php endif; ?>
                 </div>
 
@@ -364,20 +364,20 @@
                 <br>
 
                 <div id="estadoPrestamoContenedor">
-                    <?php if ($peliculaPrestada): ?>
+                    <?php if ($videojuegoPrestado): ?>
                         <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
                             <?php if ($usuarioPrestamo != null): ?>
-                                <strong class="estadoPrestado text-dark">Película Prestada
+                                <strong class="estadoPrestado text-dark">Videojuego Prestado
                                     <i>a: <?= $usuarioPrestamo->getEmail() ?></i>
                                 </strong>
                             <?php else: ?>
-                                <strong class="text-dark">Película Disponible para ser Prestada</strong>
+                                <strong class="text-dark">Videojuego Disponible para ser Prestado</strong>
                             <?php endif; ?>
                         <?php elseif (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                            <strong class="estadoPrestado text-dark">Película Prestada</strong>
+                            <strong class="estadoPrestado text-dark">Videojuego Prestado</strong>
                         <?php endif; ?>
                     <?php else: ?>
-                        <strong class="text-dark">Película Disponible para ser Prestada</strong>
+                        <strong class="text-dark">Videojuego Disponible para ser Prestado</strong>
                     <?php endif; ?>
                 </div>
 
@@ -385,14 +385,14 @@
                 <br>
                 
                 <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                    <div id="estadoVistaContenedor">
-                        <?php if ($marcadaVista): ?>
-                            <strong class="estadoVista text-success">Película Vista</strong>
+                    <div id="estadoProbadoContenedor">
+                        <?php if ($marcadoProbado): ?>
+                            <strong class="estadoProbado text-success">Videojuego Probado</strong>
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
             <?php else : ?>
-                <strong class="alert alert-warning" role="alert">Pelicula con id <?= $id ?> no encontrada</strong>
+                <strong class="alert alert-warning" role="alert">Videojuego con id <?= $id ?> no encontrado</strong>
             <?php endif; ?>
 
             <br><br>
@@ -400,14 +400,14 @@
             
 
             <br><br>
-            <!-- Permitimos a los usuarios con rol "U" gestionar reservas de películas si hay una sesión activa. Si
-            la película no está reservada o la reserva es del usuario conectado, se muestra un botón para "Quitar Reserva"
+            <!-- Permitimos a los usuarios con rol "U" gestionar reservas de videojuegos si hay una sesión activa. Si
+            el videojuego no está reservado o la reserva es del usuario conectado, se muestra un botón para "Quitar Reserva"
             o "Poner Reserva", según corresponda. -->
-            <?php if(Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U' && ( !$peliculaReservada || $existeReserva )): ?>
+            <?php if(Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U' && ( !$videojuegoReservado || $existeReserva )): ?>
                 <?php if($existeReserva): ?>
-                    <button class="quitarReserva" data-idPelicula="<?= $pelicula->getId()?>" id="botonReserva">Quitar Reserva</button>
+                    <button class="quitarReserva" data-idVideojuego="<?= $videojuego->getId()?>" id="botonReserva">Quitar Reserva</button>
                 <?php else: ?>
-                    <button class="ponerReserva" data-idPelicula="<?= $pelicula->getId()?>" id="botonReserva">Poner Reserva</button>
+                    <button class="ponerReserva" data-idVideojuego="<?= $videojuego->getId()?>" id="botonReserva">Poner Reserva</button>
                 <?php endif; ?>
                 
             <?php endif; ?>
@@ -415,27 +415,27 @@
             <br><br>
 
             <!-- Verificamos si hay una sesión activa con un usuario que tiene el rol "U". Si es así, permite
-            al usuario marcar una película como "vista" o "no vista" haciendo clic en el icono. -->
+            al usuario marcar un videojuego como "probado" o "no probado" haciendo clic en el icono. -->
             <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                <span class="estado-vista">
-                    <?php if ($marcadaVista): ?>
-                        <i id="botonVista"
-                        class="fas fa-eye quitarVista icono-visto"
-                        data-idPelicula="<?= $pelicula->getId() ?>"
+                <span class="estado-probado">
+                    <?php if ($marcadoProbado): ?>
+                        <i id="botonProbado"
+                        class="fas fa-eye quitarProbado icono-probado"
+                        data-idVideojuego="<?= $videojuego->getId() ?>"
                         style="cursor: pointer; font-size: 1.5rem;"
-                        title="Quitar vista"></i>
+                        title="Quitar probado"></i>
                     <?php else: ?>
-                        <i id="botonVista"
-                        class="fas fa-eye-slash ponerVista icono-no-visto"
-                        data-idPelicula="<?= $pelicula->getId() ?>"
+                        <i id="botonProbado"
+                        class="fas fa-eye-slash ponerProbado icono-no-probado"
+                        data-idVideojuego="<?= $videojuego->getId() ?>"
                         style="cursor: pointer; font-size: 1.5rem;"
-                        title="Marcar como vista"></i>
+                        title="Marcar como probado"></i>
                     <?php endif; ?>
 
-                    <!-- Siempre se muestra este span junto al icono al marcar la vista o si ya estaba
-                    marcada como vista -->
-                    <span class="texto-visto<?= $marcadaVista ? '' : ' oculto' ?>">
-                        <i class="fas fa-check-circle icono-confirmacion"></i> Vista
+                    <!-- Siempre se muestra este span junto al icono al marcar el probado o si ya estaba
+                    marcado como probado -->
+                    <span class="texto-probado<?= $marcadoProbado ? '' : ' oculto' ?>">
+                        <i class="fas fa-check-circle icono-confirmacion"></i> Probado
                     </span>
                 </span>
             <?php endif; ?>
@@ -494,7 +494,7 @@
                 <div class="container mt-5">
                     <div class="comment-section" id="insertarComentario">
                         <!-- Formulario para comentar -->
-                        <form id="formComentario" class="mb-4" data-idPelicula="<?= $pelicula->getId(); ?>">
+                        <form id="formComentario" class="mb-4" data-idVideojuego="<?= $videojuego->getId(); ?>">
                             <div class="d-flex gap-3">
                                 <i class="fa-solid fa-user"></i>
                                 <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail(); ?></span>
@@ -511,7 +511,7 @@
             <?php endif; ?>
 
             <!-- Lista de comentarios -->
-            <div class="container" data-idPelicula="<?= $pelicula->getId(); ?>">
+            <div class="container" data-idVideojuego="<?= $videojuego->getId(); ?>">
                 <div class="comment-section" id="listaComentarios">
                     <?php if (!empty($comentarios)): ?>
                         <?php foreach ($comentarios as $comentario): ?>
@@ -541,7 +541,7 @@
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar esta película.</p>
+                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar este videojuego.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -552,7 +552,7 @@
 
 
             <br><br>
-            <a href="index.php?accion=peliculas_por_categoria&id=<?=$categoria->getId()?>">Volver a la Categoría <?= $categoria->getNombre() ?></a>
+            <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>">Volver a la Categoría <?= $categoria->getNombre() ?></a>
         </div>
     </main>
     

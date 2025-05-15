@@ -30,9 +30,9 @@
     <header>
         <h1 class="tituloPagina">
             <?php if (Sesion::getUsuario() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                CINEMA_CLICK ADMIN
+                TESTPLAY ADMIN
             <?php else: ?>
-                CINEMA_CLICK
+                TESTPLAY
             <?php endif; ?>
         </h1>
 
@@ -47,26 +47,26 @@
 
             <?php if (Sesion::getUsuario()->getRol() === 'U'): ?>
                 <br><br>
-                <a href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Prestadas</a>
+                <a href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Préstamos</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Reservadas</a>
+                <a href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Reservas</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_peliculas_vistas&id=<?=Sesion::getUsuario()->getId()?>">Ver Películas Vistas</a>
+                <a href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">Videojuegos Probados</a>
 
             <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
                 <br><br>
-                <a href="index.php?accion=ver_todos_prestamos">Ver Todos los Préstamos</a>
+                <a href="index.php?accion=ver_todos_prestamos">Todos los Préstamos</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_todas_reservas">Ver Todas las Reservas</a>
+                <a href="index.php?accion=ver_todas_reservas">Todas las Reservas</a>
 
                 <br><br>
-                <a href="index.php?accion=ver_todas_peliculas_vistas">Ver Todas las Películas Vistas</a>
+                <a href="index.php?accion=ver_todos_videojuegos_probados">Todos los Videojuegos Probados</a>
 
                 <br><br>
-                <a href="index.php?accion=insertar_pelicula">Insertar Película</a>
+                <a href="index.php?accion=insertar_videojuego">Insertar Videojuego</a>
             <?php endif; ?>
 
         <?php else: ?>
@@ -95,7 +95,7 @@
         <?php foreach ($categorias as $categoria): ?>
             <div class="categoria">
             <h4 class="titulo">
-                    <a href="index.php?accion=peliculas_por_categoria&id=<?=$categoria->getId()?>"><?= $categoria->getNombre() ?></a>
+                    <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>"><?= $categoria->getNombre() ?></a>
                 </h4>
             </div>
         <?php endforeach; ?>
