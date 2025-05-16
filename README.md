@@ -91,6 +91,6 @@
 TestPlay ofrece únicamente versiones para PC. Aunque algunos juegos también estén disponibles en consolas, solo alquilamos y gestionamos la versión para ordenador (Windows). Esto permite simplificar el catálogo y la logística de la plataforma en su fase inicial.
 
 ## 👨‍💻 Autor
-Proyecto académico creado por [Carlos Moraleda Ruiz],
+Proyecto académico creado por [Charlie3-0],
 Instituto: [I.E.S. Juan Bosco],
 Asignatura: Desarrollo de Aplicaciones Web.
