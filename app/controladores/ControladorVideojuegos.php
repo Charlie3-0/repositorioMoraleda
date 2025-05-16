@@ -88,6 +88,7 @@ class ControladorVideojuegos {
                 $existeReserva = $reservasDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego);
                 /* $marcadaVista = $peliculasVistasDAO->estaMarcadaComoVista($usuario->getId(), $idVideojuego); */
                 $marcadoProbado = $videojuegosProbadosDAO->estaMarcadoComoProbado($usuario->getId(), $idVideojuego);
+                /* $videojuegoProbado = $videojuegosProbadosDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego); */
 
             } elseif ($usuario->getRol() === 'A') {
                 // Lógica para admins
@@ -228,6 +229,9 @@ class ControladorVideojuegos {
             $desarrollador = htmlspecialchars($_POST['desarrollador']);
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
+            $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
+            //$trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que no lo escapamos
+            $trailer = $_POST['trailer']; // Permitimos iframe, así que no lo escapamos
 
             // Aquí manejamos la foto
             $foto_nombre = $_FILES['foto']['name'];   // Nombre de la foto
@@ -250,6 +254,9 @@ class ControladorVideojuegos {
                 $videojuego->setDescripcion($descripcion);
                 // $videojuego>setFoto("");
                 $videojuego->setIdCategoria($idCategoria);
+                $videojuego->setFechaLanzamiento($fechaLanzamiento);
+                $videojuego->setTrailer($trailer);
+
 
                 // Movemos la foto al directorio final y guardamos la ruta en el objeto Videojuego
                 if (move_uploaded_file($foto_temporal, $ruta_destino)) {
@@ -300,10 +307,13 @@ class ControladorVideojuegos {
             $desarrollador = htmlspecialchars($_POST['desarrollador']);
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
+            $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
+            //$trailer = htmlspecialchars($_POST['trailer']);
+            $trailer = $_POST['trailer'];
 
     
             // Validamos los datos
-            if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria)){
+            if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento)){
                 $error = "Todos los campos son obligatorios.";
             }else{
                 // Actualizamos los datos del videojuego
@@ -312,6 +322,9 @@ class ControladorVideojuegos {
                 $videojuego->setDescripcion($descripcion);
                 // $videojuego->setFoto($foto); // Aquí manejamos la foto
                 $videojuego->setIdCategoria($idCategoria);
+                $videojuego->setFechaLanzamiento($fechaLanzamiento);
+                $videojuego->setTrailer($trailer);
+
 
                 // Manejamos la foto si se está subiendo una nueva
                 if(isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK){

@@ -62,7 +62,7 @@ function actualizarEstadoReserva(estado) {
 
 
 
-/* Funciones para marcar y quitar videojuego probado con AJAX asignando icono */
+/* Funciones para marcar y quitar videojuego_probado con AJAX asignando icono */
 let probadoOn = document.querySelector('.quitarProbado');
 if (probadoOn != null) {
     probadoOn.addEventListener('click', quitarProbado);
@@ -135,7 +135,7 @@ function quitarProbado() {
         .catch(error => console.error('Error en la solicitud:', error));
 }
 
-// Función para actualizar el estado de probado de videojuego probado
+// Función para actualizar el estado de probado de videojuego_probado
 function actualizarEstadoProbado(estado) {
     const estadoProbadoContenedor = document.getElementById('estadoProbadoContenedor');
     if (estado === 'probado') {
@@ -834,7 +834,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sinComentarios = document.querySelector('.sin-comentarios');
     /* const commentSection = document.querySelector('.comment-section'); */
     const commentSection = document.getElementById('listaComentarios');
-    const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
+    const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
 
     // Añadir comentario
     if (formComentario) {
@@ -848,7 +848,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            fetch(`index.php?accion=guardar_comentario&id=${idPelicula}`, {
+            fetch(`index.php?accion=guardar_comentario&id=${idVideojuego}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: `comentario=${encodeURIComponent(comentario)}`
@@ -993,9 +993,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!confirm('¿Seguro que quieres eliminar tu comentario?')) return;
 
                 const comentarioBox = e.target.closest('.comment-box');
-                const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
+                const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
 
-                fetch('index.php?accion=eliminar_comentario&id=' + idPelicula)
+                fetch('index.php?accion=eliminar_comentario&id=' + idVideojuego)
                     .then(response => response.json())
                     .then(data => {
                         if (data.respuesta === 'ok') {
@@ -1008,7 +1008,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             if (!document.getElementById('formComentario')) {
                                 const nuevoForm = document.createElement('form');
                                 nuevoForm.id = 'formComentario';
-                                nuevoForm.setAttribute('data-idPelicula', idPelicula);
+                                nuevoForm.setAttribute('data-idVideojuego', idVideojuego);
                                 nuevoForm.classList.add('mb-4'); // añadimos clase al form
                                 nuevoForm.innerHTML = `
                                     <div class="d-flex gap-3">
@@ -1031,7 +1031,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     const comentario = document.getElementById('comentarioTexto').value.trim();
                                     if (!comentario) return;
 
-                                    fetch(`index.php?accion=guardar_comentario&id=${idPelicula}`, {
+                                    fetch(`index.php?accion=guardar_comentario&id=${idVideojuego}`, {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                                         body: `comentario=${encodeURIComponent(comentario)}`
@@ -1115,7 +1115,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 // Crear y añadir el mensaje
                                 const mensaje = document.createElement('p');
                                 mensaje.classList.add('sin-comentarios');
-                                mensaje.textContent = 'No hay comentarios aún. Sé el primero en comentar esta película.';
+                                mensaje.textContent = 'No hay comentarios aún. Sé el primero en comentar en este videojuego.';
 
                                 contenedorComentarios.appendChild(mensaje);
                             }

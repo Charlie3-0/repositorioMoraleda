@@ -19,7 +19,7 @@ class ControladorVideojuegosProbados {
         $usuario = $usuariosDAO->getById($idUsuario);
 
         // Obtener los videojuegos probados
-        $videojuegosProbados = $videojuegosProbadosDAO->obtenerVideojuegosProbadosMarcadosByIdUsuario($idUsuario);
+        $videojuegosProbados = $videojuegosProbadosDAO->obtenerVideojuegosProbadosByIdUsuario($idUsuario);
 
         // Asignar el videojuego a cada videojuego probado
         foreach ($videojuegosProbados as $videojuegoProbado) {

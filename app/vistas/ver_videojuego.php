@@ -246,6 +246,16 @@
                     <img src="web/images/<?=$videojuego->getFoto() ?>" style="height: 300px; border: 1px solid black";>
                 </div>
                 <div class="nombreCategoria">Categoría: <?= $categoria->getNombre()?></div>
+                <div class="fecha_lanzamiento">Fecha de lanzamiento: <?= $videojuego->getFechaLanzamiento() ?> </div>
+                <br>
+                <?php if (!empty($videojuego->getTrailer())): ?>
+                    <div class="trailer">
+                        <h3>Tráiler</h3>
+                        <div class="iframe-container">
+                            <iframe src="<?= $videojuego->getTrailer() ?>" class="border border-3 rounded-3" width="560" height="315" title="YouTube video trailer" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <br>
 
@@ -541,7 +551,7 @@
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar este videojuego.</p>
+                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar en este videojuego.</p>
                     <?php endif; ?>
                 </div>
             </div>

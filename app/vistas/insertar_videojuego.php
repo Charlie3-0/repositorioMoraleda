@@ -91,6 +91,12 @@
                     <option value="<?= $categoria->getId() ?>"><?= $categoria->getNombre() ?></option>
                 <?php endforeach; ?>
             </select>
+            <br>
+            <label>Fecha de lanzamiento:</label>
+            <input type="date" name="fecha_lanzamiento" required>
+            <br>
+            <label>Tráiler (iframe de YouTube):</label>
+            <textarea name="trailer" rows="4" placeholder="Pega aquí el iframe"></textarea>
             
             <br>
             <input type="submit" value="Insertar Película">

@@ -101,6 +101,13 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <br>
+                <label>Fecha de lanzamiento:</label>
+                <input type="date" name="fecha_lanzamiento" value="<?= $videojuego->getFechaLanzamiento() ?>" required>
+                <br>
+                <label>Tráiler (iframe de YouTube):</label>
+                <textarea name="trailer" rows="4"><?= htmlspecialchars($videojuego->getTrailer()) ?></textarea>
+
                 
                 <br><br>
                 <input type="submit" value="Guardar Cambios">

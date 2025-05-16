@@ -207,7 +207,7 @@ class Videojuegos_probadosDAO {
     /**
      * Función para saber si está probado el videojuego_probado como probado
      */
-    public function estaMarcadoComoProbado($idUsuario, $idVideojuego) {
+    /* public function estaMarcadoComoProbado($idUsuario, $idVideojuego) {
         if (!$stmt = $this->conn->prepare("SELECT 1 FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1 LIMIT 1")) {
             die("Error al preparar la consulta select está marcado como probado: " . $this->conn->error);
         }
@@ -217,7 +217,21 @@ class Videojuegos_probadosDAO {
         $result = $stmt->get_result();
     
         return $result->num_rows >= 1;
+    } */
+
+
+    /**
+     * Función para saber si está probado el videojuego_probado
+     */
+    public function estaMarcadoComoProbado($idUsuario, $idVideojuego) {
+        $query = "SELECT 1 FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ? LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->num_rows > 0;
     }
+    
     
 
     /**
@@ -242,7 +256,7 @@ class Videojuegos_probadosDAO {
     /**
      * Función para obtener un videojuego_probado con idUsuario e idVideojuego
      */
-    public function getVistaPorUsuarioYPelicula($idUsuario, $idVideojuego) {
+    public function getProbadoPorUsuarioYVideojuego($idUsuario, $idVideojuego) {
         if(!$stmt = $this->conn->prepare("SELECT probado FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?")){
             die("Error al preparar la consulta select para la vista: " . $this->conn->error );
         }
@@ -250,7 +264,7 @@ class Videojuegos_probadosDAO {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            return $row['vista'] == 1;
+            return $row['probado'] == 1;
         }
         return false;
     }    
@@ -275,10 +289,10 @@ class Videojuegos_probadosDAO {
     /**
      * Insertar el videojuego_probado "probado" en la base de datos
      */
-    public function marcarComoProbado($idUsuario, $idVideojuego) {
+    /* public function marcarComoProbado($idUsuario, $idVideojuego) {
         $fechaProbado = date('Y-m-d H:i:s');
     
-        // Verificamos si ya existe un registro para esa combinación
+        // Verificamos si ya existe un registro
         $query = "SELECT id, probado FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("ii", $idUsuario, $idVideojuego);
@@ -304,7 +318,34 @@ class Videojuegos_probadosDAO {
             $insertStmt->bind_param("iis", $idUsuario, $idVideojuego, $fechaProbado);
             return $insertStmt->execute();
         }
+    } */
+
+
+    /**
+     * Insertar el videojuego_probado en la base de datos
+     */
+    public function marcarComoProbado($idUsuario, $idVideojuego) {
+        $fechaProbado = date('Y-m-d H:i:s');
+    
+        // Verificar si ya existe un registro
+        $query = "SELECT id FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+    
+        if ($resultado->num_rows > 0) {
+            // Ya existe, no hacemos nada
+            return false;
+        }
+    
+        // Insertar nuevo
+        $insertQuery = "INSERT INTO videojuegos_probados (idUsuario, idVideojuego, fecha_probado) VALUES (?, ?, ?)";
+        $insertStmt = $this->conn->prepare($insertQuery);
+        $insertStmt->bind_param("iis", $idUsuario, $idVideojuego, $fechaProbado);
+        return $insertStmt->execute();
     }
+    
     
 
     /**
@@ -313,7 +354,7 @@ class Videojuegos_probadosDAO {
      * @param int $idVideojuego ID del videojuego
      * @param int $nuevoEstado Estado de probado (1 = probado, 0 = no probado)
      */
-    public function quitarProbado($idUsuario, $idVideojuego) {
+    /* public function quitarProbado($idUsuario, $idVideojuego) {
         if (!$stmt = $this->conn->prepare("UPDATE videojuegos_probados SET probado = 0 WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1")) {
             die("Error al preparar la consulta update: " . $this->conn->error);
         }
@@ -321,7 +362,19 @@ class Videojuegos_probadosDAO {
         $stmt->bind_param("ii", $idUsuario, $idVideojuego);
     
         return $stmt->execute();
+    } */
+
+
+    /**
+     * Elimina el videojuego_probado de la base de datos
+     */
+    public function quitarProbado($idUsuario, $idVideojuego) {
+        $deleteQuery = "DELETE FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?";
+        $stmt = $this->conn->prepare($deleteQuery);
+        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
+        return $stmt->execute();
     }
+    
 
 
     /**
@@ -331,7 +384,7 @@ class Videojuegos_probadosDAO {
      * y así con todos)
      */
     public function getVideojuegosProbadosAgrupadosPorUsuario() {
-        $sql = "SELECT * FROM videojuegos_probados WHERE vista = 1 ORDER BY idUsuario, fecha_probado";
+        $sql = "SELECT * FROM videojuegos_probados ORDER BY idUsuario, fecha_probado";
         $result = $this->conn->query($sql);
     
         $usuariosDAO = new UsuariosDAO($this->conn);
@@ -348,13 +401,13 @@ class Videojuegos_probadosDAO {
             if (!isset($agrupado[$idUsuario])) {
                 $agrupado[$idUsuario] = [
                     'usuario' => $usuariosDAO->getById($idUsuario),
-                    'peliculas' => []
+                    'videojuegos' => []
                 ];
             }
     
             // Añadimos el videojuego probado a este usuario
-            $agrupado[$idUsuario]['peliculas'][] = [
-                'pelicula' => $videojuegosDAO->getById($idVideojuego),
+            $agrupado[$idUsuario]['videojuegos'][] = [
+                'videojuego' => $videojuegosDAO->getById($idVideojuego),
                 'fecha' => $fechaProbado
             ];
         }

@@ -74,7 +74,7 @@
                     <?php foreach ($grupo['videojuegos'] as $info): ?>
                         <div class="videojuego_probado" style="display: flex; align-items: center; gap: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
                             <div class="foto">
-                                <img src="web/images/<?= $info['videojuego']->getFoto() ?>" style="height: 100px; border: 1px solid black; border-radius: 8px;">
+                                <img src="web/images/<?= $info['videojuego']->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
                             </div>
                             <div class="info">
                                 <strong><?= $info['videojuego']->getTitulo() ?></strong><br>
