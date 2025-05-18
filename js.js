@@ -858,9 +858,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.respuesta === 'ok') {
                     mostrarMensajeComentario('Comentario guardado correctamente', 'success');
 
-                    // Eliminar el formulario y el contenedor donde se encuentra
-                    formComentario.remove();
-                    contenedorForm.remove();
+                    // Limpiar el textarea del comentario
+                    comentarioInput.value = '';
 
                     // Si hay comentarios, eliminar el mensaje de "sin comentarios"
                     if (sinComentarios) {
@@ -910,6 +909,7 @@ document.addEventListener("DOMContentLoaded", function () {
             boton.addEventListener('click', function (e) {
                 e.preventDefault();
                 const comentarioBox = this.closest('.comment-box');
+                const idComentario = comentarioBox.dataset.idcomentario;
                 const p = comentarioBox.querySelector('p');
                 const textoOriginal = p.textContent;
 
@@ -942,8 +942,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     const nuevaAccion = document.createElement('div');
                     nuevaAccion.classList.add('comment-actions');
                     nuevaAccion.innerHTML = `
-                        <a href="#" class="editar-comentario text-primary">Editar</a>
-                        <a href="#" class="eliminar-comentario text-danger">Eliminar</a>`;
+                        <a href="#" class="editar-comentario text-primary" data-id="${idComentario}">Editar</a>
+                        <a href="#" class="eliminar-comentario text-danger" data-id="${idComentario}">Eliminar</a>`;
                     comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
 
                     asignarEventosComentarios();
@@ -954,7 +954,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const comentarioEditado = textarea.value.trim();
                     if (!comentarioEditado) return;
 
-                    fetch(`index.php?accion=editar_comentario&id=${idPelicula}`, {
+                    fetch(`index.php?accion=editar_comentario&id=${idComentario}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `comentario=${encodeURIComponent(comentarioEditado)}`
@@ -974,8 +974,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             const nuevaAccion = document.createElement('div');
                             nuevaAccion.classList.add('comment-actions');
                             nuevaAccion.innerHTML = `
-                                <a href="#" class="editar-comentario text-primary">Editar</a>
-                                <a href="#" class="eliminar-comentario text-danger">Eliminar</a>`;
+                                <a href="#" class="editar-comentario text-primary" data-id="${idComentario}">Editar</a>
+                                <a href="#" class="eliminar-comentario text-danger" data-id="${idComentario}">Eliminar</a>`;
                             comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
 
                             asignarEventosComentarios();
@@ -994,6 +994,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const comentarioBox = e.target.closest('.comment-box');
                 const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
+                /* const idComentario = comentarioBox.getAttribute('data-idComentario'); */
 
                 fetch('index.php?accion=eliminar_comentario&id=' + idVideojuego)
                     .then(response => response.json())

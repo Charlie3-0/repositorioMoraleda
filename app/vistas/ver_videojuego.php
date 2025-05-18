@@ -500,7 +500,7 @@
             <hr>
 
             
-            <?php if (Sesion::existeSesion() && !$comentarioUsuarioActual): ?>
+            <?php if (Sesion::existeSesion()): ?>
                 <div class="container mt-5">
                     <div class="comment-section" id="insertarComentario">
                         <!-- Formulario para comentar -->
@@ -525,7 +525,7 @@
                 <div class="comment-section" id="listaComentarios">
                     <?php if (!empty($comentarios)): ?>
                         <?php foreach ($comentarios as $comentario): ?>
-                            <div class="comment-box mb-3">
+                            <div class="comment-box mb-3" data-idComentario="<?= $comentario->id ?>">
                                 <div class="d-flex gap-3">
                                     <i class="fa-solid fa-user"></i>
                                     <div class="flex-grow-1">
@@ -539,13 +539,24 @@
                                         <!-- Texto del comentario -->
                                         <p class="mb-2"><?= nl2br(htmlspecialchars($comentario->comentario)) ?></p>
 
-                                        <!-- Solo muestra el enlace "Editar comentario" si es del usuario logueado -->
-                                        <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getEmail() === $comentario->email): ?>
+                                        <!-- Mostrar botones solo si es el autor o un administrador -->
+                                        <?php if (
+                                            Sesion::existeSesion() && (
+                                                Sesion::getUsuario()->getEmail() === $comentario->email ||
+                                                Sesion::getUsuario()->getRol() === 'A'
+                                            )
+                                        ): ?>
                                             <div class="comment-actions">
+                                                <a href="#" class="editar-comentario text-primary" data-id="<?= $comentario->id ?>">Editar</a>
+                                                <a href="#" class="eliminar-comentario text-danger" data-id="<?= $comentario->id ?>">Eliminar</a>
+                                            </div>
+                                        <?php endif; ?>
+                                        
+                                        <!--<div class="comment-actions">
                                                 <a href="#" class="editar-comentario text-primary">Editar</a>
                                                 <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
                                             </div>
-                                        <?php endif; ?>
+                                            -->
                                     </div>
                                 </div>
                             </div>

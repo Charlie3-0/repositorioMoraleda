@@ -73,7 +73,11 @@
                         <img src="web/images/<?= $videojuegoProbado->videojuego->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
                     </div>
                     <div class="info" style="display: flex; flex-direction: column;">
-                        <h3 class="titulo" style="margin: 0 0 10px 0;"><?= $videojuegoProbado->videojuego->getTitulo() ?></h3>
+                        <h3 class="titulo" style="margin: 0 0 10px 0;">
+                            <a href="index.php?accion=ver_videojuego&id=<?= $videojuegoProbado->videojuego->getId() ?>">
+                                <?= $videojuegoProbado->videojuego->getTitulo() ?>
+                            </a>
+                        </h3>
                         <p class="fecha_probado" style="margin: 0;"><u>Videojuego probado en:</u> <?= $videojuegoProbado->getFechaProbado() ?></p>
                     </div>
                     <hr>

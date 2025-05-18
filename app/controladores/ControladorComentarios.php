@@ -77,22 +77,32 @@ class ControladorComentarios {
             exit;
         }
 
-        $idUsuario = Sesion::getUsuario()->getId();
-        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
-        $comentario = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $usuario = Sesion::getUsuario();
+        $idComentario = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $nuevoComentario  = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
-        if (empty($comentario)) {
-            echo json_encode(['respuesta' => 'comentario_vacio']);
+        if (!$idComentario || empty($nuevoComentario )) {
+            echo json_encode(['respuesta' => 'datos_invalidos']);
             exit;
         }
 
-        $resultado = $comentariosDAO->editarComentario($idUsuario, $idVideojuego, $comentario);
+        // Obtener el comentario de la base de datos
+        $comentario = $comentariosDAO->getComentarioPorId($idComentario);
+
+        // Comprobar si el comentario existe y si el usuario tiene permiso
+        if (!$comentario || ($comentario->getIdUsuario() !== $usuario->getId() && $usuario->getRol() !== 'A')) {
+            echo json_encode(['respuesta' => 'no_autorizado']);
+            exit;
+        }
+
+        // Ejecutar la actualización del comentario
+        $resultado = $comentariosDAO->editarComentarioPorId($idComentario, $nuevoComentario);
 
         if ($resultado) {
             echo json_encode([
                 'respuesta' => 'ok',
-                'comentario' => $comentario,
-                'fecha' => date("d/m/Y H:i") // para actualizar en la vista
+                'comentario' => $nuevoComentario ,
+                'fecha' => date("d/m/Y H:i")
             ]);
         } else {
             echo json_encode(['respuesta' => 'error']);
@@ -101,7 +111,7 @@ class ControladorComentarios {
 
 
     /**
-     * Eliminar comentario de un videojuego por un usuario
+     * Eliminar comentario de un videojuego
      */
     function eliminarComentario() {
         $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
@@ -112,10 +122,24 @@ class ControladorComentarios {
             exit;
         }
 
-        $idUsuario = Sesion::getUsuario()->getId();
-        $idVideojuego = filter_var($_GET['id'], FILTER_SANITIZE_NUMBER_INT);
+        $usuario = Sesion::getUsuario();
+        $idComentario = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
-        $resultado = $comentariosDAO->quitarComentario($idUsuario, $idVideojuego);
+        if (!$idComentario) {
+            echo json_encode(['respuesta' => 'error_datos']);
+            exit;
+        }
+
+        // Obtener el comentario de la base de datos
+        $comentario = $comentariosDAO->getComentarioPorId($idComentario);
+
+        // Comprobar si el comentario existe y si el usuario tiene permiso
+        if (!$comentario || ($comentario->getIdUsuario() !== $usuario->getId() && $usuario->getRol() !== 'A')) {
+            echo json_encode(['respuesta' => 'no_autorizado']);
+            exit;
+        }
+
+        $resultado = $comentariosDAO->quitarComentario($comentario);
 
         if ($resultado) {
             echo json_encode(['respuesta' => 'ok']);

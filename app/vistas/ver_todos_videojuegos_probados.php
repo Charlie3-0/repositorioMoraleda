@@ -77,8 +77,12 @@
                                 <img src="web/images/<?= $info['videojuego']->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
                             </div>
                             <div class="info">
-                                <strong><?= $info['videojuego']->getTitulo() ?></strong><br>
-                                <small><u>Probado en:</u> <?= $info['fecha'] ?></small>
+                                <h4>
+                                    <a href="index.php?accion=ver_videojuego&id=<?= $info['videojuego']->getId() ?>">
+                                        <?= $info['videojuego']->getTitulo() ?>
+                                    </a>
+                                </h4>
+                                <p><u>Probado en:</u> <?= $info['fecha'] ?></p>
                             </div>
                         </div>
                     <?php endforeach; ?>

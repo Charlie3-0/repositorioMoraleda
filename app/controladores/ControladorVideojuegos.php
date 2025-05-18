@@ -81,7 +81,7 @@ class ControladorVideojuegos {
 
             // Obtener comentarios de este videojuego
             $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego);
-            $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId());
+            /* $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId()); */
 
             if ($usuario->getRol() === 'U') {
                 // Lógica para usuarios normales
@@ -197,13 +197,20 @@ class ControladorVideojuegos {
         $videojuegosDAO = new VideojuegosDAO($conn);
 
         $categoriasDAO = new CategoriasDAO($conn);
+        $puntuacionesDAO = new PuntuacionesDAO($conn);
 
+        // Obtener el videojuego
+        $idVideojuego = htmlspecialchars($_GET['id']);
+        $videojuego = $videojuegosDAO->getById($idVideojuego);
 
         // Obtener los videojuegos por categoría
         $videojuegos = $videojuegosDAO->obtenerVideojuegosPorCategoria($idCategoria);
 
         $idCategoria = htmlspecialchars($_GET['id']);
         $categoria = $categoriasDAO->getById($idCategoria);
+
+        //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
+        $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
         // Incluir la vista de videojuegos por categoría
         require 'app/vistas/videojuegos_por_categoria.php';

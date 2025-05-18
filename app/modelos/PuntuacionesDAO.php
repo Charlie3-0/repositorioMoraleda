@@ -153,20 +153,32 @@ class PuntuacionesDAO {
         // Comprobamos si ya existe el registro
         $sql = "SELECT id FROM puntuaciones WHERE idUsuario = ? AND idVideojuego = ?";
         $stmt = $this->conn->prepare($sql);
+        if (!$stmt) return false;
+
         $stmt->bind_param("ii", $idUsuario, $idVideojuego);
         $stmt->execute();
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
             // Ya existe: actualizar puntuación
+            $stmt->close();
             $update = $this->conn->prepare("UPDATE puntuaciones SET puntuacion = ? WHERE idUsuario = ? AND idVideojuego = ?");
+            if (!$update) return false;
+
             $update->bind_param("iii", $puntuacion, $idUsuario, $idVideojuego);
-            return $update->execute();
+            $resultado = $update->execute();
+            $update->close();
+            return $resultado;
         } else {
-            // No existe: insertar con vista = 0 por defecto
-            $insert = $this->conn->prepare("INSERT INTO puntuaciones (idUsuario, idVideojuego, puntuacion, vista) VALUES (?, ?, ?, 0)");
+            // No existe: insertar puntuación
+            $stmt->close();
+            $insert = $this->conn->prepare("INSERT INTO puntuaciones (idUsuario, idVideojuego, puntuacion) VALUES (?, ?, ?)");
+            if (!$insert) return false;
+
             $insert->bind_param("iii", $idUsuario, $idVideojuego, $puntuacion);
-            return $insert->execute();
+            $resultado = $insert->execute();
+            $insert->close();
+            return $resultado;
         }
     }
 

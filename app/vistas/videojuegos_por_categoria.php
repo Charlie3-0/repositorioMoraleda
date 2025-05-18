@@ -10,7 +10,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        
+        /* ESTILOS PUNTUACIONES */
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ddd;
+            font-size: 24px;
+            padding: 0 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover~label,
+        .star-rating input:checked~label {
+            color: #ffc107;
+        }
+
+
+        .disabled-stars i {
+            font-size: 1.3rem;
+            margin-right: 2px;
+        }
     </style>
 </head>
 <body>
@@ -70,16 +99,43 @@
 
     <main>
         <h2>Videojuegos para la Categoría de <?= $categoria->getNombre() ?></h2>
+        
+        <?php
+            $daoPU = new PuntuacionesDAO($conn);
+        ?>
+
         <?php foreach ($videojuegos as $videojuego): ?>
+            <?php
+                $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
+                $totalVotos = $daoPU->contarVotosVideojuego($videojuego->getId());
+            ?>
             <div class="videojuego">
-            <h4 class="titulo">
-                    <a href="index.php?accion=ver_videojuego&id=<?=$videojuego->getId()?>"><?= $videojuego->getTitulo() ?></a>
+                <h4 class="titulo">
+                    <a href="index.php?accion=ver_videojuego&id=<?=$videojuego->getId()?>">
+                        <?= $videojuego->getTitulo() ?>
+                    </a>
                 </h4>
             
-            <div id="fotos">
-                    <img src="web/images/<?=$videojuego->getFoto()?>" alt="<?= $videojuego->getTitulo() ?>" style="height: 200px; border: 1px solid black";>                
-            </div>
+                <div id="fotos">
+                        <img src="web/images/<?=$videojuego->getFoto()?>" alt="<?= $videojuego->getTitulo() ?>" style="height: 200px; border: 1px solid black";>                
+                </div>
             
+                <p id="mediaPuntuacion" class="mt-1">
+                    <?php if ($mediaVideojuego): ?>
+                        <strong>Media: <?= $mediaVideojuego ?>/10</strong>
+                    <?php endif; ?>
+                </p>
+                
+                <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
+                    <?php for ($i = 10; $i >= 1; $i--): ?>
+                        <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
+                    <?php endfor; ?>
+                </div>
+
+                <p id="numeroVotos" class="text-muted small mt-1">
+                    <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
+                </p>
+                
             </div>
             <hr>
         <?php endforeach; ?>

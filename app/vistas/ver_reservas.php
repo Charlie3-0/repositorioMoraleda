@@ -69,9 +69,14 @@
         <?php if (!empty($reservas)): ?>
             <?php foreach ($reservas as $reserva): ?>
                 <div class="reserva">
-                    <h3 class="titulo"><?= $reserva->videojuego->getTitulo() ?></h3>
-                    <hr>
+                    <h3 class="titulo">
+                        <a href="index.php?accion=ver_videojuego&id=<?= $reserva->videojuego->getId() ?>">
+                            <?= $reserva->videojuego->getTitulo() ?>
+                        </a>
+                    </h3>
+                    <p class="fechaReserva">Fecha de Reserva: <?= $reserva->getFechaReserva() ?></p>
                 </div>
+                <hr>
                 <br>
             <?php endforeach; ?>
         <?php else: ?>

@@ -58,43 +58,24 @@ class ComentariosDAO {
 
     
     /**
-     * Guarda o actualiza el comentario de un usuario sobre un videojuego
+     * Inserta un nuevo comentario de un usuario sobre un videojuego.
+     * No se comprueba si ya existe otro comentario: se permite múltiples comentarios por usuario.
      */
     public function ponerComentario($idUsuario, $idVideojuego, $comentario) {
         $fechaComentario = date('Y-m-d H:i:s');
 
-        // Comprobamos si ya existe el registro
-        $sql = "SELECT id FROM comentarios WHERE idUsuario = ? AND idVideojuego = ?";
+        $sql = "INSERT INTO comentarios (idUsuario, idVideojuego, comentario, fecha_comentario)
+                VALUES (?, ?, ?, ?)";
+
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
-        $stmt->execute();
-        $stmt->store_result();
+        if (!$stmt) return false;
 
-        if ($stmt->num_rows > 0) {
-            // Ya existe: actualizar
-            $update = $this->conn->prepare("UPDATE comentarios SET comentario = ?, fecha_comentario = ? WHERE idUsuario = ? AND idVideojuego = ?");
-            $update->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idVideojuego);
-            return $update->execute();
-        } else {
-            // No existe: insertar con vista = 0 por defecto
-            $insert = $this->conn->prepare("INSERT INTO comentarios (idUsuario, idVideojuego, comentario, fecha_comentario, vista) VALUES (?, ?, ?, ?, 0)");
-            $insert->bind_param("iiss", $idUsuario, $idVideojuego, $comentario, $fechaComentario);
-            return $insert->execute();
-        }
+        $stmt->bind_param("iiss", $idUsuario, $idVideojuego, $comentario, $fechaComentario);
+        $resultado = $stmt->execute();
+        $stmt->close();
+
+        return $resultado;
     }
-
-
-    /* public function ponerComentario($idUsuario, $idVideojuego, $comentario)
-{
-    $stmt = $this->conn->prepare("
-        INSERT INTO comentarios (idUsuario, idVideojuego, comentario, fecha_comentario)
-        VALUES (?, ?, ?, NOW())
-        ON DUPLICATE KEY UPDATE comentario = VALUES(comentario), fechaComentario = NOW()
-    ");
-    $stmt->bind_param("iis", $idUsuario, $idVideojuego, $comentario);
-    $stmt->execute();
-} */
-
 
 
     /**
@@ -114,26 +95,48 @@ class ComentariosDAO {
     }
 
     /**
-     * Eliminar el comentario de un usuario sobre un videojuego
+     * Elimina un comentario concreto por su ID
      */
-    public function quitarComentario($idUsuario, $idVideojuego) {
+    public function quitarComentario($comentario) {
+        if (!$stmt = $this->conn->prepare("DELETE FROM comentarios WHERE id = ?")) {
+            die("Error al preparar la consulta delete: " . $this->conn->error);
+        }
+    
+        $id = $comentario->getId();
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+    
+        if ($stmt->affected_rows >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    /**
+     * Editar un comentario por su ID (admin o autor)
+     */
+    public function editarComentarioPorId($idComentario, $comentario) {
+        $fechaComentario = date('Y-m-d H:i:s');
+
         $sql = "UPDATE comentarios 
-                SET comentario = NULL, fecha_comentario = NULL 
-                WHERE idUsuario = ? AND idVideojuego = ?";
+                SET comentario = ?, fecha_comentario = ?
+                WHERE id = ?";
         
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
-    
+        $stmt->bind_param("ssi", $comentario, $fechaComentario, $idComentario);
+
         return $stmt->execute();
     }
-    
+
 
 
     /**
      * Obtener comentarios de usuarios sobre un videojuego
      */
     public function getComentariosPorVideojuego($idVideojuego) {
-        if (!$stmt = $this->conn->prepare("SELECT comentarios.comentario, comentarios.fecha_comentario, usuarios.email 
+        if (!$stmt = $this->conn->prepare("SELECT comentarios.id, comentarios.comentario, comentarios.fecha_comentario, usuarios.email 
             FROM comentarios 
             JOIN usuarios ON comentarios.idUsuario = usuarios.id 
             WHERE comentarios.idVideojuego = ? 
@@ -171,5 +174,30 @@ class ComentariosDAO {
 
         return $resultado->fetch_assoc();
     }
+
+
+    /**
+     * Obtener un comentario individual
+     */
+    public function getComentarioPorId($id) {
+        $sql = "SELECT * FROM comentarios WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+    
+        if ($fila = $resultado->fetch_assoc()) {
+            $comentario = new Comentario();
+            $comentario->setId($fila['id']);
+            $comentario->setIdUsuario($fila['idUsuario']);
+            $comentario->setIdVideojuego($fila['idVideojuego']);
+            $comentario->setComentario($fila['comentario']);
+            $comentario->setFechaComentario($fila['fecha_comentario']);
+            return $comentario;
+        }
+    
+        return null;
+    }
+    
 
 }
