@@ -22,10 +22,13 @@ class ControladorComentarios {
             echo json_encode(['respuesta' => 'comentario_vacio']);
             exit;
         }
+
+        $idComentario = $comentariosDAO->ponerComentario($idUsuario, $idVideojuego, $comentario);
     
-        if ($comentariosDAO->ponerComentario($idUsuario, $idVideojuego, $comentario)) {
+        if ($idComentario) {
             echo json_encode([
                 'respuesta' => 'ok',
+                'idComentario' => $idComentario,
                 'email' => Sesion::getUsuario()->getEmail(),
                 'fecha' => date('d/m/Y H:i'),
                 'comentario' => $comentario
@@ -34,35 +37,6 @@ class ControladorComentarios {
             echo json_encode(['respuesta' => 'error']);
         }
     }
-
-
-
-
-   /*  public function guardarComentario()
-{
-    $datos = json_decode(file_get_contents('php://input'), true);
-    $idPelicula = $datos['id'] ?? null;
-    $comentario = $datos['comentario'] ?? null;
-    $usuario = Sesion::getUsuario();
-
-    if (!$usuario || !$idPelicula || $comentario === null) {
-        echo json_encode(['respuesta' => 'error']);
-        return;
-    }
-
-    require_once 'modelo/DAO/Peliculas_usuariosDAO.php';
-    $dao = new Peliculas_usuariosDAO($conn);
-    $dao->ponerComentario($usuario->getId(), $idPelicula, $comentario);
-
-    echo json_encode([
-        'respuesta' => 'ok',
-        'comentario' => htmlspecialchars($comentario),
-        'fecha_comentario' => date('Y-m-d H:i'),
-        'email' => $usuario->getEmail()
-    ]);
-} */
-
-
 
 
     /**
@@ -89,7 +63,7 @@ class ControladorComentarios {
         // Obtener el comentario de la base de datos
         $comentario = $comentariosDAO->getComentarioPorId($idComentario);
 
-        // Comprobar si el comentario existe y si el usuario tiene permiso
+        // Comprobar si el comentario existe y si el usuario tiene permiso(solo el autor o admin pueden editar)
         if (!$comentario || ($comentario->getIdUsuario() !== $usuario->getId() && $usuario->getRol() !== 'A')) {
             echo json_encode(['respuesta' => 'no_autorizado']);
             exit;
@@ -133,7 +107,7 @@ class ControladorComentarios {
         // Obtener el comentario de la base de datos
         $comentario = $comentariosDAO->getComentarioPorId($idComentario);
 
-        // Comprobar si el comentario existe y si el usuario tiene permiso
+        // Comprobar si el comentario existe y si el usuario tiene permiso(solo el autor o admin pueden eliminar)
         if (!$comentario || ($comentario->getIdUsuario() !== $usuario->getId() && $usuario->getRol() !== 'A')) {
             echo json_encode(['respuesta' => 'no_autorizado']);
             exit;
@@ -147,35 +121,8 @@ class ControladorComentarios {
             echo json_encode(['respuesta' => 'error']);
         }
     }
-
-
-    
-    /* public function guardarComentario() {
-        $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
-        if (isset($_POST['idPelicula']) && isset($_POST['comentario'])) {
-            $idPelicula = $_POST['idPelicula'];
-            $comentario = $_POST['comentario'];
-            $fechaComentario = date('Y-m-d H:i:s');
-    
-            $usuario = Sesion::getUsuario();
-            if (!$usuario) {
-                echo json_encode(['success' => false, 'error' => 'No hay sesión activa.']);
-                return;
-            }
-    
-            $idUsuario = $usuario->getId();
-    
-            $peliculas_usuariosDAO = new Peliculas_usuariosDAO($conn);
-            $peliculas_usuariosDAO->ponerComentario($idPelicula, $idUsuario, $comentario, $fechaComentario);
-    
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Datos incompletos.']);
-        }
-    } */
     
     
-
 
     
 }

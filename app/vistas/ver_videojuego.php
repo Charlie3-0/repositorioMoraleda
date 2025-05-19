@@ -552,11 +552,6 @@
                                             </div>
                                         <?php endif; ?>
                                         
-                                        <!--<div class="comment-actions">
-                                                <a href="#" class="editar-comentario text-primary">Editar</a>
-                                                <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
-                                            </div>
-                                            -->
                                     </div>
                                 </div>
                             </div>

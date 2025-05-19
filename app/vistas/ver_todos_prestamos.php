@@ -73,7 +73,11 @@
         <?php if (!empty($prestamos)): ?>
             <?php foreach ($prestamos as $prestamo): ?>
                 <div class="prestamo">
-                    <h3 class="titulo"><?= $prestamo->videojuego->getTitulo() ?></h3>
+                    <h3 class="titulo">
+                        <a href="index.php?accion=ver_videojuego&id=<?= $prestamo->videojuego->getId() ?>">
+                            <?= $prestamo->videojuego->getTitulo() ?>
+                        </a>
+                    </h3>
                     <p class="fecha_prestamo">Fecha del Préstamo: <?= $prestamo->getFechaPrestamo() ?></p>
                     <!-- Mediante el operador ternario mostramos "Videojuego devuelto" si $prestamo->getDevuelto() devuelve true (1) y "Videojuego NO devuelto" si devuelve false (0). -->
                     <p class="devuelto"><?= $prestamo->getDevuelto() ? "Videojuego devuelto" : "Videojuego NO devuelto" ?></p>

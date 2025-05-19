@@ -72,9 +72,15 @@ class ComentariosDAO {
 
         $stmt->bind_param("iiss", $idUsuario, $idVideojuego, $comentario, $fechaComentario);
         $resultado = $stmt->execute();
+        
+        if ($resultado) {
+            $insertId = $stmt->insert_id;
+            $stmt->close();
+            return $insertId;
+        }
+    
         $stmt->close();
-
-        return $resultado;
+        return false;
     }
 
 

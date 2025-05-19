@@ -869,6 +869,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Crear comentario dinámicamente
                     const nuevoComentario = document.createElement('div');
                     nuevoComentario.classList.add('comment-box', 'mb-3');
+                    nuevoComentario.setAttribute('data-idComentario', data.idComentario); // para referencia general
+
                     nuevoComentario.innerHTML = `
                         <div class="d-flex gap-3">
                             <i class="fa-solid fa-user"></i>
@@ -879,8 +881,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 </div>
                                 <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>
                                 <div class="comment-actions">
-                                    <a href="#" class="editar-comentario text-primary">Editar</a>
-                                    <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
+                                    <a href="#" class="editar-comentario text-primary" data-id="${data.idComentario}">Editar</a>
+                                    <a href="#" class="eliminar-comentario text-danger" data-id="${data.idComentario}">Eliminar</a>
                                 </div>
                             </div>
                         </div>
@@ -911,7 +913,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 const comentarioBox = this.closest('.comment-box');
                 const idComentario = comentarioBox.dataset.idcomentario;
                 const p = comentarioBox.querySelector('p');
-                const textoOriginal = p.textContent;
+            //    const textoOriginal = p.textContent;
+                const textoOriginal = p.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+
 
                 const textarea = document.createElement('textarea');
                 textarea.classList.add('form-control', 'comment-input');
@@ -978,6 +982,8 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <a href="#" class="eliminar-comentario text-danger" data-id="${idComentario}">Eliminar</a>`;
                             comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
 
+                            mostrarMensajeComentario('Comentario editado correctamente', 'success');
+
                             asignarEventosComentarios();
                         }
                     });
@@ -994,9 +1000,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const comentarioBox = e.target.closest('.comment-box');
                 const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
-                /* const idComentario = comentarioBox.getAttribute('data-idComentario'); */
+                const idComentario = comentarioBox.getAttribute('data-idComentario');
 
-                fetch('index.php?accion=eliminar_comentario&id=' + idVideojuego)
+                fetch('index.php?accion=eliminar_comentario&id=' + idComentario)
                     .then(response => response.json())
                     .then(data => {
                         if (data.respuesta === 'ok') {
@@ -1004,95 +1010,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             // Eliminar el comentario del DOM
                             comentarioBox.remove();
-
-                            // Mostrar de nuevo el formulario de comentar
-                            if (!document.getElementById('formComentario')) {
-                                const nuevoForm = document.createElement('form');
-                                nuevoForm.id = 'formComentario';
-                                nuevoForm.setAttribute('data-idVideojuego', idVideojuego);
-                                nuevoForm.classList.add('mb-4'); // añadimos clase al form
-                                nuevoForm.innerHTML = `
-                                    <div class="d-flex gap-3">
-                                        <i class="fa-solid fa-user"></i>
-                                        <span class="emailUsuario">${usuarioEmail}</span>
-                                        <div class="flex-grow-1">
-                                            <textarea id="comentarioTexto" class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
-                                            <div class="mt-3 text-end">
-                                                <button type="submit" class="btn btn-comment text-white">Publicar Comentario</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `;
-                                
-
-                                commentSection.appendChild(nuevoForm);
-
-                                nuevoForm.addEventListener('submit', function (e) {
-                                    e.preventDefault();
-                                    const comentario = document.getElementById('comentarioTexto').value.trim();
-                                    if (!comentario) return;
-
-                                    fetch(`index.php?accion=guardar_comentario&id=${idVideojuego}`, {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                        body: `comentario=${encodeURIComponent(comentario)}`
-                                    })
-                                    .then(res => res.json())
-                                    .then(data => {
-                                        if (data.respuesta === 'ok') {
-                                            mostrarMensajeComentario('Comentario guardado correctamente', 'success');
-
-                                            // Eliminar el formulario directamente (nuevoForm)
-                                            nuevoForm.remove();
-
-                                            // También podrías eliminar su contenedor si existe
-                                            const contenedorInsertar = document.getElementById('insertarComentario');
-                                            if (contenedorInsertar) contenedorInsertar.innerHTML = '';
-
-                                            // Si hay comentarios, eliminar el mensaje de "sin comentarios"
-                                            const sinComentarios = document.querySelector('.sin-comentarios');
-                                            if (sinComentarios) {
-                                                sinComentarios.remove();
-                                            }
-
-                                            // Crear comentario dinámicamente
-                                            const nuevoComentario = document.createElement('div');
-                                            nuevoComentario.classList.add('comment-box', 'mb-3');
-                                            nuevoComentario.innerHTML = `
-                                                <div class="d-flex gap-3">
-                                                    <i class="fa-solid fa-user"></i>
-                                                    <div class="flex-grow-1">
-                                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <h6 class="mb-0">${data.email}</h6>
-                                                            <span class="comment-time">${data.fecha}</span>
-                                                        </div>
-                                                        <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>
-                                                        <div class="comment-actions">
-                                                            <a href="#" class="editar-comentario text-primary">Editar</a>
-                                                            <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            `;
-
-                                            nuevoComentario.style.opacity = 0;
-                                            commentSection.prepend(nuevoComentario);
-                                            setTimeout(() => {
-                                                nuevoComentario.style.transition = 'opacity 0.5s';
-                                                nuevoComentario.style.opacity = 1;
-                                            }, 10);
-
-                                            // Reasignar eventos a los nuevos botones
-                                            asignarEventosComentarios();
-                                        } else {
-                                            mostrarMensajeComentario('Error al guardar el comentario', 'danger');
-                                        }
-                                    
-
-                                    });
-                                });
-                                
-                            }
 
                             // Comprobar si ya no hay más comentarios visibles
                             const comentariosRestantes = document.querySelectorAll('#listaComentarios .comment-box');
@@ -1122,13 +1039,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
 
                             
+                        } else {
+                            mostrarMensajeComentario(data.mensaje || 'No tienes permiso para eliminar este comentario', 'danger');
                         }
                     });
 
                             // Mostrar el formulario de nuevo para comentar
                             /* location.reload(); */ // O podríamos volver a mostrar dinámicamente el formComentario
 
-                            
                         
                     /* .catch(error => console.error('Error al eliminar:', error)); */
                     
