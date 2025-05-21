@@ -71,16 +71,23 @@ class ControladorVideojuegos {
         $comentarios = $peliculasUsuariosDAO->getComentariosPorPelicula($idPelicula);
         $comentarioUsuarioActual = $peliculasUsuariosDAO->getComentarioPorUsuario($idPelicula, $usuario->getId()); */
 
+        //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
+        $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
+
+        // Obtener comentarios de este videojuego
+        $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego);
+        /* $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId()); */
+
 
         // Solo si hay sesión
         if (Sesion::existeSesion()) {
             $usuario = Sesion::getUsuario();
-
+/* 
             //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
             $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
             // Obtener comentarios de este videojuego
-            $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego);
+            $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego); */
             /* $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId()); */
 
             if ($usuario->getRol() === 'U') {

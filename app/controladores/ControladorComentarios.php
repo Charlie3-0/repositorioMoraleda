@@ -30,7 +30,7 @@ class ControladorComentarios {
                 'respuesta' => 'ok',
                 'idComentario' => $idComentario,
                 'email' => Sesion::getUsuario()->getEmail(),
-                'fecha' => date('d/m/Y H:i'),
+                'fecha' => date('c'),
                 'comentario' => $comentario
             ]);
         } else {
@@ -53,7 +53,7 @@ class ControladorComentarios {
 
         $usuario = Sesion::getUsuario();
         $idComentario = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-        $nuevoComentario  = trim(filter_input(INPUT_POST, 'comentario', FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+        $nuevoComentario  = htmlspecialchars(trim(filter_input(INPUT_POST, 'comentario')));
 
         if (!$idComentario || empty($nuevoComentario )) {
             echo json_encode(['respuesta' => 'datos_invalidos']);
@@ -76,7 +76,7 @@ class ControladorComentarios {
             echo json_encode([
                 'respuesta' => 'ok',
                 'comentario' => $nuevoComentario ,
-                'fecha' => date("d/m/Y H:i")
+                'fecha' => date('c')
             ]);
         } else {
             echo json_encode(['respuesta' => 'error']);

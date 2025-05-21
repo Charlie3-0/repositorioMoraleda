@@ -62,7 +62,7 @@ class ComentariosDAO {
      * No se comprueba si ya existe otro comentario: se permite múltiples comentarios por usuario.
      */
     public function ponerComentario($idUsuario, $idVideojuego, $comentario) {
-        $fechaComentario = date('Y-m-d H:i:s');
+        $fechaComentario = date('c');
 
         $sql = "INSERT INTO comentarios (idUsuario, idVideojuego, comentario, fecha_comentario)
                 VALUES (?, ?, ?, ?)";
@@ -88,7 +88,7 @@ class ComentariosDAO {
      * Edita exclusivamente un comentario existente
      */
     public function editarComentario($idUsuario, $idVideojuego, $comentario) {
-        $fechaComentario = date('Y-m-d H:i:s');
+        $fechaComentario = date('c');
 
         $sql = "UPDATE comentarios 
                 SET comentario = ?, fecha_comentario = ? 
@@ -124,7 +124,7 @@ class ComentariosDAO {
      * Editar un comentario por su ID (admin o autor)
      */
     public function editarComentarioPorId($idComentario, $comentario) {
-        $fechaComentario = date('Y-m-d H:i:s');
+        $fechaComentario = date('c');
 
         $sql = "UPDATE comentarios 
                 SET comentario = ?, fecha_comentario = ?

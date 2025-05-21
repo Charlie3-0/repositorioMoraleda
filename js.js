@@ -870,6 +870,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     const nuevoComentario = document.createElement('div');
                     nuevoComentario.classList.add('comment-box', 'mb-3');
                     nuevoComentario.setAttribute('data-idComentario', data.idComentario); // para referencia general
+                    
+            /*      Antes se usaba esto para el texto del comentario dentro del nuevoComentario
+                    <!--    <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>   --> */
 
                     nuevoComentario.innerHTML = `
                         <div class="d-flex gap-3">
@@ -877,9 +880,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h6 class="mb-0">${data.email}</h6>
-                                    <span class="comment-time">${data.fecha}</span>
+                                    <span class="comment-time" data-fecha="${data.fecha}">
+                                        ${formatearTiempoRelativo(data.fecha)}
+                                    </span>
                                 </div>
-                                <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>
+                                    <p class="mb-2" data-texto="${data.comentario}">${data.comentario.replace(/\n/g, "<br>")}</p>
                                 <div class="comment-actions">
                                     <a href="#" class="editar-comentario text-primary" data-id="${data.idComentario}">Editar</a>
                                     <a href="#" class="eliminar-comentario text-danger" data-id="${data.idComentario}">Eliminar</a>
@@ -896,6 +901,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     }, 10);
 
                     asignarEventosComentarios();
+
+                    actualizarTiemposRelativos();
+
                 } else {
                     mostrarMensajeComentario('Error al guardar el comentario', 'danger');
                 }
@@ -914,7 +922,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 const idComentario = comentarioBox.dataset.idcomentario;
                 const p = comentarioBox.querySelector('p');
             //    const textoOriginal = p.textContent;
-                const textoOriginal = p.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+            //    const textoOriginal = p.innerHTML.replace(/<br\s*\/?>/gi, '\n');
+                const textoOriginal = p.dataset.texto;
+
 
 
                 const textarea = document.createElement('textarea');
@@ -969,9 +979,14 @@ document.addEventListener("DOMContentLoaded", function () {
                             const nuevoParrafo = document.createElement('p');
                             nuevoParrafo.classList.add('mb-2');
                             nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, "<br>");
+                            nuevoParrafo.dataset.texto = data.comentario; // <-- ACTUALIZAMOS AQUÍ para que funcione el editar
 
                             textarea.replaceWith(nuevoParrafo);
-                            comentarioBox.querySelector('.comment-time').textContent = data.fecha;
+                        //    comentarioBox.querySelector('.comment-time').textContent = data.fecha;
+                            const spanTiempo = comentarioBox.querySelector('.comment-time');
+                            spanTiempo.dataset.fecha = data.fecha;
+                            spanTiempo.textContent = formatearTiempoRelativo(data.fecha);
+
                             btnGuardar.remove();
                             btnCancelar.remove();
 
@@ -982,9 +997,21 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <a href="#" class="eliminar-comentario text-danger" data-id="${idComentario}">Eliminar</a>`;
                             comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
 
-                            mostrarMensajeComentario('Comentario editado correctamente', 'success');
+                            /* mostrarMensajeComentario('Comentario editado correctamente', 'success'); */
+
+                            // Crear y añadir el mensaje de edición correcta de comentario
+                            const mensaje = document.createElement('div');
+                            mensaje.className = 'alert alert-success mt-2';
+                            mensaje.innerText = 'Comentario editado correctamente';
+                            // Insertar justo debajo del comentario editado
+                            comentarioBox.appendChild(mensaje);
+                            // Eliminar después de 3 segundos
+                            setTimeout(() => mensaje.remove(), 3000);
 
                             asignarEventosComentarios();
+
+                            actualizarTiemposRelativos();
+
                         }
                     });
                 });
@@ -996,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", function () {
             boton.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                if (!confirm('¿Seguro que quieres eliminar tu comentario?')) return;
+                if (!confirm('¿Seguro que quieres eliminar el comentario?')) return;
 
                 const comentarioBox = e.target.closest('.comment-box');
                 const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
@@ -1066,4 +1093,43 @@ function mostrarMensajeComentario(texto, tipo) {
     setTimeout(() => msg.remove(), 3000);
 }
 
+// Función para formatear la fecha en tiempo relativo
+function formatearTiempoRelativo(fechaISO) {
+    const fecha = new Date(fechaISO);
+    const ahora = new Date();
+    const segundos = Math.floor((ahora - fecha) / 1000);
 
+    const intervalos = {
+        año: 31536000,
+        mes: 2592000,
+        día: 86400,
+        hora: 3600,
+        minuto: 60,
+        segundo: 1,
+    };
+
+    for (let [unidad, valor] of Object.entries(intervalos)) {
+        const cantidad = Math.floor(segundos / valor);
+        if (cantidad >= 1) {
+            return `hace ${cantidad} ${unidad}${cantidad > 1 ? 's' : ''}`;
+        }
+    }
+
+    return "justo ahora";
+}
+
+// Actualizar el tiempo relativo cada segundo o menos
+setInterval(() => {
+    document.querySelectorAll('.comment-time[data-fecha]').forEach(span => {
+        const fecha = span.getAttribute('data-fecha');
+        span.textContent = formatearTiempoRelativo(fecha);
+    });
+}, 10); // cada segundo o menos
+
+// Actualizar inmediatamente al cargar la página
+function actualizarTiemposRelativos() {
+    document.querySelectorAll('.comment-time[data-fecha]').forEach(span => {
+        const fecha = span.getAttribute('data-fecha');
+        span.textContent = formatearTiempoRelativo(fecha);
+    });
+}

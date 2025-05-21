@@ -530,14 +530,20 @@
                                     <i class="fa-solid fa-user"></i>
                                     <div class="flex-grow-1">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <h6 class="mb-0"><?= htmlspecialchars($comentario->email ?? 'Anónimo') ?></h6>
-                                            <span class="comment-time">
-                                                <?= isset($comentario->fecha_comentario) ? date("d/m/Y H:i", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?>
+                                            <h6 class="mb-0"><?= $comentario->email ?? 'Anónimo' ?></h6>
+                                            <span class="comment-time" data-fecha="<?= $comentario->fecha_comentario ?>">
+                                                <?= isset($comentario->fecha_comentario) ? date("c", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?>
                                             </span>
+
                                         </div>
 
                                         <!-- Texto del comentario -->
-                                        <p class="mb-2"><?= nl2br(htmlspecialchars($comentario->comentario)) ?></p>
+                                    <!--    <p class="mb-2"><?= nl2br($comentario->comentario) ?></p>-->
+
+                                        <p class="mb-2" data-texto="<?= $comentario->comentario ?>">
+                                            <?= nl2br($comentario->comentario) ?>
+                                        </p>
+
 
                                         <!-- Mostrar botones solo si es el autor o un administrador -->
                                         <?php if (
