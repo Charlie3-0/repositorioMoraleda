@@ -89,7 +89,7 @@ function ponerProbado() {
                 setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
                 botonProbado.classList.remove('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
-                botonProbado.classList.add('quitarProbado', 'icono-probado', 'fa-eye');
+                botonProbado.classList.add('quitarProbado', 'icono-probado', 'fa-gamepad');
                 botonProbado.setAttribute('title', 'Quitar probado');
                 botonProbado.removeEventListener('click', ponerProbado);
                 botonProbado.addEventListener('click', quitarProbado);
@@ -119,7 +119,7 @@ function quitarProbado() {
                 botonProbado.classList.add('icono-animado');
                 setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
-                botonProbado.classList.remove('quitarProbado', 'icono-probado', 'fa-eye');
+                botonProbado.classList.remove('quitarProbado', 'icono-probado', 'fa-gamepad');
                 botonProbado.classList.add('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
                 botonProbado.setAttribute('title', 'Marcar como probado');
                 botonProbado.removeEventListener('click', quitarProbado);
@@ -177,6 +177,15 @@ document.querySelectorAll('.star-rating input[type="radio"]').forEach(input => {
                 console.log('Puntuación guardada con éxito');
                 actualizarEstadoPuntuacion(puntuacion);
 
+                // Mostrar mensaje de éxito con SweetAlert
+                Swal.fire({
+                    title: '¡Puntuación guardada!',
+                    icon: 'success',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
                 if (data.nuevaMedia) {
                     const mediaElemento = document.getElementById('mediaPuntuacion');
                     if (mediaElemento) {
@@ -192,6 +201,15 @@ document.querySelectorAll('.star-rating input[type="radio"]').forEach(input => {
                 }
             } else {
                 console.error('Error al guardar puntuación:', data.respuesta);
+
+                // Mostrar mensaje de error con SweetAlert
+                Swal.fire({
+                    title: 'Error al guardar la puntuación',
+                    icon: 'error',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
             }
         })
         .catch(err => console.error('Error en la solicitud:', err));
@@ -262,572 +280,6 @@ function actualizarMediaVisual(media) {
 
 
 // Script para los comentarios
-// Añadir comentario
-/* const formularioComentario = document.getElementById('formComentario');
-if (formularioComentario) {
-    formularioComentario.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const comentario = document.getElementById('comentarioTexto').value.trim();
-        const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
-
-        if (!comentario) {
-            mostrarMensajeComentario('El comentario no puede estar vacío', 'danger');
-            return;
-        }
-
-        fetch(`index.php?accion=guardar_comentario&id=${idPelicula}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `comentario=${encodeURIComponent(comentario)}`
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.respuesta === 'ok') {
-                mostrarMensajeComentario('Comentario guardado correctamente', 'success');
-            } else if (data.respuesta === 'comentario_vacio') {
-                mostrarMensajeComentario('Debes escribir algo antes de enviar', 'warning');
-            } else if (data.respuesta === 'no_sesion') {
-                mostrarMensajeComentario('Debes iniciar sesión para comentar', 'warning');
-            } else {
-                mostrarMensajeComentario('Error al guardar el comentario', 'danger');
-            }
-        })
-        .catch(err => {
-            console.error('Error en la solicitud:', err);
-            mostrarMensajeComentario('Error de red', 'danger');
-        });
-    });
-} */
-
-
-
-/* const formularioComentario = document.getElementById('formComentario');
-if (formularioComentario) {
-    formularioComentario.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        const comentario = document.getElementById('comentarioTexto');
-        const idPelicula = formularioComentario.getAttribute('data-idPelicula');
-
-        if (!comentario) {
-            mostrarMensajeComentario('El comentario no puede estar vacío', 'danger');
-            return;
-        }
-
-        fetch(`index.php?accion=guardar_comentario&id=${idPelicula}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `comentario=${encodeURIComponent(comentario)}`
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.respuesta === 'ok') {
-                mostrarMensajeComentario('Comentario guardado correctamente', 'success');
-
-                // Ocultar el formulario
-                formularioComentario.remove();
-
-                // Insertar nuevo comentario
-                const comentariosContainer = document.querySelector('.comment-section');
-                const nuevoComentario = document.createElement('div');
-                nuevoComentario.classList.add('comment-box', 'mb-3');
-                nuevoComentario.innerHTML = `
-                    <div class="d-flex gap-3">
-                        <i class="fa-solid fa-user"></i>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0">${data.email}</h6>
-                                <span class="comment-time">${data.fecha}</span>
-                            </div>
-                            <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>
-                            <div class="comment-actions">
-                                <a href="#" class="editar-comentario text-primary">Editar</a>
-                                <a href="#" class="eliminar-comentario text-danger">Eliminar</a>
-                            </div>
-                        </div>
-                    </div>
-                `;
-
-                // Animación de aparición
-                nuevoComentario.style.opacity = 0;
-                comentariosContainer.prepend(nuevoComentario);
-                setTimeout(() => {
-                    nuevoComentario.style.transition = 'opacity 0.6s';
-                    nuevoComentario.style.opacity = 1;
-                }, 10);
-
-                // Reasignar eventos de edición y eliminación
-                asignarEventosComentarios();
-            } else if (data.respuesta === 'comentario_vacio') {
-                mostrarMensajeComentario('Debes escribir algo antes de enviar', 'warning');
-            } else if (data.respuesta === 'no_sesion') {
-                mostrarMensajeComentario('Debes iniciar sesión para comentar', 'warning');
-            } else {
-                mostrarMensajeComentario('Error al guardar el comentario', 'danger');
-            }
-        })
-        .catch(err => {
-            console.error('Error en la solicitud:', err);
-            mostrarMensajeComentario('Error de red', 'danger');
-        });
-    });
-} */
-
-
-
-// Editar comentario
-/* document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.editar-comentario').forEach(enlace => {
-        enlace.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const comentarioBox = this.closest('.comment-box');
-            const textoOriginal = comentarioBox.querySelector('p');
-            const idPelicula = document.getElementById('formComentario')?.dataset.idpelicula;
-
-            // Evitar múltiples formularios
-            if (comentarioBox.querySelector('form')) return;
-
-            const textoComentario = textoOriginal.textContent.trim();
-
-            const formHTML = `
-                <form class="form-editar-comentario" action="index.php?accion=editar_comentario" method="post">
-                    <input type="hidden" name="idPelicula" value="${idPelicula}">
-                    <textarea name="comentario" class="form-control mb-2">${textoComentario}</textarea>
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
-                        <button type="button" class="btn btn-secondary btn-sm cancelar-edicion">Cancelar</button>
-                    </div>
-                </form>
-            `;
-
-            // Ocultar el texto original y reemplazarlo por el formulario
-            textoOriginal.style.display = 'none';
-            comentarioBox.insertAdjacentHTML('beforeend', formHTML);
-
-            // Cancelar edición
-            comentarioBox.querySelector('.cancelar-edicion').addEventListener('click', () => {
-                comentarioBox.querySelector('.form-editar-comentario').remove();
-                textoOriginal.style.display = '';
-            });
-
-            // Manejar envío por AJAX
-            comentarioBox.querySelector('.form-editar-comentario').addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const form = e.target;
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.exito) {
-                            textoOriginal.textContent = data.comentario_actualizado;
-                            comentarioBox.querySelector('.comment-time').textContent = data.fecha_comentario;
-                            form.remove();
-                            textoOriginal.style.display = '';
-                        } else {
-                            alert('Error al guardar el comentario.');
-                        }
-                    });
-            });
-        });
-    });
-}); */
-
-
-
-
-
-/* document.addEventListener("DOMContentLoaded", function () {
-    const formComentario = document.getElementById('formComentario');
-    const commentSection = document.querySelector('.comment-section');
-    const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
-
-    if (formComentario) {
-        formComentario.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const comentario = document.getElementById('comentarioTexto').value;
-
-            fetch('index.php?accion=guardar_comentario', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: idPelicula, comentario })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.respuesta === 'ok') {
-                    const nuevoComentario = document.createElement('div');
-                    nuevoComentario.classList.add('comment-box', 'mb-3');
-                    nuevoComentario.innerHTML = `
-                        <div class="d-flex gap-3">
-                            <i class="fa-solid fa-user"></i>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0">${data.email}</h6>
-                                    <span class="comment-time">${data.fecha_comentario}</span>
-                                </div>
-                                <p class="mb-2">${data.comentario.replace(/\n/g, '<br>')}</p>
-                                <div class="comment-actions">
-                                    <a href="#" class="editar-comentario">Editar</a>
-                                </div>
-                            </div>
-                        </div>`;
-                    commentSection.appendChild(nuevoComentario);
-                    formComentario.remove(); // Ocultamos el formulario tras comentar
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    }
-
-    document.addEventListener('click', function (e) {
-        // EDITAR COMENTARIO
-        if (e.target.classList.contains('editar-comentario')) {
-            e.preventDefault();
-
-            const comentarioBox = e.target.closest('.comment-box');
-            const textoParrafo = comentarioBox.querySelector('p');
-            const textoActual = textoParrafo.textContent;
-
-            const textarea = document.createElement('textarea');
-            textarea.classList.add('form-control', 'comment-input');
-            textarea.rows = 3;
-            textarea.value = textoActual;
-
-            const btnGuardar = document.createElement('button');
-            btnGuardar.textContent = 'Guardar';
-            btnGuardar.classList.add('btn', 'btn-comment', 'text-white', 'mt-2');
-
-            // LIMPIAR acciones anteriores (botones)
-            const acciones = comentarioBox.querySelector('.comment-actions');
-            if (acciones) acciones.remove();
-
-            // Reemplazar el <p> por el <textarea>
-            textoParrafo.replaceWith(textarea);
-            comentarioBox.querySelector('.flex-grow-1').appendChild(btnGuardar);
-
-            const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
-
-            btnGuardar.addEventListener('click', function () {
-                const comentarioEditado = textarea.value;
-            
-                fetch('index.php?accion=editar_comentario&id=' + idPelicula, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ comentario: comentarioEditado })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.respuesta === 'ok') {
-                        const nuevoParrafo = document.createElement('p');
-                        nuevoParrafo.classList.add('mb-2');
-                        nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, '<br>');
-            
-                        textarea.replaceWith(nuevoParrafo);
-                        comentarioBox.querySelector('.comment-time').textContent = data.fecha;
-            
-                        // ELIMINAR botón guardar si sigue ahí
-                        btnGuardar.remove();
-
-                        // AÑADIR de nuevo las acciones (Editar + Eliminar)
-                        const nuevaAccion = document.createElement('div');
-                        nuevaAccion.classList.add('comment-actions');
-                        nuevaAccion.innerHTML = `
-                            <a href="#" class="editar-comentario text-primary">Editar</a>
-                            <a href="#" class="eliminar-comentario text-danger">Eliminar</a>`;
-                        comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
-                    }
-                })
-                .catch(error => console.error('Error al actualizar:', error));
-            });
-            
-        }
-
-        // ELIMINAR COMENTARIO
-        if (e.target.classList.contains('eliminar-comentario')) {
-            e.preventDefault();
-    
-            if (!confirm('¿Seguro que quieres eliminar tu comentario?')) return;
-    
-            const comentarioBox = e.target.closest('.comment-box');
-            const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
-    
-            fetch('index.php?accion=eliminar_comentario&id=' + idPelicula)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.respuesta === 'ok') {
-                        comentarioBox.remove();
-    
-                        // Mostrar el formulario de nuevo para comentar
-                        location.reload(); // O podrías volver a mostrar dinámicamente el formComentario
-
-                        // VOLVER A MOSTRAR el formulario de nuevo para comentar
-                        const nuevoForm = document.createElement('form');
-                        nuevoForm.id = 'formComentario';
-                        nuevoForm.setAttribute('data-idPelicula', idPelicula);
-                        nuevoForm.innerHTML = `
-                            <?php if (Sesion::existeSesion() && !$comentarioUsuarioActual): ?>
-                                <div class="d-flex gap-3">
-                                    <i class="fa-solid fa-user"></i>
-                                    <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail(); ?></span>
-                                    <div class="flex-grow-1">
-                                        <textarea id="comentarioTexto" class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
-                                        <div class="mt-3 text-end">
-                                            <button type="submit" class="btn btn-comment text-white">Publicar Comentario</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-                        `;
-                        document.querySelector('.comment-section').appendChild(nuevoForm);
-    
-                        // Reasignar el event listener al nuevo formulario
-                        nuevoForm.addEventListener('submit', function (e) {
-                            e.preventDefault();
-                            const comentario = document.getElementById('comentarioTexto').value.trim();
-    
-                            if (!comentario) {
-                                alert('El comentario no puede estar vacío');
-                                return;
-                            }
-    
-                            fetch('index.php?accion=guardar_comentario&id=' + idPelicula, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: 'comentario=' + encodeURIComponent(comentario)
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.respuesta === 'ok') {
-                                    location.reload(); // o reinsertar dinámicamente como en insertar
-                                }
-                            });
-                        });
-                    }
-                })
-                .catch(error => console.error('Error al eliminar:', error));
-        }
-
-    });
-}); */
-
-
-
-
-
-
-
-
-/* document.querySelectorAll('.editar-comentario').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        const comentarioBox = this.closest('.comment-box');
-        const comentarioTexto = comentarioBox.querySelector('p');
-        const textoOriginal = comentarioTexto.textContent.trim();
-
-        // Evitar que se duplique si ya está editando
-        if (comentarioBox.querySelector('textarea')) return;
-
-        // Crear textarea con el contenido actual
-        const textarea = document.createElement('textarea');
-        textarea.className = 'form-control mb-2';
-        textarea.rows = 3;
-        textarea.value = textoOriginal;
-
-        // Crear botones
-        const btnGuardar = document.createElement('button');
-        btnGuardar.textContent = 'Guardar';
-        btnGuardar.className = 'btn btn-sm btn-primary me-2';
-
-        const btnCancelar = document.createElement('button');
-        btnCancelar.textContent = 'Cancelar';
-        btnCancelar.className = 'btn btn-sm btn-secondary';
-
-        const botones = document.createElement('div');
-        botones.className = 'mt-2';
-        botones.appendChild(btnGuardar);
-        botones.appendChild(btnCancelar);
-
-        // Reemplazar el texto del comentario por el textarea y botones
-        comentarioTexto.style.display = 'none';
-        comentarioTexto.parentNode.insertBefore(textarea, comentarioTexto);
-        comentarioTexto.parentNode.insertBefore(botones, comentarioTexto.nextSibling);
-
-        // Cancelar: restaurar comentario original
-        btnCancelar.addEventListener('click', () => {
-            textarea.remove();
-            botones.remove();
-            comentarioTexto.style.display = '';
-        });
-
-        // Guardar cambios
-        btnGuardar.addEventListener('click', () => {
-            const nuevoComentario = textarea.value.trim();
-            if (!nuevoComentario) {
-                mostrarMensajeComentario('No puedes dejar el comentario vacío', 'warning');
-                return;
-            }
-
-            const idPelicula = document.querySelector('[data-idPelicula]').getAttribute('data-idPelicula');
-
-            fetch(`index.php?accion=editar_comentario&id=${idPelicula}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `comentario=${encodeURIComponent(nuevoComentario)}`
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.respuesta === 'ok') {
-                    comentarioTexto.textContent = data.comentario;
-                    comentarioBox.querySelector('.comment-time').textContent = data.fecha;
-                    mostrarMensajeComentario('Comentario editado correctamente', 'success');
-                } else if (data.respuesta === 'comentario_vacio') {
-                    mostrarMensajeComentario('No puedes dejar el comentario vacío', 'warning');
-                } else if (data.respuesta === 'no_sesion') {
-                    mostrarMensajeComentario('Debes iniciar sesión para editar comentarios', 'warning');
-                } else {
-                    mostrarMensajeComentario('Error al editar el comentario', 'danger');
-                }
-                // Restaurar vista
-                textarea.remove();
-                botones.remove();
-                comentarioTexto.style.display = '';
-            })
-            .catch(err => {
-                console.error('Error en la solicitud:', err);
-                mostrarMensajeComentario('Error de red', 'danger');
-            });
-        });
-    });
-}); */
-
-
-
-
-/* function mostrarMensajeComentario(mensaje, tipo) {
-    const contenedor = document.getElementById('estadoComentarioContenedor');
-    if (!contenedor) return;
-
-    contenedor.innerHTML = `<div class="alert alert-${tipo}">${mensaje}</div>`;
-    setTimeout(() => contenedor.innerHTML = '', 3000);
-} */
-
-
-
-
-// ESTE ES EL QUE GUARDA Y EDITA CON AJAX CORRECTAMENTE(pero falta la funcion en DAO y controlador)
-/* document.addEventListener("DOMContentLoaded", function () {
-    const formComentario = document.getElementById('formComentario');
-    if (formComentario) {
-        formComentario.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const idPelicula = this.getAttribute('data-idPelicula');
-            const comentario = document.getElementById('comentarioTexto').value;
-
-            fetch('index.php?accion=guardar_comentario', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: idPelicula, comentario })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.respuesta === 'ok') {
-                    console.log('Comentario guardado');
-
-                    const nuevoComentario = document.createElement('div');
-                    nuevoComentario.classList.add('comment-box', 'mb-3');
-                    nuevoComentario.innerHTML = `
-                        <div class="d-flex gap-3">
-                            <i class="fa-solid fa-user"></i>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0">${data.email}</h6>
-                                    <span class="comment-time">${data.fecha_comentario}</span>
-                                </div>
-                                <p class="mb-2">${data.comentario.replace(/\n/g, '<br>')}</p>
-                                <div class="comment-actions">
-                                    <a href="#" class="editar-comentario">Editar</a>
-                                </div>
-                            </div>
-                        </div>`;
-                    document.querySelector('.comment-section').appendChild(nuevoComentario);
-
-                    // Ocultamos el formulario
-                    formComentario.remove();
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    }
-
-    document.addEventListener('click', function (e) {
-        if (e.target.classList.contains('editar-comentario')) {
-            e.preventDefault();
-            const comentarioBox = e.target.closest('.comment-box');
-            const textoParrafo = comentarioBox.querySelector('p');
-            const textoActual = textoParrafo.textContent;
-
-            const textarea = document.createElement('textarea');
-            textarea.classList.add('form-control', 'comment-input');
-            textarea.rows = 3;
-            textarea.value = textoActual;
-
-            const btnGuardar = document.createElement('button');
-            btnGuardar.textContent = 'Guardar';
-            btnGuardar.classList.add('btn', 'btn-comment', 'text-white', 'mt-2');
-
-            comentarioBox.querySelector('.comment-actions').replaceChildren();
-            textoParrafo.replaceWith(textarea);
-            comentarioBox.querySelector('.flex-grow-1').appendChild(btnGuardar);
-
-            btnGuardar.addEventListener('click', function () {
-                const comentarioEditado = textarea.value;
-                const idPelicula = document.getElementById('formComentario')?.getAttribute('data-idPelicula') ||
-                                   document.querySelector('[data-idPelicula]')?.getAttribute('data-idPelicula');
-
-                fetch('index.php?accion=guardar_comentario', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: idPelicula, comentario: comentarioEditado })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.respuesta === 'ok') {
-                        const nuevoParrafo = document.createElement('p');
-                        nuevoParrafo.classList.add('mb-2');
-                        nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, '<br>');
-
-                        textarea.replaceWith(nuevoParrafo);
-                        comentarioBox.querySelector('.comment-time').textContent = data.fecha_comentario;
-
-                        const nuevaAccion = document.createElement('div');
-                        nuevaAccion.classList.add('comment-actions');
-                        nuevaAccion.innerHTML = '<a href="#" class="editar-comentario">Editar</a>';
-                        comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
-                    }
-                })
-                .catch(error => console.error('Error al actualizar:', error));
-            });
-        }
-    });
-}); */
-
-
-
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
     const formComentario = document.getElementById('formComentario');
     const contenedorForm = document.getElementById('insertarComentario');
@@ -866,6 +318,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         sinComentarios.remove();
                     }
 
+                    // Determinar el icono según el rol
+                    let iconoRol = '';
+                    if (data.rol === 'A') {
+                        iconoRol = '<i class="fa-solid fa-shield-halved text-warning"></i>'; // Admin
+                    } else {
+                        iconoRol = '<i class="fa-solid fa-user text-primary"></i>'; // Usuario normal
+                    }
+
                     // Crear comentario dinámicamente
                     const nuevoComentario = document.createElement('div');
                     nuevoComentario.classList.add('comment-box', 'mb-3');
@@ -876,7 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     nuevoComentario.innerHTML = `
                         <div class="d-flex gap-3">
-                            <i class="fa-solid fa-user"></i>
+                            ${iconoRol}
                             <div class="flex-grow-1">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h6 class="mb-0">${data.email}</h6>
@@ -905,10 +365,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     actualizarTiemposRelativos();
 
                 } else {
-                    mostrarMensajeComentario('Error al guardar el comentario', 'danger');
+                    mostrarMensajeComentario('Error al guardar el comentario', 'error');
                 }
             })
-            .catch(() => mostrarMensajeComentario('Error de red', 'danger'));
+            .catch(() => mostrarMensajeComentario('Error de red', 'error'));
         });
     }
 
@@ -997,16 +457,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <a href="#" class="eliminar-comentario text-danger" data-id="${idComentario}">Eliminar</a>`;
                             comentarioBox.querySelector('.flex-grow-1').appendChild(nuevaAccion);
 
-                            /* mostrarMensajeComentario('Comentario editado correctamente', 'success'); */
+                            mostrarMensajeComentario('Comentario editado correctamente', 'success');
 
-                            // Crear y añadir el mensaje de edición correcta de comentario
+                            /* // Crear y añadir el mensaje de edición correcta de comentario
                             const mensaje = document.createElement('div');
                             mensaje.className = 'alert alert-success mt-2';
                             mensaje.innerText = 'Comentario editado correctamente';
                             // Insertar justo debajo del comentario editado
                             comentarioBox.appendChild(mensaje);
                             // Eliminar después de 3 segundos
-                            setTimeout(() => mensaje.remove(), 3000);
+                            setTimeout(() => mensaje.remove(), 3000); */
 
                             asignarEventosComentarios();
 
@@ -1023,59 +483,66 @@ document.addEventListener("DOMContentLoaded", function () {
             boton.addEventListener('click', function (e) {
                 e.preventDefault();
 
-                if (!confirm('¿Seguro que quieres eliminar el comentario?')) return;
+                /* if (!confirm('¿Seguro que quieres eliminar el comentario?')) return; */
 
                 const comentarioBox = e.target.closest('.comment-box');
                 const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
                 const idComentario = comentarioBox.getAttribute('data-idComentario');
 
-                fetch('index.php?accion=eliminar_comentario&id=' + idComentario)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.respuesta === 'ok') {
-                            mostrarMensajeComentario('Comentario eliminado correctamente', 'success');
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: 'Esta acción eliminará el comentario permanentemente.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Lógica para eliminar el comentario aquí...
+                        fetch('index.php?accion=eliminar_comentario&id=' + idComentario)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.respuesta === 'ok') {
+                                    mostrarMensajeComentario('Comentario eliminado correctamente', 'success');
 
-                            // Eliminar el comentario del DOM
-                            comentarioBox.remove();
+                                    // Eliminar el comentario del DOM
+                                    comentarioBox.remove();
 
-                            // Comprobar si ya no hay más comentarios visibles
-                            const comentariosRestantes = document.querySelectorAll('#listaComentarios .comment-box');
-                            if (comentariosRestantes.length === 0) {
-                                // Eliminar mensaje viejo si existía
-                                const mensajeExistente = document.querySelector('#listaComentarios .sin-comentarios');
-                                if (mensajeExistente) mensajeExistente.remove();
+                                    // Comprobar si ya no hay más comentarios visibles
+                                    const comentariosRestantes = document.querySelectorAll('#listaComentarios .comment-box');
+                                    if (comentariosRestantes.length === 0) {
+                                        // Eliminar mensaje viejo si existía
+                                        const mensajeExistente = document.querySelector('#listaComentarios .sin-comentarios');
+                                        if (mensajeExistente) mensajeExistente.remove();
 
-                                // Si no existe el contenedor de comentarios, lo creamos
-                                let contenedorComentarios = document.getElementById('listaComentarios');
-                                if (!contenedorComentarios) {
-                                    contenedorComentarios = document.createElement('div');
-                                    contenedorComentarios.classList.add('comment-section');
-                                    contenedorComentarios.id = 'listaComentarios';
+                                        // Si no existe el contenedor de comentarios, lo creamos
+                                        let contenedorComentarios = document.getElementById('listaComentarios');
+                                        if (!contenedorComentarios) {
+                                            contenedorComentarios = document.createElement('div');
+                                            contenedorComentarios.classList.add('comment-section');
+                                            contenedorComentarios.id = 'listaComentarios';
 
-                                    // Insertamos debajo del contenedor del formulario
-                                    const contenedorFormulario = document.getElementById('insertarComentario');
-                                    contenedorFormulario.insertAdjacentElement('afterend', contenedorComentarios);
+                                            // Insertamos debajo del contenedor del formulario
+                                            const contenedorFormulario = document.getElementById('insertarComentario');
+                                            contenedorFormulario.insertAdjacentElement('afterend', contenedorComentarios);
+                                        }
+
+                                        // Crear y añadir el mensaje
+                                        const mensaje = document.createElement('p');
+                                        mensaje.classList.add('sin-comentarios');
+                                        mensaje.textContent = 'No hay comentarios aún. Sé el primero en comentar.';
+
+                                        contenedorComentarios.appendChild(mensaje);
+                                    }
+
+
+                                } else {
+                                    mostrarMensajeComentario(data.mensaje || 'No tienes permiso para eliminar este comentario', 'error');
                                 }
-
-                                // Crear y añadir el mensaje
-                                const mensaje = document.createElement('p');
-                                mensaje.classList.add('sin-comentarios');
-                                mensaje.textContent = 'No hay comentarios aún. Sé el primero en comentar en este videojuego.';
-
-                                contenedorComentarios.appendChild(mensaje);
-                            }
-
-                            
-                        } else {
-                            mostrarMensajeComentario(data.mensaje || 'No tienes permiso para eliminar este comentario', 'danger');
-                        }
-                    });
-
-                            // Mostrar el formulario de nuevo para comentar
-                            /* location.reload(); */ // O podríamos volver a mostrar dinámicamente el formComentario
-
-                        
-                    /* .catch(error => console.error('Error al eliminar:', error)); */
+                            });
+                    }
+                });
+                
                     
             });
         });
@@ -1084,14 +551,26 @@ document.addEventListener("DOMContentLoaded", function () {
     asignarEventosComentarios(); // Inicial
 });
 
-function mostrarMensajeComentario(texto, tipo) {
+/* function mostrarMensajeComentario(texto, tipo) {
     const msg = document.createElement('div');
     msg.className = `alert alert-${tipo} mt-2`;
     msg.innerText = texto;
-    /* document.querySelector('.comment-section').prepend(msg); */
+    // document.querySelector('.comment-section').prepend(msg);
     document.getElementById('listaComentarios').prepend(msg);
     setTimeout(() => msg.remove(), 3000);
+} */
+
+function mostrarMensajeComentario(texto, tipo) {
+    Swal.fire({
+        icon: tipo === 'success' ? 'success' : tipo === 'warning' ? 'warning' : tipo === 'error' ? 'error' : 'info',
+        title: texto,
+        timer: 2500,
+        showConfirmButton: false,
+        toast: true,
+        /* position: 'top' */
+    });
 }
+
 
 // Función para formatear la fecha en tiempo relativo
 function formatearTiempoRelativo(fechaISO) {
@@ -1108,10 +587,20 @@ function formatearTiempoRelativo(fechaISO) {
         segundo: 1,
     };
 
+    const plurales = {
+        año: 'años',
+        mes: 'meses',
+        día: 'días',
+        hora: 'horas',
+        minuto: 'minutos',
+        segundo: 'segundos',
+    };
+
     for (let [unidad, valor] of Object.entries(intervalos)) {
         const cantidad = Math.floor(segundos / valor);
         if (cantidad >= 1) {
-            return `hace ${cantidad} ${unidad}${cantidad > 1 ? 's' : ''}`;
+            const etiqueta = cantidad > 1 ? plurales[unidad] : unidad;
+            return `hace ${cantidad} ${etiqueta}`;
         }
     }
 
@@ -1124,7 +613,7 @@ setInterval(() => {
         const fecha = span.getAttribute('data-fecha');
         span.textContent = formatearTiempoRelativo(fecha);
     });
-}, 10); // cada segundo o menos
+}, 10);
 
 // Actualizar inmediatamente al cargar la página
 function actualizarTiemposRelativos() {

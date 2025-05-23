@@ -4,51 +4,66 @@ class ControladorUsuarios {
     public function registrar(){
         $error = '';
 
-        if ($_SERVER['REQUEST_METHOD']=='POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            //Limpiamos los datos
-            $email = htmlentities($_POST['email']);
-            $password = htmlentities($_POST['password']);
+            // Limpiamos los datos
+            $email = trim(htmlentities($_POST['email']));
+            $password = trim(htmlentities($_POST['password']));
 
-            //Validación 
+            // Validación: campos vacíos
+            if (empty($email) || empty($password)) {
+                $error = "Los campos email y contraseña no pueden estar vacíos.";
+            }
+            // Validación: longitud mínima del password
+            elseif (strlen($password) < 4) {
+                $error = "La contraseña debe tener al menos 4 caracteres.";
+            }
+            else {
+                // Conectamos con la BD
+                $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
+                $conn = $connexionDB->getConnexion();
 
-            //Conectamos con la BD
-            $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
-            $conn = $connexionDB->getConnexion();
-
-            //Compruebo que no haya un usuario registrado con el mismo email
-            $usuariosDAO = new UsuariosDAO($conn);
-            if ($usuariosDAO->getByEmail($email) != null) {
-                $error = "Ya hay un usuario con ese email";
-            } else {
-
-                if ($error == '')    //Si no hay error
-                {
-                    //Insertamos en la BD
-
+                // Compruebo que no haya un usuario registrado con el mismo email
+                $usuariosDAO = new UsuariosDAO($conn);
+                if ($usuariosDAO->getByEmail($email) != null) {
+                    $error = "Ya existe un usuario con ese email.";
+                } else {
+                    // Si no hay error, insertamos
                     $usuario = new Usuario();
                     $usuario->setEmail($email);
-                    //encriptamos el password
                     $passwordCifrado = password_hash($password, PASSWORD_DEFAULT);
                     $usuario->setPassword($passwordCifrado);
-
-                    // Establecer rol por defecto antes de insertar
-                    $usuario->setRol('U');
+                    $usuario->setRol('U'); // Rol por defecto
 
                     if ($usuariosDAO->insert($usuario)) {
-                        header("location: index.php");
+                        header("location: index.php?registro=ok");
                         die();
                     } else {
-                        $error = "No se ha podido insertar el usuario";
+                        $error = "No se ha podido insertar el usuario.";
                     }
                 }
             }
-        } //
-        
+        }
+
         require 'app/vistas/registrar.php';
+
+        // Si hay un error, lo mostramos con SweetAlert
+        if (!empty($error)) {
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '".addslashes($error)."'
+                    });
+                });
+            </script>";
+        }
     }
 
     public function login(){
+        $error = '';
+
         //Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -64,7 +79,6 @@ class ControladorUsuarios {
                 //email y password correctos. Inciamos sesión
                 Sesion::iniciarSesion($usuario);
                 
-                
                 //$_SESSION['email'] = $usuario->getEmail();
                 //$_SESSION['id'] = $usuario->getId();
 
@@ -73,9 +87,31 @@ class ControladorUsuarios {
                 die();
             }
         }
-        //email o password incorrectos, redirigir a index.php
+
+        /* //email o password incorrectos, redirigir a index.php
         guardarMensaje("Email o password incorrectos");
-        header('location: index.php');
+        header('location: index.php'); */
+
+        // Si llega aquí, hay error
+        $error = "Email o contraseña incorrectos.";
+
+        // Cargamos la vista
+        require 'app/vistas/inicio.php';
+
+        // Lanzamos SweetAlert2 con el error
+        if (!empty($error)) {
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error de acceso',
+                        text: '" . addslashes($error) . "'
+                    });
+                });
+            </script>";
+        }
+
+        
     }
 
     public function logout(){

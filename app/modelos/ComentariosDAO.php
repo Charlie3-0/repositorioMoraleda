@@ -87,7 +87,7 @@ class ComentariosDAO {
     /**
      * Edita exclusivamente un comentario existente
      */
-    public function editarComentario($idUsuario, $idVideojuego, $comentario) {
+    /* public function editarComentario($idUsuario, $idVideojuego, $comentario) {
         $fechaComentario = date('c');
 
         $sql = "UPDATE comentarios 
@@ -98,7 +98,7 @@ class ComentariosDAO {
         $stmt->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idVideojuego);
 
         return $stmt->execute();
-    }
+    } */
 
     /**
      * Elimina un comentario concreto por su ID
@@ -142,7 +142,7 @@ class ComentariosDAO {
      * Obtener comentarios de usuarios sobre un videojuego
      */
     public function getComentariosPorVideojuego($idVideojuego) {
-        if (!$stmt = $this->conn->prepare("SELECT comentarios.id, comentarios.comentario, comentarios.fecha_comentario, usuarios.email 
+        if (!$stmt = $this->conn->prepare("SELECT comentarios.id, comentarios.comentario, comentarios.fecha_comentario, usuarios.email, usuarios.rol 
             FROM comentarios 
             JOIN usuarios ON comentarios.idUsuario = usuarios.id 
             WHERE comentarios.idVideojuego = ? 

@@ -8,38 +8,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="web/css/estilos.css">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
-        /* ESTILOS PUNTUACIONES */
-        .star-rating {
-            direction: rtl;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            color: #ddd;
-            font-size: 24px;
-            padding: 0 2px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .star-rating label:hover,
-        .star-rating label:hover~label,
-        .star-rating input:checked~label {
-            color: #ffc107;
-        }
-
-
-        .disabled-stars i {
-            font-size: 1.3rem;
-            margin-right: 2px;
-        }
+        
     </style>
 </head>
 <body>
@@ -98,7 +72,7 @@
     <br><br>
 
     <main>
-        <h2>Videojuegos para la Categoría de <?= $categoria->getNombre() ?></h2>
+        <h2>Videojuegos de <?= $categoria->getNombre() ?></h2>
         
         <?php
             $daoPU = new PuntuacionesDAO($conn);

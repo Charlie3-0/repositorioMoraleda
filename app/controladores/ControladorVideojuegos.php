@@ -52,6 +52,7 @@ class ControladorVideojuegos {
         $categoriaId = $videojuego->getIdCategoria();
         $categoria = $categoriasDAO->getById($categoriaId);
 
+        /* $rolUsuario = $usuariosDAO->getRol(); */
 
         // Inicializar variables comunes
         $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0

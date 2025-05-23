@@ -9,22 +9,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-        .error-message {
-            background-color: #ffdddd;
-            color: #d8000c;
-            border: 1px solid #d8000c;
-            padding: 15px;
-            margin: 20px auto;
-            text-align: center;
-            max-width: 500px;
-            border-radius: 15px;
-            font-weight: bold;
-            box-shadow: 0px 0px 10px rgba(216, 0, 12, 0.5);
-        }
-
-    </style>
+    <link rel="stylesheet" href="web/css/estilos.css">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -82,38 +69,31 @@
     <br><br>
 
     <main>
-    <?php $mensajeError = imprimirMensaje(); ?>
-    <?php if ($mensajeError): ?>
-        <div class="error-message">
-            <h4><?= $mensajeError ?></h4>
-        </div>
-    <?php endif; ?>
-
-    
-    <?php if (!empty($categorias)): ?>
-        <h2>Categorías</h2>
-        <?php foreach ($categorias as $categoria): ?>
-            <div class="categoria">
-            <h4 class="titulo">
-                    <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>"><?= $categoria->getNombre() ?></a>
-                </h4>
-            </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Inicia sesión para ver las Categorías.</p>
-    <?php endif; ?>
+        <?php if (!empty($categorias)): ?>
+            <h2>Categorías</h2>
+            <?php foreach ($categorias as $categoria): ?>
+                <div class="categoria">
+                <h4 class="titulo">
+                        <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>"><?= $categoria->getNombre() ?></a>
+                    </h4>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Inicia sesión para ver las Categorías.</p>
+        <?php endif; ?>
     
     </main>
 
+    <!-- SweetAlert2 para mostrar mensaje de éxito en el registro -->
+    <?php if (isset($_GET['registro']) && $_GET['registro'] == 'ok'): ?>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                var errorMessage = document.querySelector('.error-message');
-                if (errorMessage) {
-                    errorMessage.style.display = 'none';
-                }
-            }, 3000);
+        Swal.fire({
+            icon: 'success',
+            title: '¡Registro exitoso!',
+            text: 'Ya puedes iniciar sesión.'
         });
     </script>
+    <?php endif; ?>
+
 </body>
 </html>

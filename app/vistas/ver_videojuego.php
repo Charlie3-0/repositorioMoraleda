@@ -8,176 +8,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link rel="stylesheet" href="web/css/estilos.css">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* ESTILOS VIDEOJUEGO_PROBADO */
-        /* Colores personalizados */
-        .icono-probado {
-            color: black;
-        }
-
-        .icono-no-probado {
-            color: gray;
-        }
-
-        /* Animación rápida al hacer clic */
-        .icono-animado {
-            animation: rebote 0.4s ease;
-        }
-
-        @keyframes rebote {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
-        }
-
-        .estado-probado {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .texto-probado {
-            font-size: 1em;
-            color: black; /* mismo tono que icono-probado */
-            font-weight: bold;
-            margin-left: 8px;
-            display: inline-block;
-
-            opacity: 1;
-            visibility: visible;
-            /* transition: opacity 0.7s ease, visibility 0.7s ease; */
-
-            transform: translateY(0);
-            transition: opacity 0.7s ease, visibility 0.7s ease, transform 0.7s ease;
-        }
-
-        .texto-probado.oculto {
-            opacity: 0;
-            visibility: hidden;
-
-            transform: translateY(-5px);
-        }
-
-        .icono-confirmacion {
-            margin-right: 4px;
-            color: #28a745;
-        }
-
-        
-        /* ESTILOS PUNTUACIONES */
-        .star-rating {
-            direction: rtl;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .star-rating input {
-            display: none;
-        }
-
-        .star-rating label {
-            color: #ddd;
-            font-size: 24px;
-            padding: 0 2px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .star-rating label:hover,
-        .star-rating label:hover~label,
-        .star-rating input:checked~label {
-            color: #ffc107;
-        }
-
-
-        .disabled-stars i {
-            font-size: 1.3rem;
-            margin-right: 2px;
-        }
-
-        /* ESTILOS COMENTARIOS */
-        .comment-section {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .comment-box {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-            border: 1px solid #e9ecef;
-        }
-
-        .comment-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .comment-input {
-            border-radius: 20px;
-            padding: 15px 20px;
-            border: 2px solid #e9ecef;
-            transition: all 0.3s;
-        }
-
-        .comment-input:focus {
-            box-shadow: none;
-            border-color: #86b7fe;
-        }
-
-        .btn-comment {
-            border-radius: 20px;
-            padding: 8px 25px;
-            background: #0d6efd;
-            border: none;
-            transition: all 0.3s;
-        }
-
-        .btn-comment:hover {
-            background: #0b5ed7;
-            transform: translateY(-1px);
-        }
-
-        .comment-actions {
-            font-size: 0.9rem;
-        }
-
-        .comment-actions a {
-            color: #6c757d;
-            text-decoration: none;
-            margin-right: 15px;
-            transition: color 0.2s;
-        }
-
-        .comment-actions a:hover {
-            color: #0d6efd;
-        }
-
-        .comment-time {
-            color: #adb5bd;
-            font-size: 0.85rem;
-        }
-
-        .reply-section {
-            margin-left: 60px;
-            border-left: 2px solid #e9ecef;
-            padding-left: 20px;
-        }
 
     </style>
 </head>
@@ -193,11 +27,14 @@
 
         <?php if (Sesion::getUsuario()): ?>
             <span class="emailUsuario">
-                <?= Sesion::getUsuario()->getEmail() ?>
                 <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
-                    <strong>(ADMIN)</strong>
+                    <i class="fa-solid fa-shield-halved text-warning" title="Administrador"></i>
+                <?php else: ?>
+                    <i class="fa-solid fa-user text-primary"></i>
                 <?php endif; ?>
+                <?= Sesion::getUsuario()->getEmail() ?>
             </span>
+
             <a href="index.php?accion=logout">Cerrar sesión</a>
 
             <?php if (Sesion::getUsuario()->getRol() === 'U'): ?>
@@ -430,7 +267,7 @@
                 <span class="estado-probado">
                     <?php if ($marcadoProbado): ?>
                         <i id="botonProbado"
-                        class="fas fa-eye quitarProbado icono-probado"
+                        class="fas fa-gamepad quitarProbado icono-probado"
                         data-idVideojuego="<?= $videojuego->getId() ?>"
                         style="cursor: pointer; font-size: 1.5rem;"
                         title="Quitar probado"></i>
@@ -506,7 +343,12 @@
                         <!-- Formulario para comentar -->
                         <form id="formComentario" class="mb-4" data-idVideojuego="<?= $videojuego->getId(); ?>">
                             <div class="d-flex gap-3">
-                                <i class="fa-solid fa-user"></i>
+                                <!-- Avatar del usuario -->
+                                <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
+                                    <i class="fa-solid fa-shield-halved text-warning" title="Administrador"></i>
+                                <?php else: ?>
+                                    <i class="fa-solid fa-user text-primary"></i>
+                                <?php endif; ?>
                                 <span class="emailUsuario"><?= Sesion::getUsuario()->getEmail(); ?></span>
                                 <div class="flex-grow-1">
                                     <textarea id="comentarioTexto" class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
@@ -527,7 +369,12 @@
                         <?php foreach ($comentarios as $comentario): ?>
                             <div class="comment-box mb-3" data-idComentario="<?= $comentario->id ?>">
                                 <div class="d-flex gap-3">
-                                    <i class="fa-solid fa-user"></i>
+                                    <!-- Avatar del usuario -->
+                                    <?php if ($comentario->rol === 'A'): ?>
+                                        <i class="fa-solid fa-shield-halved text-warning" title="Administrador"></i>
+                                    <?php else: ?>
+                                        <i class="fa-solid fa-user text-primary"></i>
+                                    <?php endif; ?>
                                     <div class="flex-grow-1">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
                                             <h6 class="mb-0"><?= $comentario->email ?? 'Anónimo' ?></h6>
@@ -563,7 +410,7 @@
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar en este videojuego.</p>
+                        <p class="sin-comentarios">No hay comentarios aún. Sé el primero en comentar.</p>
                     <?php endif; ?>
                 </div>
             </div>

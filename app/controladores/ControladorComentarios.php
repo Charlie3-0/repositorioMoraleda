@@ -30,6 +30,7 @@ class ControladorComentarios {
                 'respuesta' => 'ok',
                 'idComentario' => $idComentario,
                 'email' => Sesion::getUsuario()->getEmail(),
+                'rol' => Sesion::getUsuario()->getRol(),
                 'fecha' => date('c'),
                 'comentario' => $comentario
             ]);

@@ -8,22 +8,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="web/css/estilos.css">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <style>
-        .error-message {
-            background-color: #ffdddd;
-            color: #d8000c;
-            border: 1px solid #d8000c;
-            padding: 15px;
-            margin: 20px auto;
-            text-align: center;
-            max-width: 500px;
-            border-radius: 10px;
-            font-weight: bold;
-            box-shadow: 0px 0px 10px rgba(216, 0, 12, 0.5);
-        }
-
-    </style>
 </head>
 <body>
     <header>
@@ -85,12 +73,12 @@
 
     <br>
     <h2>Registro de Usuario</h2>
-    <?php if (!empty($error)): ?>
+<!--    <?php if (!empty($error)): ?>
         <div class="error-message">
             <?= $error ?>
         </div>
     <?php endif; ?>
-    
+-->
     <form action="index.php?accion=registrar" method="post">
         <input type="email" name="email" placeholder="Email"><br>
         <input type="password" name="password" placeholder="Password"><br>
@@ -100,14 +88,14 @@
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        /* document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 var errorMessage = document.querySelector('.error-message');
                 if (errorMessage) {
                     errorMessage.style.display = 'none';
                 }
             }, 3000);
-        });
+        }); */
     </script>
 </body>
 </html>
