@@ -68,6 +68,7 @@ class ReservasDAO {
         }
         $idUsuario = $reserva->getIdUsuario();
         $idVideojuego = $reserva->getIdVideojuego();
+        $fechaReserva = $reserva->getFechaReserva();
         $stmt->bind_param('sii',$fechaReserva, $idUsuario, $idVideojuego);
         if($stmt->execute()){
             $reserva->setId($stmt->insert_id);

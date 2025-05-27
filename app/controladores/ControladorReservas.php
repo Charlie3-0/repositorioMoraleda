@@ -12,6 +12,7 @@ class ControladorReservas {
         $reserva = new Reserva();
         $reserva->setIdVideojuego($idVideojuego);
         $reserva->setIdUsuario(Sesion::getUsuario()->getId());
+        $reserva->setFechaReserva(date('Y-m-d H:i:s'));
         if($reservasDAO->insert($reserva)){
             $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego);
             print json_encode(['respuesta'=>'ok','videojuegoReservado'=>$videojuegoReservado]);

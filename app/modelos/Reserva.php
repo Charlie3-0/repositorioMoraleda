@@ -3,12 +3,11 @@
 class Reserva {
     private $id;
     private $fecha_reserva;
-    private $tramitado;
     private $idUsuario;
     private $idVideojuego;
     
     
-
+    
     /**
      * Get the value of id
      */
@@ -41,24 +40,6 @@ class Reserva {
     public function setFechaReserva($fecha_reserva): self
     {
         $this->fecha_reserva = $fecha_reserva;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of tramitado
-     */
-    public function getTramitado()
-    {
-        return $this->tramitado;
-    }
-
-    /**
-     * Set the value of tramitado
-     */
-    public function setTramitado($tramitado): self
-    {
-        $this->tramitado = $tramitado;
 
         return $this;
     }

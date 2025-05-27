@@ -67,9 +67,6 @@ $mapa = array(
     'quitar_reserva'=>array('controlador'=>'ControladorReservas', 
                             'metodo'=>'borrarReserva',
                             'privada'=>false),
-    'tramitar_videojuego'=>array('controlador'=>'ControladorReservas', 
-                            'metodo'=>'tramitarVideojuego',
-                            'privada'=>false),
     'ver_reservas'=>array('controlador'=>'ControladorReservas',
                             'metodo'=>'verReservas',
                             'privada'=>false),
@@ -111,7 +108,7 @@ $mapa = array(
                                 'privada'=>false),
     'eliminar_comentario'=>array('controlador'=>'ControladorComentarios',
                                 'metodo'=>'eliminarComentario',
-                                'privada'=>false),                                  
+                                'privada'=>false)                                  
 );
 
 
