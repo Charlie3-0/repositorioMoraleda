@@ -226,7 +226,7 @@ class ControladorVideojuegos {
     
 
     public function insertarVideojuego() {
-        $error = '';
+    //    $error = '';
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -245,8 +245,8 @@ class ControladorVideojuegos {
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
             $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
-            //$trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que no lo escapamos
-            $trailer = $_POST['trailer']; // Permitimos iframe, así que no lo escapamos
+            $trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que no lo escapamos
+            //$trailer = $_POST['trailer']; // Permitimos iframe, así que no lo escapamos
 
             // Aquí manejamos la foto
             $foto_nombre = $_FILES['foto']['name'];   // Nombre de la foto
@@ -255,8 +255,9 @@ class ControladorVideojuegos {
     
     
             // Validamos los datos
-            if (empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria)) {
-                $error = "Todos los campos son obligatorios.";
+            if (empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento) || empty($trailer) || empty($foto_nombre)) {
+            //    $error = "Todos los campos son obligatorios.";
+                $_SESSION['mensaje_error'] = "Todos los campos son obligatorios.";
             } else {
 
                 // Creamos el objeto DAO necesario para acceder a los videojuegos en la base de datos
@@ -277,18 +278,29 @@ class ControladorVideojuegos {
                 if (move_uploaded_file($foto_temporal, $ruta_destino)) {
                     $videojuego->setFoto($foto_nombre);
                 } else {
-                    $error = "Error al cargar la foto.";
+                 //   $error = "Error al cargar la foto.";
+                    $_SESSION['mensaje_error'] = "Error al cargar la foto.";
                 }
     
+
                 if ($videojuegosDAO->insert($videojuego)) {
+                    $_SESSION['mensaje_ok'] = "El videojuego se ha insertado correctamente.";
+                    header('location: index.php?accion=videojuegos_por_categoria&id=' . $videojuego->getIdCategoria());
+                    die();
+                } else {
+                    $_SESSION['mensaje_error'] = "Error al insertar el videojuego.";
+                }
+                
+
+                /* if ($videojuegosDAO->insert($videojuego)) {
                     echo "El videojuego se ha insertado correctamente.";
                 } else {
                     echo "Error al insertar el videojuego.";
-                }
+                } */
     
-                // Redireccionamos a las categorías
+            /*     // Redireccionamos a las categorías
                 header('location: index.php?accion=videojuegos_por_categoria&id=' . $videojuego->getIdCategoria());
-                die();
+                die(); */
             }
         }
     
@@ -298,7 +310,7 @@ class ControladorVideojuegos {
     
 
     public function editarVideojuego(){
-        $error ='';
+     //   $error ='';
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -323,13 +335,14 @@ class ControladorVideojuegos {
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
             $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
-            //$trailer = htmlspecialchars($_POST['trailer']);
-            $trailer = $_POST['trailer'];
+            $trailer = htmlspecialchars($_POST['trailer']);
+          //  $trailer = $_POST['trailer'];
 
     
             // Validamos los datos
-            if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento)){
-                $error = "Todos los campos son obligatorios.";
+            if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento) || empty($trailer)) {
+             //   $error = "Todos los campos son obligatorios.";
+                $_SESSION['mensaje_error'] = "Todos los campos son obligatorios.";
             }else{
                 // Actualizamos los datos del videojuego
                 $videojuego->setTitulo($titulo);
@@ -351,19 +364,24 @@ class ControladorVideojuegos {
                     if(move_uploaded_file($foto_temporal, $ruta_destino)){
                         $videojuego->setFoto($foto_nombre);
                     }else{
-                        $error = "Error al subir la imagen.";
+                     //   $error = "Error al subir la imagen.";
+                        $_SESSION['mensaje_error'] = "Error al subir la imagen.";
                     }
                 }
     
                 if ($videojuegosDAO->update($videojuego)) {
-                    echo "El videojuego se ha actualizado correctamente.";
+                 //   echo "El videojuego se ha actualizado correctamente.";
+                    $_SESSION['mensaje_ok'] = "El videojuego se ha actualizado correctamente.";
+                    header('location: index.php?accion=ver_videojuego&id=' . $videojuego->getId());
+                    die();
                 } else {
-                    echo "Error al actualizar el videojuego.";
+                 //   echo "Error al actualizar el videojuego.";
+                    $_SESSION['mensaje_error'] = "Error al actualizar el videojuego.";
                 }
     
-                // Redireccionamos a la vista del Videojuego
+            /*     // Redireccionamos a la vista del Videojuego
                 header('location: index.php?accion=ver_videojuego&id=' . $videojuego->getId());
-                die();
+                die(); */
             }
         }
     

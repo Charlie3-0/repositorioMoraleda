@@ -81,29 +81,6 @@ class ReservasDAO {
 
 
     /**
-     * Insertar una Reserva
-     */
-/*     public function insert($reserva){
-        if($this->existByIdUsuarioIdVideojuego($reserva->getIdUsuario(), $reserva->getIdVideojuego()));
-        if(!$stmt = $this->conn->prepare("INSERT INTO reservas (fecha_reserva, tramitado, idUsuario, idVideojuego) VALUES (?,?,?,?)")){
-            die("Error al preparar la consulta insert: " . $this->conn->error );
-        }
-        $fechaReserva = $reserva->getFechaReserva();
-        $tramitado = $reserva->getTramitado();
-        $idUsuario = $reserva->getIdUsuario();
-        $idVideojuego = $reserva->getIdVideojuego();
-        $stmt->bind_param('siii',$fechaReserva, $tramitado, $idUsuario, $idVideojuego);
-        if($stmt->execute()){
-            $reserva->setId($stmt->insert_id);
-            return $stmt->insert_id;
-        }
-        else{
-            return false;
-        }
-    } */
-
-
-    /**
      * Borrar una Reserva 
      */
     public function delete($reserva){
@@ -120,6 +97,7 @@ class ReservasDAO {
             return false;
         }
     }
+
 
     /**
      * Función para contar el número de Videojuegos reservados, aunque la hemos usado para ver si tenemos la reserva de un videojuego,
@@ -153,6 +131,7 @@ class ReservasDAO {
             return false;
         }
     }
+
 
     /**
      * Función que obtiene el usuario que ha reservado un videojuego específico.
@@ -195,7 +174,7 @@ class ReservasDAO {
     /**
      * Función para obtener una reserva con idUsuario e idVideojuego
      */
-    public function getByIdUsuarioIdVideojuego($idUsuario, $idPelicula){
+    public function getByIdUsuarioIdVideojuego($idUsuario, $idVideojuego){
         if(!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario=? and idVideojuego = ?")){
             die("Error al preparar la consulta select count: " . $this->conn->error );
         }
@@ -240,31 +219,6 @@ class ReservasDAO {
 
         return $arrayReservas;
     }
-
-
-    /* public function obtenerReservasByIdUsuarioTramitados($idUsuario): array {
-        if (!$stmt = $this->conn->prepare("SELECT * FROM reservas WHERE idUsuario = ? AND tramitado = 0")) {
-            echo "Error en la SQL: " . $this->conn->error;
-        }
-
-        // Obtener parámetro del ID
-        $stmt->bind_param('i', $idUsuario);
-
-        // Ejecutamos la consulta
-        $stmt->execute();
-
-        // Obtener el objeto mysql_result
-        $result = $stmt->get_result();
-
-        $arrayReservas = array();
-
-        // Mientras reserva es igual al resultado, se crea un array de Reservas
-        while ($reserva = $result->fetch_object(Reserva::class)) {
-            $arrayReservas[] = $reserva;
-        }
-
-        return $arrayReservas;
-    } */
 
 }
 

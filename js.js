@@ -88,7 +88,7 @@ function ponerProbado() {
                 botonProbado.classList.add('icono-animado');
                 setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
-                botonProbado.classList.remove('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
+                botonProbado.classList.remove('ponerProbado', 'icono-no-probado', 'fa-circle-xmark');
                 botonProbado.classList.add('quitarProbado', 'icono-probado', 'fa-gamepad');
                 botonProbado.setAttribute('title', 'Quitar probado');
                 botonProbado.removeEventListener('click', ponerProbado);
@@ -120,7 +120,7 @@ function quitarProbado() {
                 setTimeout(() => botonProbado.classList.remove('icono-animado'), 300);
 
                 botonProbado.classList.remove('quitarProbado', 'icono-probado', 'fa-gamepad');
-                botonProbado.classList.add('ponerProbado', 'icono-no-probado', 'fa-eye-slash');
+                botonProbado.classList.add('ponerProbado', 'icono-no-probado', 'fa-circle-xmark');
                 botonProbado.setAttribute('title', 'Marcar como probado');
                 botonProbado.removeEventListener('click', quitarProbado);
                 botonProbado.addEventListener('click', ponerProbado);

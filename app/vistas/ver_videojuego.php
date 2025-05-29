@@ -74,6 +74,20 @@
     <br><br>
 
     <main>
+        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['mensaje_ok'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_ok']); ?>
+        <?php endif; ?>
+
+        <?php if (!empty($_SESSION['mensaje_error'])): ?>
+            <div class="alert alert-danger">
+                <?= $_SESSION['mensaje_error'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_error']); ?>
+        <?php endif; ?>
+
         <div class="ver_videojuego">
             <?php if ($videojuego!= null) : ?>
                 <h2 class="titulo"><?= $videojuego->getTitulo() ?> </h2>
@@ -270,15 +284,15 @@
                         class="fas fa-gamepad quitarProbado icono-probado"
                         data-idVideojuego="<?= $videojuego->getId() ?>"
                         style="cursor: pointer; font-size: 1.5rem;"
-                        title="Quitar probado"></i>
+                        title="Desmarcar probado"></i>
                     <?php else: ?>
                         <i id="botonProbado"
-                        class="fas fa-eye-slash ponerProbado icono-no-probado"
+                        class="fas fa-circle-xmark ponerProbado icono-no-probado"
                         data-idVideojuego="<?= $videojuego->getId() ?>"
                         style="cursor: pointer; font-size: 1.5rem;"
                         title="Marcar como probado"></i>
                     <?php endif; ?>
-
+                    
                     <!-- Siempre se muestra este span junto al icono al marcar el probado o si ya estaba
                     marcado como probado -->
                     <span class="texto-probado<?= $marcadoProbado ? '' : ' oculto' ?>">
@@ -288,47 +302,8 @@
             <?php endif; ?>
 
             <br><br>
-            
-            <!--<div class="container">
-                <div class="comment-section">
-                     Nuevo Comentario Form 
-                    <div class="mb-4">
-                        <div class="d-flex gap-3">
-                        <i class="fa-solid fa-user"></i>
-                            <span class="emailUsuario">
-                                <?= Sesion::getUsuario()->getEmail() ?>
-                            </span>
-                            <div class="flex-grow-1">
-                                <textarea class="form-control comment-input" rows="3" placeholder="Escribe un comentario..."></textarea>
-                                <div class="mt-3 text-end">
-                                    <button class="btn btn-comment text-white">Publicar Comentario</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                     Comentario de ejemplo 
-                    <div class="comment-box">
-                        <div class="d-flex gap-3">
-                            <i class="fa-solid fa-user"></i>
-                            <div class="flex-grow-1">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="mb-0">Mike Johnson(aquí iría el email del usuario de este comentario)</h6>
-                                    <span class="comment-time">3 hours ago</span>
-                                </div>
-                                <p class="mb-2">¡Excelente discusión! Me gustaría añadir que este tema tiene muchos aspectos
-                                interesantes que podríamos explorar más a fondo.</p>
-                                <div class="comment-actions">
-                                    <a href="#">Editar(solo el mismo usuario conectado puede editar su comentario)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div> -->
-
-
+            <!-- Sección de comentarios -->
             <div class="container mt-5">
                 <div class="comment-section" id="tituloComentarios">
                     <h4 class="text-center"><span></span> Comentarios</h4>
@@ -432,6 +407,15 @@
         const usuarioEmail = "<?= Sesion::existeSesion() ? Sesion::getUsuario()->getEmail() : '' ?>";
     </script>
 
+    <script>
+        setTimeout(() => {
+            const success = document.querySelector('.alert-success');
+            const error = document.querySelector('.alert-danger');
+
+            if (success) success.remove();
+            if (error) error.remove();
+        }, 3000);
+    </script>
 
 </body>
 </html>

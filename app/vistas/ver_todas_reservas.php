@@ -76,11 +76,7 @@
                         </a>
                     </h3>
                     <p class="fecha_reserva">Fecha de la Reserva: <?= $reserva->getFechaReserva() ?></p>
-                    <!-- Mediante el operador ternario mostramos "Videojuego tramitado" si $reserva->getTramitado() devuelve true (1) y "Videojuego NO tramitado" si devuelve false (0). 
-                    <p class="tramitado"><?= $reserva->getTramitado() ? "Videojuego tramitado" : "Videojuego NO tramitado" ?></p> -->
                     <strong>Videojuego Reservado por: <?= $reserva->usuario->getEmail() ?></strong>
-                    <br><br>
-                    
                     <hr>
                 </div>
                 <br>

@@ -9,13 +9,8 @@ class ControladorPrestamos {
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
         $videojuegosDAO = new VideojuegosDAO($conn);
-        $reservasDAO = new ReservasDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
-
-        // Obtener el videojuego
-        /* $idVideojuego = htmlspecialchars($_GET['id']);
-        $videojuego = $videojuegosDAO->getById($idVideojuego); */
 
         $idUsuario =htmlspecialchars($_GET['id']);
         $usuario = $usuariosDAO->getById($idUsuario);
@@ -61,7 +56,7 @@ class ControladorPrestamos {
 
 
     public function insertarPrestamo() {
-        $error = '';
+     //   $error = '';
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -80,7 +75,7 @@ class ControladorPrestamos {
             // Limpiamos los datos que vienen del formulario
             $idUsuario = htmlspecialchars($_POST['idUsuario']); // Es necesario si queremos seleccionar usuario en el desplegable
             $idVideojuego = htmlspecialchars($_POST['idVideojuego']); // Es necesario si queremos seleccionar videojuego en el desplegable
-            $fecha_prestamo = date('Y-m-d'); // Fecha actual
+            $fecha_prestamo = date('Y-m-d H:i:s'); // Fecha actual
             $devuelto = 0; // Por defecto, el videojuego NO está devuelto
     
             // Obtener el número de préstamos para el videojuego(en nuestro caso será solo 1)
@@ -100,9 +95,9 @@ class ControladorPrestamos {
     
             // Validamos los datos(modificar esto para que permita insertar los prestamos si el videojuego no tiene prestamos o el prestamo tenga el videojuego devuelto)
             if (empty($idUsuario) || empty($idVideojuego)) {
-                $error = "Los campos de usuario y videojuego son obligatorios.";
+                $_SESSION['mensaje_error'] = "Los campos de usuario y videojuego son obligatorios.";
             } elseif ($videojuegoPrestado > 0) {
-                $error = "El videojuego ya está prestado.";
+                $_SESSION['mensaje_error'] = "El videojuego ya está prestado.";
             } else {
                 // Insertamos el préstamo
                 $prestamo = new Prestamo();
@@ -112,9 +107,9 @@ class ControladorPrestamos {
                 $prestamo->setDevuelto($devuelto);
     
                 if ($prestamosDAO->insertar($prestamo)) {
-                    echo "El préstamo se ha insertado correctamente.";
+                    $_SESSION['mensaje_ok'] = "El préstamo se ha insertado correctamente.";
                 } else {
-                    echo "Error al insertar el préstamo.";
+                    $_SESSION['mensaje_error'] = "Error al insertar el préstamo.";
                 }
     
                 // Redireccionamos al administrador de préstamos
@@ -152,9 +147,11 @@ class ControladorPrestamos {
             } else {
                 // Actualizamos el estado del préstamo a devuelto
                 if ($prestamosDAO->marcarComoDevuelto($idPrestamo)) {
-                    echo "El préstamo se ha marcado como devuelto correctamente.";
+                //    echo "El préstamo se ha marcado como devuelto correctamente.";
+                    $_SESSION['mensaje_ok'] = "Videojuego devuelto correctamente.";
                 } else {
-                    echo "Error al marcar el préstamo como devuelto.";
+                //    echo "Error al marcar el préstamo como devuelto.";
+                    $_SESSION['mensaje_error'] = "Error al marcar el préstamo como devuelto.";
                 }
     
                 // Redireccionamos al administrador de préstamos

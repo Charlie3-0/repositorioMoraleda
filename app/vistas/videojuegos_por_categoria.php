@@ -73,6 +73,20 @@
 
     <main>
         <h2>Videojuegos de <?= $categoria->getNombre() ?></h2>
+
+        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['mensaje_ok'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_ok']); ?>
+        <?php endif; ?>
+
+        <?php if (!empty($_SESSION['mensaje_error'])): ?>
+            <div class="alert alert-danger">
+                <?= $_SESSION['mensaje_error'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_error']); ?>
+        <?php endif; ?>
         
         <?php
             $daoPU = new PuntuacionesDAO($conn);
@@ -117,6 +131,15 @@
     
     <br><br>
     <a href="index.php">Volver al listado de Categorías</a>
+
+    <script>
+        setTimeout(() => {
+            const success = document.querySelector('.alert-success');
+            const error = document.querySelector('.alert-danger');
+            if (success) success.remove();
+            if (error) error.remove();
+        }, 3000);
+    </script>
 </body>
 </html>
 

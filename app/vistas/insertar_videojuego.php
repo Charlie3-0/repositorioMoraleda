@@ -67,11 +67,21 @@
 
     <main>
         <h2>Añadir Videojuego</h2>
-        <?php if (!empty($error)): ?>
-            <div class="error">
-                <p style="color: red;"><?= $error ?></p>
+
+        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['mensaje_ok'] ?>
             </div>
+            <?php unset($_SESSION['mensaje_ok']); ?>
         <?php endif; ?>
+
+        <?php if (!empty($_SESSION['mensaje_error'])): ?>
+            <div class="alert alert-danger">
+                <?= $_SESSION['mensaje_error'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_error']); ?>
+        <?php endif; ?>
+
         
         <form action="index.php?accion=insertar_videojuego" method="post" enctype="multipart/form-data">
             <label for="titulo">Título: </label>
@@ -100,7 +110,7 @@
             <textarea name="trailer" rows="4" placeholder="Pega aquí el iframe"></textarea>
             
             <br>
-            <input type="submit" value="Insertar Película">
+            <input type="submit" value="Insertar Videojuego">
         </form>
 
         <br><br>
@@ -108,14 +118,12 @@
     </main>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                var errorMessage = document.querySelector('.error');
-                if (errorMessage) {
-                    errorMessage.style.display = 'none';
-                }
-            }, 3000);
-        });
+        setTimeout(() => {
+            const success = document.querySelector('.alert-success');
+            const error = document.querySelector('.alert-danger');
+            if (success) success.remove();
+            if (error) error.remove();
+        }, 3000);
     </script>
 </body>
 </html>

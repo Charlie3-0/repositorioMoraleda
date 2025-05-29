@@ -67,9 +67,21 @@
 
     <main>
         <h2>Todos los Videojuegos Prestados</h2>
-        <?php if (!empty($error)): ?>
-            <p style="color: red;"><?= $error ?></p>
+
+        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+            <div class="alert alert-success">
+                <?= $_SESSION['mensaje_ok'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_ok']); ?>
         <?php endif; ?>
+
+        <?php if (!empty($_SESSION['mensaje_error'])): ?>
+            <div class="alert alert-danger">
+                <?= $_SESSION['mensaje_error'] ?>
+            </div>
+            <?php unset($_SESSION['mensaje_error']); ?>
+        <?php endif; ?>
+
 
         <?php if (!empty($prestamos)): ?>
             <?php foreach ($prestamos as $prestamo): ?>
@@ -105,5 +117,17 @@
         <br><br>
         <a href="index.php">Volver al listado de Categorías</a>
     </main>
+
+
+    <!-- Script para ocultar los mensajes -->
+    <script>
+        setTimeout(() => {
+            const success = document.querySelector('.alert-success');
+            const error = document.querySelector('.alert-danger');
+
+            if (success) success.remove();
+            if (error) error.remove();
+        }, 3000);
+    </script>
 </body>
 </html>
