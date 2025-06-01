@@ -23,8 +23,24 @@ function ponerReserva() {
                 botonReserva.addEventListener('click', quitarReserva);
                 botonReserva.innerHTML = "Quitar Reserva";
 
+                Swal.fire({
+                    title: '¡Reserva realizada con éxito!',
+                    icon: 'success',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
             } else {
                 console.error('Error al poner reserva');
+
+                Swal.fire({
+                    title: 'Error al poner la reserva',
+                    icon: 'error',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
             }
         });
 }
@@ -42,8 +58,25 @@ function quitarReserva() {
                 botonReserva.removeEventListener('click', quitarReserva);
                 botonReserva.addEventListener('click', ponerReserva);
                 botonReserva.innerHTML = "Poner Reserva";
+
+                Swal.fire({
+                    title: 'Reserva eliminada con éxito',
+                    icon: 'success',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
             } else {
                 console.error('Error al quitar reserva');
+
+                Swal.fire({
+                    title: 'Error al quitar la reserva',
+                    icon: 'error',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
             }
         });
 }
@@ -52,7 +85,7 @@ function quitarReserva() {
 function actualizarEstadoReserva(estado) {
     const estadoReservaContenedor = document.getElementById('estadoReservaContenedor');
     if (estado === 'reservado') {
-        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado text-warning">Videojuego Reservado</strong>';
+        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado">Videojuego Reservado</strong>';
     } else {
         estadoReservaContenedor.innerHTML = '';
     }
@@ -97,6 +130,15 @@ function ponerProbado() {
                 if (textoProbado) {
                     textoProbado.classList.remove('oculto');
                 }
+
+                Swal.fire({
+                    title: '¡Videojuego probado!',
+                    icon: 'success',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
             } else {
                 console.error('Error al marcar videojuego como probado');
             }
@@ -128,6 +170,15 @@ function quitarProbado() {
                 if (textoProbado) {
                     textoProbado.classList.add('oculto');
                 }
+
+                Swal.fire({
+                    title: 'Videojuego no probado',
+                    icon: 'info',
+                    toast: true,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
             } else {
                 console.error('Error al quitar estado de probado');
             }

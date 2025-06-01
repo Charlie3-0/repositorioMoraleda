@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="web/css/estilos.css">
+    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -68,27 +71,40 @@
     <main>
         <h2>Todos los Videojuegos Probados</h2>
         <?php if (!empty($videojuegosProbadosAgrupadosPorUsuario)): ?>
-            <?php foreach ($videojuegosProbadosAgrupadosPorUsuario as $grupo): ?>
-                <div class="usuario" style="margin-bottom: 40px;">
-                    <h3 style="color: darkblue;">👤 <?= $grupo['usuario']->getEmail() ?></h3>
-                    
-                    <?php foreach ($grupo['videojuegos'] as $info): ?>
-                        <div class="videojuego_probado" style="display: flex; align-items: center; gap: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-                            <div class="foto">
-                                <img src="web/images/<?= $info['videojuego']->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
-                            </div>
-                            <div class="info">
-                                <h4>
-                                    <a href="index.php?accion=ver_videojuego&id=<?= $info['videojuego']->getId() ?>">
-                                        <?= $info['videojuego']->getTitulo() ?>
-                                    </a>
-                                </h4>
-                                <p><u>Probado en:</u> <?= $info['fecha'] ?></p>
+            <div class="accordion" id="accordionUsuarios">
+                <?php foreach ($videojuegosProbadosAgrupadosPorUsuario as $index => $grupo): ?>
+                    <?php $usuario = $grupo['usuario']; ?>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading<?= $index ?>">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse<?= $index ?>" aria-expanded="false"
+                                    aria-controls="collapse<?= $index ?>">
+                                    <i class="fa-solid fa-user text-primary me-2"></i> <?= $usuario->getEmail() ?>
+                            </button>
+                        </h2>
+                        <div id="collapse<?= $index ?>" class="accordion-collapse collapse"
+                            aria-labelledby="heading<?= $index ?>" data-bs-parent="#accordionUsuarios">
+                            <div class="accordion-body">
+                                <?php foreach ($grupo['videojuegos'] as $info): ?>
+                                    <div class="videojuego_probado d-flex align-items-center gap-3 border p-2 mb-2 rounded">
+                                        <div class="foto">
+                                            <img src="web/images/<?= $info['videojuego']->getFoto() ?>" height="100" class="border rounded">
+                                        </div>
+                                        <div class="info">
+                                            <h5>
+                                                <a href="index.php?accion=ver_videojuego&id=<?= $info['videojuego']->getId() ?>">
+                                                    <?= $info['videojuego']->getTitulo() ?>
+                                                </a>
+                                            </h5>
+                                            <p><u>Probado en:</u> <?= $info['fecha'] ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
         <?php else: ?>
             <p>No hay videojuegos probados actualmente.</p>
         <?php endif; ?>

@@ -56,6 +56,7 @@ class ControladorComentarios {
         $idComentario = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
         $nuevoComentario  = htmlspecialchars(trim(filter_input(INPUT_POST, 'comentario')));
 
+        // No se permiten comentarios vacíos
         if (!$idComentario || empty($nuevoComentario )) {
             echo json_encode(['respuesta' => 'datos_invalidos']);
             exit;

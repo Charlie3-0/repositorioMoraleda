@@ -44,9 +44,9 @@ class ControladorVideojuegos {
         $videojuego = $videojuegosDAO->getById($idVideojuego);
 
         // Obtener el Id de la categoria para obtener el atributo/elemento idCategoria de la clase Videojuego
-        $idCategoria = $_GET['id'];
+        /* $idCategoria = $_GET['id'];
         $idCategoria = htmlspecialchars($_GET['id']);
-        $categoria = $categoriasDAO->getById($idCategoria);
+        $categoria = $categoriasDAO->getById($idCategoria); */
 
         // Obtener la categoría del videojuego para poder obtener el nombre de la categoría
         $categoriaId = $videojuego->getIdCategoria();
@@ -105,91 +105,8 @@ class ControladorVideojuegos {
             }
         }
 
-        /* // Comprobar si existe una reserva para la pelicula
-        $existeReserva = $reservasDAO->existByIdUsuarioIdPelicula(Sesion::getUsuario()->getId(), $idPelicula);
-
-        // Obtener el número de reservas para la pelicula
-        $peliculaReservada = $reservasDAO->countByIdPelicula($idPelicula);
-
-        // Obtener el número de préstamos para el libro(en nuestro caso será solo 1)
-        $peliculaPrestada = $prestamosDAO->countByIdPelicula($idPelicula);
-
-        // Comprobar si el usuario ha marcado la película como vista (estado individual)
-        $marcadaVista = false;  // Valor inicial por si no hay sesion. Evita errores
-        if (Sesion::existeSesion()) {   // Comprobar si el usuario está conectado
-            $marcadaVista = $peliculasVistasDAO->estaMarcadaComoVista(Sesion::getUsuario()->getId(), $idPelicula);  // Verificar si este usuario ha marcado esta película
-        }
-        
-        // Obtener el número de vistas para la pelicula
-        $peliculaVista = $peliculasVistasDAO->countByIdPelicula($idPelicula); */   // Cuenta cuántos usuarios han marcado esta película como vista
 
         require 'app/vistas/ver_videojuego.php';
-    }
-
-
-    // FUNCIÓN PARA VER CADA PELICULA PARA ADMINISTRADOR
-    public function verPeliculaAdmin(){
-        // Creamos la conexión utilizando la clase que hemos creado
-        $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
-        $conn = $connexionDB->getConnexion();
-
-        // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
-        $peliculasDAO = new VideojuegosDAO($conn);
-        $reservasDAO = new ReservasDAO($conn);
-        $categoriasDAO = new CategoriasDAO($conn);
-        $prestamosDAO = new PrestamosDAO($conn);
-        $usuariosDAO = new UsuariosDAO($conn);
-        $peliculasVistasDAO = new Videojuegos_probadosDAO($conn);
-        $comentariosDAO = new ComentariosDAO($conn);
-
-        // Obtener la pelicula
-        $idPelicula = htmlspecialchars($_GET['id']);
-        $pelicula = $peliculasDAO->getById($idPelicula);
-
-        // Obtener el Id de la categoria para obtener el atributo/elemento idCategoria de la clase Pelicula
-        $idCategoria = $_GET['id'];
-        $idCategoria = htmlspecialchars($_GET['id']);
-        $categoria = $categoriasDAO->getById($idCategoria);
-
-        // Obtener la categoría de la pelicula para poder obtener el nombre de la categoría
-        $categoriaId = $pelicula->getIdCategoria();
-        $categoria = $categoriasDAO->getById($categoriaId);
-
-
-        /* // Comprobar si existe una reserva para la pelicula
-        $existeReserva = $reservasDAO->existByIdUsuarioIdPelicula(Sesion::getUsuario()->getId(), $idPelicula); */
-
-
-/*         // Obtener el número de reservas para la pelicula(en nuestro caso será solo 1)
-        $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego);
-
-        // Obtener el usuario que ha reservado la pelicula
-        $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
- */
-
-    /*     // Obtener el número de préstamos para la pelicula(en nuestro caso será solo 1)
-        $peliculaPrestada = $prestamosDAO->countByIdPelicula($idPelicula);
-
-        // Obtener el usuario que ha tomado prestada la pelicula (si no ha sido devuelto)
-        $usuarioPrestado = $peliculaPrestada ? $prestamosDAO->getUsuarioPrestamoPorPeliculaId($idPelicula) : null; */
-
-
-    /*     // Obtener el usuario que ha reservado la pelicula
-        $usuarioReserva = $reservasDAO->getUsuarioReservaPorPeliculaId($idPelicula);
-
-        // Obtener el número de reservas para la pelicula (en nuestro caso será solo 1)
-        $peliculaReservada = $reservasDAO->countByIdPelicula($idPelicula);
- */
-
-/*         // Obtener el usuario que tiene la pelicula prestada o el estado de disponibilidad
-        $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego);
-
-        // Obtener el número de préstamos para la pelicula (en nuestro caso será solo 1)
-        $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
- */
-        // var_dump($categoria);die();
-
-        require '../app/vistas/ver_pelicula_admin.php';
     }
 
 
@@ -227,6 +144,14 @@ class ControladorVideojuegos {
 
     public function insertarVideojuego() {
     //    $error = '';
+
+        // Comprobamos si hay sesión y si el usuario es administrador
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -284,7 +209,7 @@ class ControladorVideojuegos {
     
 
                 if ($videojuegosDAO->insert($videojuego)) {
-                    $_SESSION['mensaje_ok'] = "El videojuego se ha insertado correctamente.";
+                    $_SESSION['mensaje_ok'] = "El videojuego se ha creado correctamente.";
                     header('location: index.php?accion=videojuegos_por_categoria&id=' . $videojuego->getIdCategoria());
                     die();
                 } else {
@@ -312,6 +237,14 @@ class ControladorVideojuegos {
     public function editarVideojuego(){
      //   $error ='';
     
+        // Comprobamos si hay sesión y si el usuario es administrador
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -391,12 +324,110 @@ class ControladorVideojuegos {
 
 
     public function eliminarVideojuego(){
-        $error ='';
+        // Comprobamos si hay sesión y si el usuario es administrador
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
 
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
 
+        //Creamos el objeto VideojuegosDAO para acceder a BBDD a través de este objeto
+        $videojuegosDAO = new VideojuegosDAO($conn);
+
+        //Obtener el videojuego que se quiere eliminar
+        $idVideojuego = htmlspecialchars($_GET['id']);
+        $videojuego = $videojuegosDAO->getById($idVideojuego);
+
+        // Verificamos si existe el videojuego antes de eliminar
+        $videojuego = $videojuegosDAO->getById($idVideojuego);
+        if (!$videojuego) {
+            $_SESSION['mensaje_error'] = 'El videojuego no existe.';
+            header('location: index.php?accion=configuraciones_videojuegos');
+            exit;
+        }
+
+        // Intentamos eliminar el videojuego
+        if ($videojuegosDAO->delete($idVideojuego)) {
+            $_SESSION['mensaje_ok'] = 'Videojuego eliminado correctamente.';
+        } else {
+            $_SESSION['mensaje_error'] = 'Error al eliminar el videojuego.';
+        }
+
+        // Redirigimos de nuevo a configuraciones
+        header('location: index.php?accion=configuraciones_videojuegos');
+        exit;
+        
+    }
+
+
+    public function configuracionesVideojuegos() {
+        // Comprobamos si hay sesión y si el usuario es administrador
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
+        // Creamos la conexión utilizando la clase que hemos creado
+        $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
+        $conn = $connexionDB->getConnexion();
+
+        // Creamos el objeto VideojuegosDAO para acceder a BBDD a través de este objeto
+        $videojuegosDAO = new VideojuegosDAO($conn);
+        $usuariosDAO = new UsuariosDAO($conn);
+        $categoriasDAO = new CategoriasDAO($conn);
+        $reservasDAO = new ReservasDAO($conn);
+        $prestamosDAO = new PrestamosDAO($conn);
+
+        // Obtenemos todos los videojuegos
+        $videojuegos = $videojuegosDAO->getAll();
+        // Obtenemos todos los usuarios
+        $usuarios = $usuariosDAO->getAll();
+        // Obtenemos todas las reservas
+        $reservas = $reservasDAO->getAll();
+        // Obtenemos todos los préstamos
+        $prestamos = $prestamosDAO->getAll();
+
+        // Obtener el videojuego
+    /*     $idVideojuego = htmlspecialchars($_GET['id']);
+        $videojuego = $videojuegosDAO->getById($idVideojuego); */
+
+        // Obtener la categoría del videojuego
+        /* $idCategoria = $_GET['id'];
+        $idCategoria = htmlspecialchars($_GET['id']);
+        $categoria = $categoriasDAO->getById($idCategoria); */
+
+        // Obtener la categoría del videojuego para poder obtener el nombre de la categoría
+        /* $categoriaId = $videojuego->getIdCategoria();
+        $categoria = $categoriasDAO->getById($categoriaId); */
+
+        // Inicializar variables comunes
+    /*     $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0
+        $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego); */
+        $existeReserva = false;
+        $usuarioReservado = null;
+        $usuarioPrestamo = null;
+        $prestamoActivo = false;
+
+        // Solo si hay sesión
+        if (Sesion::existeSesion()) {
+            $usuario = Sesion::getUsuario();
+
+            if ($usuario->getRol() === 'A') {
+                // Lógica para administradores
+       /*          $existeReserva = $reservasDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego);
+                $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
+                $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego); */
+            }
+        }
+
+        require 'app/vistas/configuraciones.php';
     }
 
 }

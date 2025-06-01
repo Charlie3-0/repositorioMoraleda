@@ -100,6 +100,18 @@ class ReservasDAO {
 
 
     /**
+     * Eliminar una Reserva desde las configuraciones por el ID del videojuego
+     */
+    public function deleteByIdVideojuego($idVideojuego) {
+        $sql = "DELETE FROM reservas WHERE idVideojuego = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $idVideojuego);
+        return $stmt->execute();
+    }
+    
+
+
+    /**
      * Función para contar el número de Videojuegos reservados, aunque la hemos usado para ver si tenemos la reserva de un videojuego,
      * ya que nosotros estamos contemplando que solo hay una unidad de cada videojuego
      */

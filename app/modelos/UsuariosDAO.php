@@ -116,5 +116,14 @@ class UsuariosDAO {
     }
 
 
+    public function updateRol(Usuario $usuario) {
+        $stmt = $this->conn->prepare("UPDATE usuarios SET rol = ? WHERE id = ?");
+        $rol = $usuario->getRol();
+        $id = $usuario->getId();
+        $stmt->bind_param('si', $rol, $id);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
+    
 
 }

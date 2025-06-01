@@ -397,10 +397,15 @@ class Videojuegos_probadosDAO {
             $idVideojuego = $fila['idVideojuego'];
             $fechaProbado = $fila['fecha_probado'];
     
-            // Si aún no hemos agregado a este usuario, lo añadimos
+            // Cargar usuario si aún no está cargado
             if (!isset($agrupado[$idUsuario])) {
+                $usuario = $usuariosDAO->getById($idUsuario);
+
+                // Saltar si no es un usuario con rol 'U'
+                if ($usuario->getRol() !== 'U') continue;
+
                 $agrupado[$idUsuario] = [
-                    'usuario' => $usuariosDAO->getById($idUsuario),
+                    'usuario' => $usuario,
                     'videojuegos' => []
                 ];
             }

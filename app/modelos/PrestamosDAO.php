@@ -90,31 +90,6 @@ class PrestamosDAO {
 
 
     /**
-     * Borrar el prestamo de la tabla prestamos del id pasado por parámetro
-     * @return true si ha borrado el prestamo y false si no lo ha borrado (por que no existia)
-     */
-    function borrar($id):bool{
-
-        if(!$stmt = $this->conn->prepare("DELETE FROM prestamos WHERE id = ?"))
-        {
-            echo "Error en la SQL: " . $this->conn->error;
-        }
-        //Asociar las variables a las interrogaciones(parámetros)
-        $stmt->bind_param('i',$id);
-        //Ejecutamos la SQL
-        $stmt->execute();
-        //Comprobamos si ha borrado algún registro o no
-        if($stmt->affected_rows==1){
-            return true;
-        }
-        else{
-            return false;
-        }
-        
-    }
-
-
-    /**
      * Insertar en la base de datos el prestamo que recibe como parámetro
      * @return idPrestamo Devuelve el id autonumérico que se le ha asignado al prestamo o false en caso de error
      */
@@ -255,6 +230,37 @@ class PrestamosDAO {
 
         return $stmt->execute();
     }
+
+
+    // Método para marcar como devuelto el prestamo desde el ID del videojuego
+    public function marcarComoDevueltoPorIdVideojuego($idVideojuego) {
+        $sql = "UPDATE prestamos SET devuelto = 1 WHERE idVideojuego = ? AND devuelto = 0";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $idVideojuego);
+        return $stmt->execute();
+    }
+    
+
+    // Método para obtener un préstamo activo por el ID del videojuego
+    public function getPrestamoActivoPorVideojuegoId($idVideojuego) {
+        $stmt = $this->conn->prepare("SELECT * FROM prestamos WHERE idVideojuego = ? AND devuelto = 0 LIMIT 1");
+        $stmt->bind_param("i", $idVideojuego);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        
+        if ($fila = $resultado->fetch_assoc()) {
+            $prestamo = new Prestamo(
+                $fila['id'],
+                $fila['fecha_prestamo'],
+                $fila['devuelto'],
+                $fila['idUsuario'],
+                $fila['idVideojuego']  
+            );
+            return $prestamo;
+        }
+        return null;
+    }
+
 
 }
 

@@ -42,6 +42,33 @@ class ControladorReservas {
     }
 
 
+    /**
+     * Quitar la reserva de un videojuego por parte de un administrador
+     */
+    public function quitarReservaAdmin() {
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+    
+        $idVideojuego = $_GET['idVideojuego'];
+    
+        $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
+        $reservasDAO = new ReservasDAO($conn);
+    
+        if ($reservasDAO->deleteByIdVideojuego($idVideojuego)) {
+            $_SESSION['mensaje_ok'] = 'Reserva eliminada correctamente.';
+        } else {
+            $_SESSION['mensaje_error'] = 'Error al eliminar la reserva.';
+        }
+    
+        header('location: index.php?accion=configuraciones_videojuegos');
+    }
+    
+
+
     public function verReservas(){
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
@@ -70,6 +97,13 @@ class ControladorReservas {
 
 
     public function verTodasReservas(){
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();

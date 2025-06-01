@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="web/css/estilos.css">
+    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -121,7 +124,7 @@
                 
                 <br><br>
                 <input type="submit" value="Guardar Cambios">
-                <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>">Volver Atrás</a>
+                <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>">Volver al Videojuego</a>
             </form>
         <?php else: ?>
             <p class="alert alert-warning" role="alert">El videojuego no existe o no se ha especificado.</p>

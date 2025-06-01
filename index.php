@@ -58,6 +58,9 @@ $mapa = array(
     'registrar'=>array('controlador'=>'ControladorUsuarios', 
                        'metodo'=>'registrar', 
                        'privada'=>false),
+    'cambiar_rol_usuario'=>array('controlador'=>'ControladorUsuarios',
+                            'metodo'=>'cambiarRolUsuario',
+                            'privada'=>true),
     'videojuegos_por_categoria'=>array('controlador'=>'ControladorVideojuegos',
                                     'metodo'=>'verVideojuegosPorCategoria',
                                     'privada'=>false),
@@ -67,6 +70,9 @@ $mapa = array(
     'quitar_reserva'=>array('controlador'=>'ControladorReservas', 
                             'metodo'=>'borrarReserva',
                             'privada'=>false),
+    'quitar_reserva_admin'=>array('controlador'=>'ControladorReservas', 
+                            'metodo'=>'quitarReservaAdmin',
+                            'privada'=>true),
     'ver_reservas'=>array('controlador'=>'ControladorReservas',
                             'metodo'=>'verReservas',
                             'privada'=>false),
@@ -79,6 +85,9 @@ $mapa = array(
     'devolver_videojuego'=>array('controlador'=>'ControladorPrestamos', 
                             'metodo'=>'devolverVideojuego',
                             'privada'=>false),
+    'devolver_prestamo_admin'=>array('controlador'=>'ControladorPrestamos', 
+                            'metodo'=>'devolverPrestamoAdmin',
+                            'privada'=>true),
     'ver_prestamos'=>array('controlador'=>'ControladorPrestamos', 
                             'metodo'=>'verPrestamos',
                             'privada'=>false),
@@ -108,7 +117,13 @@ $mapa = array(
                                 'privada'=>false),
     'eliminar_comentario'=>array('controlador'=>'ControladorComentarios',
                                 'metodo'=>'eliminarComentario',
-                                'privada'=>false)                                  
+                                'privada'=>false),
+    'configuraciones_videojuegos'=>array('controlador'=>'ControladorVideojuegos',
+                         'metodo'=>'configuracionesVideojuegos', 
+                         'privada'=>false),
+    'sobre_nosotros'=>array('controlador'=>'ControladorUsuarios',
+                         'metodo'=>'sobreNosotros', 
+                         'privada'=>false)                              
 );
 
 

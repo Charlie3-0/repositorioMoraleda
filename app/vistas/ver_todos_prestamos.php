@@ -9,16 +9,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="web/css/estilos.css">
+    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <!-- SweetAlert2 CSS y JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
-        <h1 class="tituloPagina">
-            <?php if (Sesion::getUsuario() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                TESTPLAY ADMIN
-            <?php else: ?>
-                TESTPLAY
-            <?php endif; ?>
-        </h1>
+        <a class="navbar-brand" href="index.php" required title="Inicio">
+            <img src="web/icons/Logo_TestPlay.png" style="height: 200px;";>
+        </a>
 
         <?php if (Sesion::getUsuario()): ?>
             <span class="emailUsuario">
@@ -51,6 +50,12 @@
 
                 <br><br>
                 <a href="index.php?accion=insertar_videojuego">Insertar Videojuego</a>
+
+                <br><br>
+                <a href="index.php?accion=sobre_nosotros">Sobre Nosotros</a>
+
+                <br><br>
+                <a href="index.php?accion=configuraciones_videojuegos"><i class="fa-solid fa-gear"></i> Configuraciones</a>
             <?php endif; ?>
 
         <?php else: ?>

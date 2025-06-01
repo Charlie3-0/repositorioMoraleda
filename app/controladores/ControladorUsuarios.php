@@ -120,6 +120,39 @@ class ControladorUsuarios {
     }
 
 
+    public function cambiarRolUsuario() {
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+    
+        $idUsuario = $_POST['id_usuario'];
+        $nuevoRol = $_POST['nuevo_rol'];
+    
+        if ($idUsuario && in_array($nuevoRol, ['A', 'U'])) {
+            $conexion = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
+            $usuariosDAO = new UsuariosDAO($conexion->getConnexion());
+    
+            $usuarioActualizar = $usuariosDAO->getById($idUsuario);
+            if ($usuarioActualizar && $usuarioActualizar->getEmail() !== 'admin@gmail.com') {
+                $usuarioActualizar->setRol($nuevoRol);
+                $usuariosDAO->updateRol($usuarioActualizar);
+                $_SESSION['mensaje_ok'] = 'Rol actualizado correctamente.';
+            }
+        }
+    
+        header('location: index.php?accion=configuraciones_videojuegos');
+    }
+    
+
+
+    public function sobreNosotros() {
+        // Cargamos la vista
+        require 'app/vistas/sobre_nosotros.php';
+    }
+
 }
 
 

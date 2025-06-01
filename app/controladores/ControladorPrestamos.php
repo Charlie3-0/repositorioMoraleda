@@ -29,6 +29,13 @@ class ControladorPrestamos {
 
 
     public function verTodosPrestamos(){
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -56,7 +63,12 @@ class ControladorPrestamos {
 
 
     public function insertarPrestamo() {
-     //   $error = '';
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -77,9 +89,6 @@ class ControladorPrestamos {
             $idVideojuego = htmlspecialchars($_POST['idVideojuego']); // Es necesario si queremos seleccionar videojuego en el desplegable
             $fecha_prestamo = date('Y-m-d H:i:s'); // Fecha actual
             $devuelto = 0; // Por defecto, el videojuego NO está devuelto
-    
-            // Obtener el número de préstamos para el videojuego(en nuestro caso será solo 1)
-            // $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
 
 
             // Modificar para obtener el préstamo activo(NO DEVUELTO) del videojuego
@@ -127,7 +136,12 @@ class ControladorPrestamos {
     y así no tener que borrar los prestamos realizados y se queden guardados en la Base de Datos y de esta forma se
     puedan visualizar en la vista de mostrarTodosPrestamos. */
     public function devolverVideojuego() {
-        $error = '';
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
     
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
@@ -143,7 +157,7 @@ class ControladorPrestamos {
     
             // Validamos los datos
             if (empty($idPrestamo)) {
-                $error = "El ID del préstamo es obligatorio.";
+                $_SESSION['mensaje_error'] = "El ID del préstamo es obligatorio.";
             } else {
                 // Actualizamos el estado del préstamo a devuelto
                 if ($prestamosDAO->marcarComoDevuelto($idPrestamo)) {
@@ -159,13 +173,35 @@ class ControladorPrestamos {
                 die();
             }
         } else {
-            $error = "No se ha proporcionado un ID de préstamo válido.";
+            $_SESSION['mensaje_error'] = "No se ha proporcionado un ID de préstamo válido.";
         }
     
         // Cargamos la vista de ver todos los préstamos
         require 'app/vistas/ver_todos_prestamos.php';
     }
     
+    
+    public function devolverPrestamoAdmin() {
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+    
+        $idVideojuego = $_GET['idVideojuego'];
+    
+        $conn = (new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB))->getConnexion();
+        $prestamosDAO = new PrestamosDAO($conn);
+    
+        if ($prestamosDAO->marcarComoDevueltoPorIdVideojuego($idVideojuego)) {
+            $_SESSION['mensaje_ok'] = 'Videojuego devuelto con éxito.';
+        } else {
+            $_SESSION['mensaje_error'] = 'Error al marcar como devuelto.';
+        }
+    
+        header('location: index.php?accion=configuraciones_videojuegos');
+    }
     
     
 

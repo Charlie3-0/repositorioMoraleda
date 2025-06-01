@@ -193,3 +193,14 @@
 }
 
 
+/* ESTILOS PARA TEXTO DE VIDEOJUEGO DISPONIBLE EN CONFIGURACIONES */
+.texto-disponible {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 4px 8px;
+    background-color: #e0f7e9;
+    color: #2e7d32;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
