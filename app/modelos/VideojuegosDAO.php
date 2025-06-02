@@ -187,26 +187,23 @@ class VideojuegosDAO {
     
 
         
-
-        /* Recogemos las peliculas que no han sido prestadas, es decir,
-        las que han sido devueltas, que será para el booleano un 0(devuelto), para poder prestarlas después de nuevo. */
-        /* public function obtenerPeliculasDisponibles():array { 
-            if(!$stmt = $this->conn->prepare("SELECT * FROM peliculas WHERE id NOT IN(SELECT IdPelicula from prestamos WHERE devuelta=false)"))
-        {
-            echo "Error en la SQL: " . $this->conn->error;
-        }
-        //Ejecutamos la SQL
+    public function buscarPorTitulo($texto){
+        $stmt = $this->conn->prepare("SELECT id, titulo FROM videojuegos WHERE titulo LIKE CONCAT('%', ?, '%') LIMIT 10");
+        $stmt->bind_param("s", $texto);
         $stmt->execute();
-        //Obtener el objeto mysql_result
-        $result = $stmt->get_result();
+        $res = $stmt->get_result();
 
-        $array_peliculas = array();
-        
-        while($pelicula = $result->fetch_object(Pelicula::class)){
-            $array_peliculas[] = $pelicula;
+        $videojuegos = [];
+        while ($row = $res->fetch_assoc()) {
+            $vj = new Videojuego();
+            $vj->setId($row['id']);
+            $vj->setTitulo($row['titulo']);
+            $videojuegos[] = $vj;
         }
-        return $array_peliculas;
-        } */
+
+        return $videojuegos;
+    }
+
 
 }
 

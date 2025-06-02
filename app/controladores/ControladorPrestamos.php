@@ -42,21 +42,11 @@ class ControladorPrestamos {
 
         // Creamos los objetos DAO necesarios para acceder a BBDD a través de estos objetos
         $videojuegosDAO = new VideojuegosDAO($conn);
-        $reservasDAO = new ReservasDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
-        // Obtener todos los préstamos
-        $todosLosPrestamos = $prestamosDAO->getAll();
-
-        
-        foreach ($todosLosPrestamos as $prestamo) {
-            $prestamo->videojuego = $videojuegosDAO->getById($prestamo->getIdVideojuego()); // Asignar el videojuego a cada préstamo
-            $prestamo->usuario = $usuariosDAO->getById($prestamo->getIdUsuario()); // Asignar el usuario al préstamo
-        }
-
-        // Pasar los préstamos a la vista
-        $prestamos = $todosLosPrestamos;
+        // Obtener préstamos agrupados por usuario
+        $prestamosAgrupadosPorUsuario = $prestamosDAO->getPrestamosAgrupadosPorUsuario();
 
         require 'app/vistas/ver_todos_prestamos.php';
     }

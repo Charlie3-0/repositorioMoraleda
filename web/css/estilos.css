@@ -204,3 +204,27 @@
     font-size: 0.875rem;
     font-weight: 600;
 }
+
+
+/* ESTILOS PARA HEADER */
+.navbar-bootstrap-purple {
+    background-color: #712cf9 !important;
+}
+.navbar-bootstrap-purple .nav-link,
+.navbar-bootstrap-purple .navbar-brand,
+.navbar-bootstrap-purple .dropdown-item,
+.navbar-bootstrap-purple .text-dark {
+    color: white !important;
+}
+.navbar-bootstrap-purple .dropdown-menu {
+    background-color: #5a23c8;
+}
+.navbar-bootstrap-purple .dropdown-item:hover {
+    background-color: #4b1da9;
+}
+
+/* ESTILOS PARA INPUTS DE FORMULARIO */
+input.form-control:focus {
+    border-color: #ffc107 !important;   /* Bootstrap warning color */
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25); /* Yellow glow */
+}

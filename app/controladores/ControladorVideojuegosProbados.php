@@ -34,6 +34,13 @@ class ControladorVideojuegosProbados {
      * Ver todos los videojuegos probados como probados en la base de datos
      */
     public function verTodosVideojuegosProbados() {
+        $usuario = Sesion::getUsuario();
+        if (!$usuario || $usuario->getRol() !== 'A') {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
     

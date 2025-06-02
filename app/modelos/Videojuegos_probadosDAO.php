@@ -58,49 +58,6 @@ class Videojuegos_probadosDAO {
 
 
     /**
-     * Insertar una Reserva
-     */
-    /* public function insert($reserva){
-        if($this->existByIdUsuarioIdPelicula($reserva->getIdUsuario(), $reserva->getIdPelicula()));
-        if(!$stmt = $this->conn->prepare("INSERT INTO reservas (idUsuario, idPelicula) VALUES (?,?)")){
-            die("Error al preparar la consulta insert: " . $this->conn->error );
-        }
-        $idUsuario = $reserva->getIdUsuario();
-        $idPelicula = $reserva->getIdPelicula();
-        $stmt->bind_param('ii',$idUsuario, $idPelicula);
-        if($stmt->execute()){
-            $reserva->setId($stmt->insert_id);
-            return $stmt->insert_id;
-        }
-        else{
-            return false;
-        }
-    } */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-    /**
      * Obtener todos los videojuegos_probados marcados como probados (probado = 1)
      * @return array Devuelve un array de objetos Videojuego_probado
      */
@@ -203,22 +160,6 @@ class Videojuegos_probadosDAO {
         }
     }
 
-    
-    /**
-     * Función para saber si está probado el videojuego_probado como probado
-     */
-    /* public function estaMarcadoComoProbado($idUsuario, $idVideojuego) {
-        if (!$stmt = $this->conn->prepare("SELECT 1 FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1 LIMIT 1")) {
-            die("Error al preparar la consulta select está marcado como probado: " . $this->conn->error);
-        }
-    
-        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        return $result->num_rows >= 1;
-    } */
-
 
     /**
      * Función para saber si está probado el videojuego_probado
@@ -231,7 +172,6 @@ class Videojuegos_probadosDAO {
         $result = $stmt->get_result();
         return $result->num_rows > 0;
     }
-    
     
 
     /**
@@ -287,41 +227,6 @@ class Videojuegos_probadosDAO {
 
 
     /**
-     * Insertar el videojuego_probado "probado" en la base de datos
-     */
-    /* public function marcarComoProbado($idUsuario, $idVideojuego) {
-        $fechaProbado = date('Y-m-d H:i:s');
-    
-        // Verificamos si ya existe un registro
-        $query = "SELECT id, probado FROM videojuegos_probados WHERE idUsuario = ? AND idVideojuego = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-    
-        if ($resultado->num_rows > 0) {
-            $fila = $resultado->fetch_assoc();
-            if ($fila['probado'] == 1) {
-                // Ya está marcado como probado, no hacemos nada
-                return false;
-            } else {
-                // Existe pero no estaba marcado como probado, lo actualizamos
-                $updateQuery = "UPDATE videojuegos_probados SET probado = 1, fecha_probado = ? WHERE id = ?";
-                $updateStmt = $this->conn->prepare($updateQuery);
-                $updateStmt->bind_param("si", $fechaProbado, $fila['id']);
-                return $updateStmt->execute();
-            }
-        } else {
-            // No existe aún, la insertamos
-            $insertQuery = "INSERT INTO videojuegos_probados (idUsuario, idVideojuego, probado, fecha_probado) VALUES (?, ?, 1, ?)";
-            $insertStmt = $this->conn->prepare($insertQuery);
-            $insertStmt->bind_param("iis", $idUsuario, $idVideojuego, $fechaProbado);
-            return $insertStmt->execute();
-        }
-    } */
-
-
-    /**
      * Insertar el videojuego_probado en la base de datos
      */
     public function marcarComoProbado($idUsuario, $idVideojuego) {
@@ -345,24 +250,6 @@ class Videojuegos_probadosDAO {
         $insertStmt->bind_param("iis", $idUsuario, $idVideojuego, $fechaProbado);
         return $insertStmt->execute();
     }
-    
-    
-
-    /**
-     * Actualiza el estado de probado, a videojuego_probado no probado
-     * @param int $idUsuario ID del usuario
-     * @param int $idVideojuego ID del videojuego
-     * @param int $nuevoEstado Estado de probado (1 = probado, 0 = no probado)
-     */
-    /* public function quitarProbado($idUsuario, $idVideojuego) {
-        if (!$stmt = $this->conn->prepare("UPDATE videojuegos_probados SET probado = 0 WHERE idUsuario = ? AND idVideojuego = ? AND probado = 1")) {
-            die("Error al preparar la consulta update: " . $this->conn->error);
-        }
-    
-        $stmt->bind_param("ii", $idUsuario, $idVideojuego);
-    
-        return $stmt->execute();
-    } */
 
 
     /**

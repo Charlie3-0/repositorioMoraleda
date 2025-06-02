@@ -673,3 +673,47 @@ function actualizarTiemposRelativos() {
         span.textContent = formatearTiempoRelativo(fecha);
     });
 }
+
+
+// Script para buscar videojuegos
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("inputBusquedaVideojuego");
+    const resultados = document.getElementById("resultadosBusqueda");
+
+    input.addEventListener("keyup", function () {
+        const texto = input.value.trim();
+
+        if (texto.length < 2) {
+            resultados.innerHTML = "";
+            return;
+        }
+
+        fetch("index.php?accion=buscar_titulos_videojuego&query=" + encodeURIComponent(texto))
+            .then(res => res.json())
+            .then(data => {
+                resultados.innerHTML = "";
+
+                if (data.length === 0) {
+                    resultados.innerHTML = `<li class="list-group-item text-muted">Sin resultados</li>`;
+                    return;
+                }
+
+                data.forEach(vj => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item list-group-item-action";
+                    li.textContent = vj.titulo;
+                    li.addEventListener("click", () => {
+                        window.location.href = `index.php?accion=ver_videojuego&id=${vj.id}`;
+                    });
+                    resultados.appendChild(li);
+                });
+            });
+    });
+
+    // Ocultar resultados al perder foco
+    document.addEventListener("click", function (e) {
+        if (!document.getElementById("buscadorVideojuegos").contains(e.target)) {
+            resultados.innerHTML = "";
+        }
+    });
+});

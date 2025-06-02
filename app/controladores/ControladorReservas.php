@@ -113,17 +113,10 @@ class ControladorReservas {
         $reservasDAO = new ReservasDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
 
-        // Obtener todas las reservas
-        $todasLasReservas = $reservasDAO->getAll();
-        
-        
-        foreach ($todasLasReservas as $reserva) {
-            $reserva->videojuego = $videojuegosDAO->getById($reserva->getIdVideojuego()); // Asignar el videojuego a cada reserva
-            $reserva->usuario = $usuariosDAO->getById($reserva->getIdUsuario()); // Asignar el usuario a la reserva
-        }
+        $reservasDAO = new ReservasDAO($conn);
 
-        // Pasar las reservas a la vista
-        $reservas = $todasLasReservas;
+        // Obtenemos las reservas agrupadas por usuario
+        $reservasAgrupadas = $reservasDAO->getReservasAgrupadasPorUsuario();
 
         require 'app/vistas/ver_todas_reservas.php';
     }

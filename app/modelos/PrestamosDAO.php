@@ -59,6 +59,53 @@ class PrestamosDAO {
     }
 
 
+    public function getPrestamosAgrupadosPorUsuario() {
+        $sql = "SELECT * FROM prestamos ORDER BY idUsuario, fecha_prestamo DESC";
+        $result = $this->conn->query($sql);
+    
+        $usuariosDAO = new UsuariosDAO($this->conn);
+        $videojuegosDAO = new VideojuegosDAO($this->conn);
+    
+        $agrupado = [];
+    
+        while ($fila = $result->fetch_assoc()) {
+            $idUsuario = $fila['idUsuario'];
+    
+            // Cargar usuario solo si es necesario
+            if (!isset($agrupado[$idUsuario])) {
+                $usuario = $usuariosDAO->getById($idUsuario);
+    
+                // Saltar si no es usuario normal
+                if ($usuario->getRol() !== 'U') continue;
+    
+                $agrupado[$idUsuario] = [
+                    'usuario' => $usuario,
+                    'prestamos' => []
+                ];
+            }
+    
+            $prestamo = new Prestamo();
+            $prestamo->setId($fila['id']);
+            $prestamo->setIdUsuario($idUsuario);
+            $prestamo->setIdVideojuego($fila['idVideojuego']);
+            $prestamo->setFechaPrestamo($fila['fecha_prestamo']);
+            $prestamo->setDevuelto($fila['devuelto']);
+    
+            // Empaquetar todo en un array
+            $prestamoConUsuarioVideojuego = [
+                'prestamo' => $prestamo,
+                'videojuego' => $videojuegosDAO->getById($fila['idVideojuego']),
+                'usuario' => $agrupado[$idUsuario]['usuario'],
+            ];
+
+            $agrupado[$idUsuario]['prestamos'][] = $prestamoConUsuarioVideojuego;
+        }
+    
+        return array_values($agrupado); // Para que sean índices numéricos
+    }
+    
+
+
     /**
      * Obtener todos los préstamos de la tabla prestamos por el ID de usuario
      * @param int $idUsuario El ID del usuario del que deseamos obtener los préstamos

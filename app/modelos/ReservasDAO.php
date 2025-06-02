@@ -232,6 +232,49 @@ class ReservasDAO {
         return $arrayReservas;
     }
 
+
+    /**
+     * Obtener todas las reservas agrupadas por usuario
+     * @return array Devuelve un array de usuarios con sus reservas
+     */
+    public function getReservasAgrupadasPorUsuario() {
+        $sql = "SELECT * FROM reservas ORDER BY idUsuario, fecha_reserva";
+        $result = $this->conn->query($sql);
+    
+        $usuariosDAO = new UsuariosDAO($this->conn);
+        $videojuegosDAO = new VideojuegosDAO($this->conn);
+    
+        $agrupado = [];
+    
+        while ($fila = $result->fetch_assoc()) {
+            $idUsuario = $fila['idUsuario'];
+            $idVideojuego = $fila['idVideojuego'];
+            $fechaReserva = $fila['fecha_reserva'];
+    
+            // Cargar usuario si aún no está cargado
+            if (!isset($agrupado[$idUsuario])) {
+                $usuario = $usuariosDAO->getById($idUsuario);
+    
+                // Saltar si no es un usuario normal
+                if ($usuario->getRol() !== 'U') continue;
+    
+                $agrupado[$idUsuario] = [
+                    'usuario' => $usuario,
+                    'reservas' => []
+                ];
+            }
+    
+            // Añadir la reserva a la lista del usuario
+            $agrupado[$idUsuario]['reservas'][] = [
+                'videojuego' => $videojuegosDAO->getById($idVideojuego),
+                'fecha' => $fechaReserva
+            ];
+        }
+    
+        return array_values($agrupado); // Devolver como array numérico
+    }
+    
+
 }
 
 
