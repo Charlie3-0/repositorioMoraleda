@@ -116,6 +116,7 @@ class UsuariosDAO {
     }
 
 
+    // Función para actualizar el rol de un usuario
     public function updateRol(Usuario $usuario) {
         $stmt = $this->conn->prepare("UPDATE usuarios SET rol = ? WHERE id = ?");
         $rol = $usuario->getRol();
@@ -125,5 +126,22 @@ class UsuariosDAO {
         return $stmt->affected_rows > 0;
     }
     
+
+    // Función para obtener todos los usuarios con rol 'U' (usuarios normales)
+    public function getSoloUsuarios(): array {
+        if (!$stmt = $this->conn->prepare("SELECT * FROM usuarios WHERE rol = 'U'")) {
+            echo "Error en la SQL: " . $this->conn->error;
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $array_usuarios = array();
+    
+        while ($usuario = $result->fetch_object(Usuario::class)) {
+            $array_usuarios[] = $usuario;
+        }
+    
+        return $array_usuarios;
+    }
 
 }

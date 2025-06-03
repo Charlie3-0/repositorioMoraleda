@@ -187,22 +187,35 @@ class VideojuegosDAO {
     
 
         
-    public function buscarPorTitulo($texto){
-        $stmt = $this->conn->prepare("SELECT id, titulo FROM videojuegos WHERE titulo LIKE CONCAT('%', ?, '%') LIMIT 10");
-        $stmt->bind_param("s", $texto);
+    public function buscarPorTitulo($texto) {
+        $sql = "SELECT * FROM videojuegos WHERE titulo LIKE ? ORDER BY titulo ASC LIMIT 10";
+        $stmt = $this->conn->prepare($sql);
+        $like = "%$texto%";
+        $stmt->bind_param("s", $like);
         $stmt->execute();
-        $res = $stmt->get_result();
-
+        $result = $stmt->get_result();
+    
         $videojuegos = [];
-        while ($row = $res->fetch_assoc()) {
-            $vj = new Videojuego();
-            $vj->setId($row['id']);
-            $vj->setTitulo($row['titulo']);
-            $videojuegos[] = $vj;
+        while ($row = $result->fetch_assoc()) {
+            $videojuegos[] = $this->crearDesdeFila($row); // O el método que uses para crear objetos Videojuego
         }
-
         return $videojuegos;
     }
+    
+
+    private function crearDesdeFila(array $fila): Videojuego {
+        $videojuego = new Videojuego();
+        $videojuego->setId($fila['id']);
+        $videojuego->setTitulo($fila['titulo']);
+        $videojuego->setDesarrollador($fila['desarrollador']);
+        $videojuego->setDescripcion($fila['descripcion']);
+        $videojuego->setFoto($fila['foto']);
+        $videojuego->setIdCategoria($fila['idCategoria']);
+        $videojuego->setFechaLanzamiento($fila['fecha_lanzamiento']);
+        $videojuego->setTrailer($fila['trailer']);
+        return $videojuego;
+    }
+    
 
 
 }

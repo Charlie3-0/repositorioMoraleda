@@ -160,6 +160,8 @@
         <?php endif; ?>
     </main>
     
+    <script src="js.js"></script>
+
     <script>
         setTimeout(() => {
             const success = document.querySelector('.alert-success');

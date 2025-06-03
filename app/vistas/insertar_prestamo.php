@@ -12,7 +12,7 @@
     <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <!-- Select2 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <!-- jQuery -->
@@ -149,17 +149,9 @@
         <a href="index.php?accion=ver_todos_prestamos">Volver a Préstamos</a>
     </main>
 
-    <script>
-        /* document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                var errorMessage = document.querySelector('.error');
-                if (errorMessage) {
-                    errorMessage.style.display = 'none';
-                }
-            }, 3000);
-        }); */
+    <script src="js.js"></script>
 
-        
+    <script>
         setTimeout(() => {
             const success = document.querySelector('.alert-success');
             const error = document.querySelector('.alert-danger');

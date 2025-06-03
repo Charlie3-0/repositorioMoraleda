@@ -231,6 +231,8 @@
     <footer>
     </footer>
 
+    <script src="js.js"></script>
+
     <script>
         function confirmarEliminacion(idVideojuego) {
             Swal.fire({

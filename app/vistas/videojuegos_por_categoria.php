@@ -158,6 +158,8 @@
     <br><br>
     <a href="index.php">Volver al listado de Categorías</a>
 
+    <script src="js.js"></script>
+
     <script>
         setTimeout(() => {
             const success = document.querySelector('.alert-success');

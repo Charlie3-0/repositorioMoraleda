@@ -144,5 +144,6 @@
         <a href="index.php">Volver al listado de Categorías</a>
     </main>
     
+    <script src="js.js"></script>
 </body>
 </html>

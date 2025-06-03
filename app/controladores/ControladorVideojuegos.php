@@ -431,33 +431,34 @@ class ControladorVideojuegos {
     }
 
 
-    public static function buscarTitulosVideojuego() {
-        error_log("Entrando en buscarTitulosVideojuego()");
-
-        if (!isset($_GET['query'])) {
+    public function buscarVideojuegosAjax() {
+        if (!Sesion::getUsuario()) {
             echo json_encode([]);
             return;
         }
     
-        $query = trim($_GET['query']);
-    
-        // Creamos la conexión utilizando la clase que hemos creado
+        // Crear conexión a la base de datos
+    //    require_once 'app/core/ConnexionDB.php'; // Asegúrate de incluirlo si no está incluido
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
     
-        // Crear el DAO con la conexión
+        $query = isset($_GET['query']) ? trim($_GET['query']) : '';
+        require_once 'app/modelos/VideojuegosDAO.php';
         $videojuegosDAO = new VideojuegosDAO($conn);
-    
-        // Llamar al método como instancia, no estáticamente
         $resultados = $videojuegosDAO->buscarPorTitulo($query);
     
-        // Devolver el resultado como JSON
-        $json = array_map(function ($vj) {
-            return ['id' => $vj->getId(), 'titulo' => $vj->getTitulo()];
+        $respuesta = array_map(function($videojuego) {
+            return [
+                'id' => $videojuego->getId(),
+                'titulo' => $videojuego->getTitulo()
+            ];
         }, $resultados);
     
-        echo json_encode($json);
+        header('Content-Type: application/json');
+        echo json_encode($respuesta);
     }
+    
+    
     
 
 

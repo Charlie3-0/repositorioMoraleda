@@ -87,6 +87,8 @@
         <a href="index.php">Volver Atrás</a>
     </form>
 
+    <script src="js.js"></script>
+
     <script>
         /* document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {

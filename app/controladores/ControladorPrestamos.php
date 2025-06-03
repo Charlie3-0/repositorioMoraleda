@@ -69,8 +69,8 @@ class ControladorPrestamos {
         $videojuegosDAO = new VideojuegosDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
     
-        // Obtener todos los usuarios y videojuegos
-        $usuarios = $usuariosDAO->getAll();
+        // Obtener todos los usuarios con rol "U" y videojuegos
+        $usuarios = $usuariosDAO->getSoloUsuarios();
         $videojuegos = $videojuegosDAO->getAll();
     
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

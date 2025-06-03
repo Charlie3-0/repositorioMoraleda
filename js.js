@@ -676,44 +676,38 @@ function actualizarTiemposRelativos() {
 
 
 // Script para buscar videojuegos
-document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById("inputBusquedaVideojuego");
-    const resultados = document.getElementById("resultadosBusqueda");
+document.addEventListener('DOMContentLoaded', () => {
+    const buscador = document.getElementById('buscador-videojuegos');
+    const sugerencias = document.getElementById('sugerencias-videojuegos');
 
-    input.addEventListener("keyup", function () {
-        const texto = input.value.trim();
-
-        if (texto.length < 2) {
-            resultados.innerHTML = "";
+    buscador.addEventListener('input', () => {
+        const query = buscador.value.trim();
+        if (query.length === 0) {
+            sugerencias.innerHTML = '';
             return;
         }
 
-        fetch("index.php?accion=buscar_titulos_videojuego&query=" + encodeURIComponent(texto))
+        fetch(`index.php?accion=buscar_videojuegos_ajax&query=${encodeURIComponent(query)}`)
             .then(res => res.json())
             .then(data => {
-                resultados.innerHTML = "";
-
-                if (data.length === 0) {
-                    resultados.innerHTML = `<li class="list-group-item text-muted">Sin resultados</li>`;
-                    return;
-                }
-
-                data.forEach(vj => {
-                    const li = document.createElement("li");
-                    li.className = "list-group-item list-group-item-action";
-                    li.textContent = vj.titulo;
-                    li.addEventListener("click", () => {
-                        window.location.href = `index.php?accion=ver_videojuego&id=${vj.id}`;
+                sugerencias.innerHTML = '';
+                data.forEach(juego => {
+                    const item = document.createElement('li');
+                    item.classList.add('list-group-item', 'list-group-item-action');
+                    item.textContent = juego.titulo;
+                    item.style.cursor = 'pointer'; // Aplicamos cursor dinámicamente
+                    item.addEventListener('click', () => {
+                        window.location.href = `index.php?accion=ver_videojuego&id=${juego.id}`;
                     });
-                    resultados.appendChild(li);
+                    sugerencias.appendChild(item);
                 });
             });
     });
 
-    // Ocultar resultados al perder foco
-    document.addEventListener("click", function (e) {
-        if (!document.getElementById("buscadorVideojuegos").contains(e.target)) {
-            resultados.innerHTML = "";
+    // Cerrar sugerencias si se hace clic fuera
+    document.addEventListener('click', (e) => {
+        if (!sugerencias.contains(e.target) && e.target !== buscador) {
+            sugerencias.innerHTML = '';
         }
     });
 });

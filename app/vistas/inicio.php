@@ -12,6 +12,9 @@
     <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -68,6 +71,13 @@
                     <!-- Lado derecho del navbar -->
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <?php if (Sesion::getUsuario()): ?>
+                            
+                            <!-- Buscador de videojuegos -->
+                            <li class="nav-item position-relative me-5 mb-3 mb-lg-0">
+                                <input type="text" class="form-control" id="buscador-videojuegos" placeholder="Buscar videojuegos..." autocomplete="off">
+                                <ul id="sugerencias-videojuegos" class="list-group position-absolute w-100" style="z-index: 999;"></ul>
+                            </li>
+
                             <!-- Email y logout -->
                             <li class="nav-item d-flex align-items-center me-3 fw-semibold">
                                 <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
@@ -148,6 +158,8 @@
             });
         </script>
     <?php endif; ?>
+
+    <script src="js.js"></script>
 
     <script>
         setTimeout(() => {

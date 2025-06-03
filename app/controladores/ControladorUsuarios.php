@@ -145,7 +145,6 @@ class ControladorUsuarios {
     
         header('location: index.php?accion=configuraciones_videojuegos');
     }
-    
 
 
     public function sobreNosotros() {
