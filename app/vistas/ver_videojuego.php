@@ -17,16 +17,13 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-bootstrap-purple border-bottom shadow-sm px-3">
             <div class="container-fluid">
-                <!-- Logo grande -->
                 <a class="navbar-brand d-flex align-items-center" href="index.php" title="Inicio">
-                    <img src="web/icons/favicon_TestPlay.png" alt="Logo" style="height: 70px;" class="me-2">
+                    <img src="web/icons/TestPlay-icon.png" alt="Logo" style="height: 70px;" class="me-2">
                 </a>
-
                 <!-- Botón toggle para móviles -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContenido" aria-controls="navbarContenido" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <!-- Contenido del navbar -->
                 <div class="collapse navbar-collapse" id="navbarContenido">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -64,10 +61,14 @@
                             </li>
                         <?php endif; ?>
                     </ul>
-
                     <!-- Lado derecho del navbar -->
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <?php if (Sesion::getUsuario()): ?>
+                            <!-- Buscador de videojuegos -->
+                            <li class="nav-item position-relative me-5 mb-3 mb-lg-0">
+                                <input type="text" class="form-control" id="buscador-videojuegos" placeholder="Buscar videojuegos..." autocomplete="off">
+                                <ul id="sugerencias-videojuegos" class="list-group position-absolute w-100" style="z-index: 999;"></ul>
+                            </li>
                             <!-- Email y logout -->
                             <li class="nav-item d-flex align-items-center me-3 fw-semibold">
                                 <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
@@ -89,6 +90,12 @@
                                 <a class="btn btn-outline-light" href="index.php?accion=registrar">Registrarse</a>
                             </form>
                         <?php endif; ?>
+                        <li>
+                            <!-- BOTÓN MODO CLARO/OSCURO -->
+                            <button id="themeToggle" class="btn btn-outline-light ms-3" aria-label="Cambiar tema">
+                                <i class="fa-solid fa-moon" id="themeIcon"></i>
+                            </button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -187,17 +194,14 @@
                     <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
                 </p>
 
-                
                 <br>
 
                 <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
                     <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>">Editar Videojuego</a>
                 <?php endif; ?>
 
-
                 <br><br><br>
                 
-
                 <div id="estadoReservaContenedor">
                     <?php if ($videojuegoReservado): ?>
                         <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
@@ -217,8 +221,6 @@
                     <?php endif; ?>
                 </div>
 
-
-                
                 <br>
 
                 <div id="estadoPrestamoContenedor">
@@ -238,7 +240,6 @@
                         <strong class="text-dark">Videojuego Disponible para ser Prestado</strong>
                     <?php endif; ?>
                 </div>
-
 
                 <br>
                 
@@ -306,7 +307,6 @@
             </div>
             <hr>
 
-            
             <?php if (Sesion::existeSesion()): ?>
                 <div class="container mt-5">
                     <div class="comment-section" id="insertarComentario">
@@ -351,17 +351,11 @@
                                             <span class="comment-time" data-fecha="<?= $comentario->fecha_comentario ?>">
                                                 <?= isset($comentario->fecha_comentario) ? date("c", strtotime($comentario->fecha_comentario)) : 'Sin fecha' ?>
                                             </span>
-
                                         </div>
-
                                         <!-- Texto del comentario -->
-                                    <!--    <p class="mb-2"><?= nl2br($comentario->comentario) ?></p>-->
-
                                         <p class="mb-2" data-texto="<?= $comentario->comentario ?>">
                                             <?= nl2br($comentario->comentario) ?>
                                         </p>
-
-
                                         <!-- Mostrar botones solo si es el autor o un administrador -->
                                         <?php if (
                                             Sesion::existeSesion() && (
@@ -385,11 +379,6 @@
                 </div>
             </div>
 
-
-
-            
-
-
             <br><br>
             <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>">Volver a la Categoría <?= $categoria->getNombre() ?></a>
         </div>
@@ -411,7 +400,6 @@
             if (error) error.remove();
         }, 3000);
     </script>
-
 </body>
 </html>
 

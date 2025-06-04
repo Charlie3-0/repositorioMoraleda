@@ -711,3 +711,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+// SCRIPT: Toggle entre claro/oscuro solo en main y footer
+const btn = document.getElementById("themeToggle");
+const icon = document.getElementById("themeIcon");
+const main = document.querySelector("main");
+const footer = document.querySelector("footer");
+
+// Función para aplicar el tema y actualizar el icono
+function aplicarTema(theme) {
+    main.setAttribute("data-bs-theme", theme);
+    footer.setAttribute("data-bs-theme", theme);
+    icon.classList.toggle("fa-sun", theme === "light");
+    icon.classList.toggle("fa-moon", theme === "dark");
+}
+
+// Al cargar la página: leer preferencia o usar claro por defecto
+const temaGuardado = localStorage.getItem("modo-tema") || "light";
+aplicarTema(temaGuardado);
+
+// Al hacer clic: cambiar el tema y guardarlo
+btn.addEventListener("click", () => {
+    const actual = main.getAttribute("data-bs-theme");
+    const nuevo = actual === "dark" ? "light" : "dark";
+    aplicarTema(nuevo);
+    localStorage.setItem("modo-tema", nuevo);
+});
