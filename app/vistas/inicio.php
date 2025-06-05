@@ -10,12 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <link rel="stylesheet" href="web/css/estilos.css">
-    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <link rel="icon" type="image/png" href="web/icons/TestPlay-icon.png">
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- jQuery -->
-    
 </head>
 <body>
     <header>
@@ -106,13 +103,9 @@
         </nav>
     </header>
 
-
-
     <br><br>
 
-
-
-    <main>
+    <main class="bg-body text-body px-4 py-3">
         <h1 class="tituloPagina">Bienvenido a TestPlay</h1>
 
         <?php if (!empty($_SESSION['mensaje_ok'])): ?>
@@ -134,18 +127,19 @@
             <?php foreach ($categorias as $categoria): ?>
                 <div class="categoria">
                 <h4 class="titulo">
-                        <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>"><?= $categoria->getNombre() ?></a>
+                        <a class="link-body-emphasi text-decoration-none" href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>">
+                            <?= $categoria->getNombre() ?>
+                        </a>
                     </h4>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
             <p>Inicia sesión para ver las Categorías.</p>
         <?php endif; ?>
-    
     </main>
 
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+    <footer class="bg-body text-body text-center py-3">
+        <p class="mb-0">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
     </footer>
 
     <!-- SweetAlert2 para mostrar mensaje de éxito en el registro -->

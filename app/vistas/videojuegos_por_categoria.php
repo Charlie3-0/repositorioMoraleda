@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="web/css/estilos.css">
-    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <link rel="icon" type="image/png" href="web/icons/TestPlay-icon.png">
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -160,10 +160,14 @@
             </div>
             <hr>
         <?php endforeach; ?>
+
+        <br><br>
+        <a href="index.php">Volver al listado de Categorías</a>
     </main>
-    
-    <br><br>
-    <a href="index.php">Volver al listado de Categorías</a>
+
+    <footer>
+        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="js.js"></script>
 

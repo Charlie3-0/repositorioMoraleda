@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="web/css/estilos.css">
-    <link rel="icon" type="image/png" href="web/icons/favicon_TestPlay.png">
+    <link rel="icon" type="image/png" href="web/icons/TestPlay-icon.png">
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -104,15 +104,23 @@
         
 
     <br>
-    <h2>Registro de Usuario</h2>
+    
+    <main>
+        <h2>Registro de Usuario</h2>
 
-    <form action="index.php?accion=registrar" method="post">
-        <input type="email" name="email" placeholder="Email"><br>
-        <input type="password" name="password" placeholder="Password"><br>
-        <input type="submit" value="Registrar">
-        <br><br>
-        <a href="index.php">Volver Atrás</a>
-    </form>
+        <form action="index.php?accion=registrar" method="post">
+            <input type="email" name="email" placeholder="Email"><br>
+            <input type="password" name="password" placeholder="Password"><br>
+            <input type="submit" value="Registrar">
+            <br><br>
+            <a href="index.php">Volver Atrás</a>
+        </form>
+    </main>
+    
+
+    <footer>
+        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="js.js"></script>
 </body>
