@@ -83,7 +83,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -102,72 +102,84 @@
         </nav>
     </header>
 
-    <br><br>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
+            <h2 class="text-center mb-5"><?= $categoria->getNombre() ?></h2>
 
-    <main>
-        <h2>Videojuegos de <?= $categoria->getNombre() ?></h2>
-
-        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
-            <div class="alert alert-success">
-                <?= $_SESSION['mensaje_ok'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_ok']); ?>
-        <?php endif; ?>
-
-        <?php if (!empty($_SESSION['mensaje_error'])): ?>
-            <div class="alert alert-danger">
-                <?= $_SESSION['mensaje_error'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_error']); ?>
-        <?php endif; ?>
-        
-        <?php
-            $daoPU = new PuntuacionesDAO($conn);
-        ?>
-
-        <?php foreach ($videojuegos as $videojuego): ?>
-            <?php
-                $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
-                $totalVotos = $daoPU->contarVotosVideojuego($videojuego->getId());
-            ?>
-            <div class="videojuego">
-                <h4 class="titulo">
-                    <a href="index.php?accion=ver_videojuego&id=<?=$videojuego->getId()?>">
-                        <?= $videojuego->getTitulo() ?>
-                    </a>
-                </h4>
-            
-                <div id="fotos">
-                        <img src="web/images/<?=$videojuego->getFoto()?>" alt="<?= $videojuego->getTitulo() ?>" style="height: 200px; border: 1px solid black";>                
+            <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+                <div class="alert alert-success">
+                    <?= $_SESSION['mensaje_ok'] ?>
                 </div>
+                <?php unset($_SESSION['mensaje_ok']); ?>
+            <?php endif; ?>
+
+            <?php if (!empty($_SESSION['mensaje_error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['mensaje_error'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_error']); ?>
+            <?php endif; ?>
             
-                <p id="mediaPuntuacion" class="mt-1">
-                    <?php if ($mediaVideojuego): ?>
-                        <strong>Media: <?= $mediaVideojuego ?>/10</strong>
-                    <?php endif; ?>
-                </p>
-                
-                <div id="mediaVisualEstrellas" class="star-rating disabled-stars mt-1" style="pointer-events: none;">
-                    <?php for ($i = 10; $i >= 1; $i--): ?>
-                        <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
-                    <?php endfor; ?>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <?php
+                    $daoPU = new PuntuacionesDAO($conn);
+                    foreach ($videojuegos as $videojuego):
+                        $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
+                        $totalVotos = $daoPU->contarVotosVideojuego($videojuego->getId());
+                ?>
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="web/images/<?= $videojuego->getFoto() ?>" class="card-img-top" alt="<?= $videojuego->getTitulo() ?>">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?= $videojuego->getTitulo() ?></h5>
+                                
+                                <?php if ($mediaVideojuego): ?>
+                                    <p class="card-text mb-1">
+                                        <strong>Media: <?= $mediaVideojuego ?>/10</strong>
+                                    </p>
+                                    <div class="star-rating disabled-stars mb-2" style="pointer-events: none;">
+                                        <?php for ($i = 10; $i >= 1; $i--): ?>
+                                            <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
+                                        <?php endfor; ?>
+                                    </div>
+                                    <p class="text-muted small mb-2">
+                                        <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-primary mt-auto">Ver Detalles</a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
+            </div>
+        </main>
+    </div>
+
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
                 </div>
 
-                <p id="numeroVotos" class="text-muted small mt-1">
-                    <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
-                </p>
-                
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
             </div>
-            <hr>
-        <?php endforeach; ?>
-
-        <br><br>
-        <a href="index.php">Volver al listado de Categorías</a>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+        </footer>
+    </div>
 
     <script src="js.js"></script>
 

@@ -89,7 +89,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -108,55 +108,73 @@
         </nav>
     </header>
 
-    <br><br>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
+            <h2 class="py-3 text-center">Añadir Préstamo</h2>
 
-    <main>
-        <h2>Añadir Préstamo</h2>
+            <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+                <div class="alert alert-success">
+                    <?= $_SESSION['mensaje_ok'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_ok']); ?>
+            <?php endif; ?>
 
-        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
-            <div class="alert alert-success">
-                <?= $_SESSION['mensaje_ok'] ?>
+            <?php if (!empty($_SESSION['mensaje_error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['mensaje_error'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_error']); ?>
+            <?php endif; ?>
+
+
+            <form action="index.php?accion=poner_prestamo" method="post">
+                <label for="idUsuario">Usuario: </label>
+                <select name="idUsuario" id="idUsuario" class="form-select select-usuario">
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <option value="<?= $usuario->getId() ?>"><?= $usuario->getEmail() ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <br>
+
+                <label for="idVideojuego">Videojuego: </label>
+                <select name="idVideojuego" id="idVideojuego" class="form-select select-videojuego">
+                    <?php foreach ($videojuegos as $videojuego): ?>
+                        <option value="<?= $videojuego->getId() ?>"><?= $videojuego->getTitulo() ?></option>
+                    <?php endforeach; ?>
+                </select>
+
+                <br>
+                <br>
+                <input type="submit" value="Insertar Préstamo">
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="index.php?accion=ver_todos_prestamos" class="text-decoration-none">Volver a Préstamos</a>
             </div>
-            <?php unset($_SESSION['mensaje_ok']); ?>
-        <?php endif; ?>
+        </main>
+    </div>
 
-        <?php if (!empty($_SESSION['mensaje_error'])): ?>
-            <div class="alert alert-danger">
-                <?= $_SESSION['mensaje_error'] ?>
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
             </div>
-            <?php unset($_SESSION['mensaje_error']); ?>
-        <?php endif; ?>
-
-
-        <form action="index.php?accion=poner_prestamo" method="post">
-            <label for="idUsuario">Usuario: </label>
-            <select name="idUsuario" id="idUsuario" class="form-select select-usuario">
-                <?php foreach ($usuarios as $usuario): ?>
-                    <option value="<?= $usuario->getId() ?>"><?= $usuario->getEmail() ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <br>
-
-            <label for="idVideojuego">Videojuego: </label>
-            <select name="idVideojuego" id="idVideojuego" class="form-select select-videojuego">
-                <?php foreach ($videojuegos as $videojuego): ?>
-                    <option value="<?= $videojuego->getId() ?>"><?= $videojuego->getTitulo() ?></option>
-                <?php endforeach; ?>
-            </select>
-
-            <br>
-            <br>
-            <input type="submit" value="Insertar Préstamo">
-        </form>
-
-        <br>
-        <a href="index.php?accion=ver_todos_prestamos">Volver a Préstamos</a>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+        </footer>
+    </div>
 
     <script src="js.js"></script>
 

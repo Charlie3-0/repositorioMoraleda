@@ -83,7 +83,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -102,63 +102,81 @@
         </nav>
     </header>
 
-    <br><br>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
+            <h2 class="py-3 text-center">Añadir Videojuego</h2>
 
-    <main>
-        <h2>Añadir Videojuego</h2>
+            <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+                <div class="alert alert-success">
+                    <?= $_SESSION['mensaje_ok'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_ok']); ?>
+            <?php endif; ?>
 
-        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
-            <div class="alert alert-success">
-                <?= $_SESSION['mensaje_ok'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_ok']); ?>
-        <?php endif; ?>
+            <?php if (!empty($_SESSION['mensaje_error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['mensaje_error'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_error']); ?>
+            <?php endif; ?>
 
-        <?php if (!empty($_SESSION['mensaje_error'])): ?>
-            <div class="alert alert-danger">
-                <?= $_SESSION['mensaje_error'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_error']); ?>
-        <?php endif; ?>
-
-        
-        <form action="index.php?accion=insertar_videojuego" method="post" enctype="multipart/form-data">
-            <label for="titulo">Título: </label>
-            <input type="text" name="titulo" id="titulo" placeholder="Titulo">
-            <br>
-            <label for="desarrollador">Desarrollador: </label>
-            <input type="text" name="desarrollador" id="desarrollador" placeholder="Desarrollador">
-            <br>
-            <label for="descripcion">Descripción: </label>
-            <textarea name="descripcion" id="descripcion" placeholder="Descripcion"></textarea>
-            <br>
-            <label for="foto">Imagen: </label>
-            <input type="file" name="foto" id="foto">
-            <br>
-            <label for="idCategoria">Categoría: </label>
-            <select name="idCategoria" id="idCategoria">
-                <?php foreach ($categorias as $categoria): ?>
-                    <option value="<?= $categoria->getId() ?>"><?= $categoria->getNombre() ?></option>
-                <?php endforeach; ?>
-            </select>
-            <br>
-            <label>Fecha de lanzamiento:</label>
-            <input type="date" name="fecha_lanzamiento" required>
-            <br>
-            <label>Tráiler (iframe de YouTube):</label>
-            <textarea name="trailer" rows="4" placeholder="Pega aquí el iframe"></textarea>
             
-            <br>
-            <input type="submit" value="Insertar Videojuego">
-        </form>
+            <form action="index.php?accion=insertar_videojuego" method="post" enctype="multipart/form-data">
+                <label for="titulo">Título: </label>
+                <input type="text" name="titulo" id="titulo" placeholder="Titulo">
+                <br>
+                <label for="desarrollador">Desarrollador: </label>
+                <input type="text" name="desarrollador" id="desarrollador" placeholder="Desarrollador">
+                <br>
+                <label for="descripcion">Descripción: </label>
+                <textarea name="descripcion" id="descripcion" placeholder="Descripcion"></textarea>
+                <br>
+                <label for="foto">Imagen: </label>
+                <input type="file" name="foto" id="foto">
+                <br>
+                <label for="idCategoria">Categoría: </label>
+                <select name="idCategoria" id="idCategoria">
+                    <?php foreach ($categorias as $categoria): ?>
+                        <option value="<?= $categoria->getId() ?>"><?= $categoria->getNombre() ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <br>
+                <label>Fecha de lanzamiento:</label>
+                <input type="date" name="fecha_lanzamiento" required>
+                <br>
+                <label>Tráiler (iframe de YouTube):</label>
+                <textarea name="trailer" rows="4" placeholder="Pega aquí el iframe"></textarea>
+                
+                <br>
+                <input type="submit" value="Insertar Videojuego">
+            </form>
 
-        <br><br>
-        <a href="index.php">Volver al listado de Categorías</a>
-    </main>
+            <div class="mt-4 text-center">
+                <a href="index.php?accion=configuraciones_videojuegos" class="text-decoration-none">Volver a Configuraciones</a>
+            </div>
+        </main>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="js.js"></script>
     

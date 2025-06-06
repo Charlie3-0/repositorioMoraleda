@@ -83,7 +83,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -102,12 +102,35 @@
         </nav>
     </header>
 
-    <main>
-    </main>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
+            <div>
+                <h2 class="py-3 text-center">Curriculum Vitae</h2>
+                <p>texto</p>
+            </div>
+        </main>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="js.js"></script>
 

@@ -83,7 +83,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -102,46 +102,64 @@
         </nav>
     </header>
 
-    <br><br>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
+            <h2 class="py-3 text-center">Videojuegos Prestados</h2>
+            
+            <?php if (!empty($prestamos)): ?>
+                <?php foreach ($prestamos as $prestamo): ?>
 
-    <main>
-        <h2>Videojuegos Prestados del usuario <?= $usuario->getEmail() ?></h2>
-        
-        <?php if (!empty($prestamos)): ?>
-            <?php foreach ($prestamos as $prestamo): ?>
+                    <div class="prestamo" style="display: flex; align-items: center; gap: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 10px;">
+                        <div class="foto">
+                            <img src="web/images/<?= $prestamo->videojuego->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
+                        </div>
+                        <div class="info" style="display: flex; flex-direction: column;">
+                            <h3 class="titulo" style="margin: 0 0 10px 0;">
+                                <a href="index.php?accion=ver_videojuego&id=<?= $prestamo->videojuego->getId() ?>">
+                                    <?= $prestamo->videojuego->getTitulo() ?>
+                                </a>
+                            </h3>
+                            <p class="fecha_prestamo" style="margin: 0 0 10px 0;"><u>Fecha del Préstamo:</u> <?= $prestamo->getFechaPrestamo() ?></p>
+                            <!-- Mediante el operador ternario mostramos "Videojuego devuelto" si $prestamo->getDevuelto() devuelve true (1) y "Videojuego NO devuelto" si devuelve false (0). -->
+                            <strong class="devuelto" style="margin: 0;"><?= $prestamo->getDevuelto() ? "Videojuego devuelto" : "Videojuego NO devuelto" ?></strong>
+                        </div>
+                        <hr>
+                    </div>
 
-                <div class="prestamo" style="display: flex; align-items: center; gap: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 10px;">
-                    <div class="foto">
-                        <img src="web/images/<?= $prestamo->videojuego->getFoto() ?>" style="height: 150px; border: 1px solid black; border-radius: 8px;">
-                    </div>
-                    <div class="info" style="display: flex; flex-direction: column;">
-                        <h3 class="titulo" style="margin: 0 0 10px 0;">
-                            <a href="index.php?accion=ver_videojuego&id=<?= $prestamo->videojuego->getId() ?>">
-                                <?= $prestamo->videojuego->getTitulo() ?>
-                            </a>
-                        </h3>
-                        <p class="fecha_prestamo" style="margin: 0 0 10px 0;"><u>Fecha del Préstamo:</u> <?= $prestamo->getFechaPrestamo() ?></p>
-                        <!-- Mediante el operador ternario mostramos "Videojuego devuelto" si $prestamo->getDevuelto() devuelve true (1) y "Videojuego NO devuelto" si devuelve false (0). -->
-                        <strong class="devuelto" style="margin: 0;"><?= $prestamo->getDevuelto() ? "Videojuego devuelto" : "Videojuego NO devuelto" ?></strong>
-                    </div>
-                    <hr>
+                    
+
+                    <br>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay videojuegos prestados actualmente.</p>
+            <?php endif; ?>
+
+            <div class="mt-4 text-center">
+                <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
+            </div>
+        </main>
+    </div>
+
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
                 </div>
 
-                
-
-                <br>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No hay videojuegos prestados actualmente.</p>
-        <?php endif; ?>
-
-        <br><br>
-        <a href="index.php">Volver al listado de Categorías</a>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script src="js.js"></script>
 </body>

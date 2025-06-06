@@ -718,11 +718,35 @@ const btn = document.getElementById("themeToggle");
 const icon = document.getElementById("themeIcon");
 const main = document.querySelector("main");
 const footer = document.querySelector("footer");
+const wrapperMain = document.getElementById("mainWrapper");
+const wrapperFooter = document.getElementById("footerWrapper");
 
 // Función para aplicar el tema y actualizar el icono
+/* function aplicarTema(theme) {
+    main.setAttribute("data-bs-theme", theme);
+    footer.setAttribute("data-bs-theme", theme);
+    icon.classList.toggle("fa-sun", theme === "light");
+    icon.classList.toggle("fa-moon", theme === "dark");
+} */
 function aplicarTema(theme) {
     main.setAttribute("data-bs-theme", theme);
     footer.setAttribute("data-bs-theme", theme);
+
+    if (theme === "dark") {
+        wrapperMain.classList.remove("bg-main-light", "text-dark");
+        wrapperMain.classList.add("bg-main-dark", "text-light");
+
+        wrapperFooter.classList.remove("bg-footer-light", "text-dark");
+        wrapperFooter.classList.add("bg-footer-dark", "text-light");
+        
+    } else {
+        wrapperMain.classList.remove("bg-main-dark", "text-light");
+        wrapperMain.classList.add("bg-main-light", "text-dark");
+
+        wrapperFooter.classList.remove("bg-footer-dark", "text-light");
+        wrapperFooter.classList.add("bg-footer-light", "text-dark");
+    }
+
     icon.classList.toggle("fa-sun", theme === "light");
     icon.classList.toggle("fa-moon", theme === "dark");
 }

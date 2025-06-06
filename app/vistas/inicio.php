@@ -84,7 +84,7 @@
                             </li>
                         <?php else: ?>
                             <!-- Formulario login -->
-                            <form class="d-flex" action="index.php?accion=login" method="post">
+                            <form class="d-flex mb-3 mb-lg-0" action="index.php?accion=login" method="post">
                                 <input class="form-control me-2" type="email" name="email" placeholder="Email" required>
                                 <input class="form-control me-2" type="password" name="password" placeholder="Password" required>
                                 <button class="btn btn-light me-2" type="submit">Login</button>
@@ -103,44 +103,76 @@
         </nav>
     </header>
 
-    <br><br>
+    <div id="mainWrapper" class="bg-light text-dark">
+        <main id="mainContent" class="container py-5">
 
-    <main class="bg-body text-body px-4 py-3">
-        <h1 class="tituloPagina">Bienvenido a TestPlay</h1>
-
-        <?php if (!empty($_SESSION['mensaje_ok'])): ?>
-            <div class="alert alert-success">
-                <?= $_SESSION['mensaje_ok'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_ok']); ?>
-        <?php endif; ?>
-
-        <?php if (!empty($_SESSION['mensaje_error'])): ?>
-            <div class="alert alert-danger">
-                <?= $_SESSION['mensaje_error'] ?>
-            </div>
-            <?php unset($_SESSION['mensaje_error']); ?>
-        <?php endif; ?>
-
-        <?php if (!empty($categorias)): ?>
-            <h2>Categorías</h2>
-            <?php foreach ($categorias as $categoria): ?>
-                <div class="categoria">
-                <h4 class="titulo">
-                        <a class="link-body-emphasi text-decoration-none" href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>">
-                            <?= $categoria->getNombre() ?>
-                        </a>
-                    </h4>
+            <?php if (!empty($_SESSION['mensaje_ok'])): ?>
+                <div class="alert alert-success">
+                    <?= $_SESSION['mensaje_ok'] ?>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>Inicia sesión para ver las Categorías.</p>
-        <?php endif; ?>
-    </main>
+                <?php unset($_SESSION['mensaje_ok']); ?>
+            <?php endif; ?>
 
-    <footer class="bg-body text-body text-center py-3">
-        <p class="mb-0">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
-    </footer>
+            <?php if (!empty($_SESSION['mensaje_error'])): ?>
+                <div class="alert alert-danger">
+                    <?= $_SESSION['mensaje_error'] ?>
+                </div>
+                <?php unset($_SESSION['mensaje_error']); ?>
+            <?php endif; ?>
+
+            <div id="bannerInicio" class="mb-4">
+                <div class="p-5 rounded bg-body-secondary shadow-sm text-center">
+                    <h1 class="tituloPagina pb-3">Bienvenido a TestPlay</h1>
+                    <h3 class="mb-3">¡Explora, alquila y juega!</h3>
+                    <p class="lead">Descubre cientos de videojuegos para PC disponibles por tiempo limitado.</p>
+                </div>
+            </div>
+
+            <?php if (!empty($categorias)): ?>
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pt-3">
+                    <?php foreach ($categorias as $categoria): ?>
+                        <div class="col">
+                            <div class="card h-100 border-0 shadow-sm bg-body-tertiary">
+                                <div class="card-body">
+                                    <h5 class="card-title text-center">
+                                        <a href="index.php?accion=videojuegos_por_categoria&id=<?= $categoria->getId() ?>" class="stretched-link text-decoration-none">
+                                            <?= $categoria->getNombre() ?>
+                                        </a>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+            <?php else: ?>
+                <div class="pt-3">
+                    <p class="text-center">Inicia sesión para ver los Videojuegos y las Categorías.</p>
+                </div>
+            <?php endif; ?>
+        </main>
+    </div>
+
+    <div id="footerWrapper" class="bg-footer-light text-dark">
+        <footer id="footerContent" class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <h6 class="fw-bold">Sobre TestPlay</h6>
+                    <p class="mb-0">Alquiler temporal de videojuegos para PC. Explora títulos únicos y conocidos.</p>
+                </div>
+
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="mb-2 fs-4">
+                        <a href="https://www.facebook.com/" target="_blank" class="text-reset me-3"><i class="bi bi-facebook"></i></a>
+                        <a href="https://x.com/" target="_blank" class="text-reset me-3"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://www.instagram.com/" target="_blank" class="text-reset me-3"><i class="bi bi-instagram"></i></a>
+                        <a href="https://www.youtube.com/" target="_blank" class="text-reset"><i class="bi bi-youtube"></i></a>
+                    </div>
+                    <p class="mb-0 small">&copy; 2025 TestPlay. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <!-- SweetAlert2 para mostrar mensaje de éxito en el registro -->
     <?php if (isset($_GET['registro']) && $_GET['registro'] == 'ok'): ?>
