@@ -3,6 +3,14 @@
 class ControladorReservas {
 
     function insertarReserva(){
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+        
         //Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -22,6 +30,14 @@ class ControladorReservas {
     }
 
     function borrarReserva(){
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         //Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -70,6 +86,14 @@ class ControladorReservas {
 
 
     public function verReservas(){
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -82,7 +106,6 @@ class ControladorReservas {
 
         $idUsuario =htmlspecialchars($_GET['id']);
         $usuario = $usuariosDAO->getById($idUsuario);
-        //var_dump($_GET);
 
         // Obtener las reservas
         $reservas = $reservasDAO->obtenerReservasByIdUsuario($idUsuario);

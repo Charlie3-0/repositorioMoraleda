@@ -3,6 +3,14 @@
 class ControladorPrestamos {
 
     public function verPrestamos(){
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+        
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -111,13 +119,11 @@ class ControladorPrestamos {
                     $_SESSION['mensaje_error'] = "Error al insertar el préstamo.";
                 }
     
-                // Redireccionamos al administrador de préstamos
                 header('location: index.php?accion=ver_todos_prestamos');
                 die();
             }
         }
     
-        // Cargamos la vista de insertar préstamo
         require 'app/vistas/insertar_prestamo.php';
     }
     

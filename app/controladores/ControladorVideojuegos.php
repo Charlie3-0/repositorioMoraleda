@@ -24,6 +24,14 @@ class ControladorVideojuegos {
 
     // FUNCIÓN PARA VER CADA VIDEOJUEGO PARA USUARIOS
     public function verVideojuego(){
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -112,6 +120,14 @@ class ControladorVideojuegos {
 
     // FUNCIÓN PARA VER LOS VIDEOJUEGOS POR CATEGORÍA PARA USUARIOS
     public function verVideojuegosPorCategoria() {
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         //Creamos la conexión utilizando la clase que hemos creado
         $connexionDB = new ConnexionDB(MYSQL_USER,MYSQL_PASS,MYSQL_HOST,MYSQL_DB);
         $conn = $connexionDB->getConnexion();
@@ -143,8 +159,6 @@ class ControladorVideojuegos {
     
 
     public function insertarVideojuego() {
-    //    $error = '';
-
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
         if (!$usuario || $usuario->getRol() !== 'A') {
@@ -170,8 +184,7 @@ class ControladorVideojuegos {
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
             $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
-            $trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que no lo escapamos
-            //$trailer = $_POST['trailer']; // Permitimos iframe, así que no lo escapamos
+            $trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que usamos htmlspecialchars para evitar XSS
 
             // Aquí manejamos la foto
             $foto_nombre = $_FILES['foto']['name'];   // Nombre de la foto
@@ -193,7 +206,6 @@ class ControladorVideojuegos {
                 $videojuego->setTitulo($titulo);
                 $videojuego->setDesarrollador($desarrollador);
                 $videojuego->setDescripcion($descripcion);
-                // $videojuego>setFoto("");
                 $videojuego->setIdCategoria($idCategoria);
                 $videojuego->setFechaLanzamiento($fechaLanzamiento);
                 $videojuego->setTrailer($trailer);
@@ -203,7 +215,6 @@ class ControladorVideojuegos {
                 if (move_uploaded_file($foto_temporal, $ruta_destino)) {
                     $videojuego->setFoto($foto_nombre);
                 } else {
-                 //   $error = "Error al cargar la foto.";
                     $_SESSION['mensaje_error'] = "Error al cargar la foto.";
                 }
     
@@ -215,17 +226,6 @@ class ControladorVideojuegos {
                 } else {
                     $_SESSION['mensaje_error'] = "Error al insertar el videojuego.";
                 }
-                
-
-                /* if ($videojuegosDAO->insert($videojuego)) {
-                    echo "El videojuego se ha insertado correctamente.";
-                } else {
-                    echo "Error al insertar el videojuego.";
-                } */
-    
-            /*     // Redireccionamos a las categorías
-                header('location: index.php?accion=videojuegos_por_categoria&id=' . $videojuego->getIdCategoria());
-                die(); */
             }
         }
     
@@ -235,8 +235,6 @@ class ControladorVideojuegos {
     
 
     public function editarVideojuego(){
-     //   $error ='';
-    
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
         if (!$usuario || $usuario->getRol() !== 'A') {

@@ -78,19 +78,11 @@ class ControladorUsuarios {
             if (password_verify($password, $usuario->getPassword())) {
                 //email y password correctos. Inciamos sesión
                 Sesion::iniciarSesion($usuario);
-                
-                //$_SESSION['email'] = $usuario->getEmail();
-                //$_SESSION['id'] = $usuario->getId();
-
-                //Redirigimos a index.php
+   
                 header('location: index.php');
                 die();
             }
         }
-
-        /* //email o password incorrectos, redirigir a index.php
-        guardarMensaje("Email o password incorrectos");
-        header('location: index.php'); */
 
         // Si llega aquí, hay error
         $error = "Email o contraseña incorrectos.";
@@ -148,6 +140,14 @@ class ControladorUsuarios {
 
 
     public function sobreNosotros() {
+        // Comprobamos si hay sesión y si hay un usuario conectado
+        $usuario = Sesion::getUsuario();
+        if (!$usuario) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado.';
+            header('location: index.php');
+            exit;
+        }
+
         // Cargamos la vista
         require 'app/vistas/sobre_nosotros.php';
     }
