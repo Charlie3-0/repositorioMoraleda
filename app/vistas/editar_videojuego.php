@@ -121,49 +121,80 @@
             <?php endif; ?>
             
             <?php if ($videojuego): ?>
-                <form action="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" method="post" enctype="multipart/form-data">
-                    <label for="titulo">Título: </label>
-                    <input type="text" name="titulo" id="titulo" value="<?= $videojuego->getTitulo() ?>">
-                    <br>
-                    <label for="desarrollador">Desarrollador: </label>
-                    <input type="text" name="desarrollador" id="desarrollador" value="<?= $videojuego->getDesarrollador() ?>">
-                    <br><br>
-                    <label for="descripcion">Descripción: </label>
-                    <textarea name="descripcion" id="descripcion"><?= $videojuego->getDescripcion() ?></textarea>
-                    <br><br>
-                    <!-- Mostramos la foto actual del videojuego si existe -->
-                    <?php if ($videojuego->getFoto()): ?>
-                        <label>Foto Actual: </label><br>
-                        <img src="web/images/<?= $videojuego->getFoto() ?>" style="height: 100px; border: 1px solid black;">
-                        <br><br>
-                    <?php endif; ?>
-                    <!-- Agregamos la opción para seleccionar una nueva foto -->
-                    <label for="foto">Seleccionar Nueva Foto: </label>
-                    <input type="file" name="foto" id="foto">
-                    <br>
-                    <label for="idCategoria">Categoría: </label>
-                    <select name="idCategoria" id="idCategoria">
-                        <?php foreach ($categorias as $categoria): ?>
-                            <option value="<?= $categoria->getId() ?>" <?= ($videojuego->getIdCategoria() == $categoria->getId()) ? 'selected' : '' ?>>
-                                <?= $categoria->getNombre() ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <br>
-                    <label>Fecha de lanzamiento:</label>
-                    <input type="date" name="fecha_lanzamiento" value="<?= $videojuego->getFechaLanzamiento() ?>" required>
-                    <br>
-                    <label>Tráiler (iframe de YouTube):</label>
-                    <textarea name="trailer" rows="4"><?= htmlspecialchars($videojuego->getTrailer()) ?></textarea>
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-7">
+                        <div class="card rounded-4 no-hover">
+                            <div class="card-body p-4">
+                                <form action="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" method="post" enctype="multipart/form-data">
 
-                    
-                    <br><br>
-                    <input type="submit" value="Guardar Cambios">
-                    <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>">Volver al Videojuego</a>
-                </form>
+                                    <div class="mb-3">
+                                        <label for="titulo" class="form-label">Título</label>
+                                        <input type="text" name="titulo" id="titulo" class="form-control" value="<?= $videojuego->getTitulo() ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="desarrollador" class="form-label">Desarrollador</label>
+                                        <input type="text" name="desarrollador" id="desarrollador" class="form-control" value="<?= $videojuego->getDesarrollador() ?>" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="descripcion" class="form-label">Descripción</label>
+                                        <textarea name="descripcion" id="descripcion" class="form-control" rows="4" required><?= $videojuego->getDescripcion() ?></textarea>
+                                    </div>
+
+                                    <?php if ($videojuego->getFoto()): ?>
+                                        <div class="mb-3">
+                                            <label class="form-label">Foto Actual</label><br>
+                                            <img src="web/images/<?= $videojuego->getFoto() ?>" class="img-fluid border" style="max-height: 150px;">
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="mb-3">
+                                        <label for="foto" class="form-label">Seleccionar Nueva Foto</label>
+                                        <input type="file" name="foto" id="foto" class="form-control">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="idCategoria" class="form-label">Categoría</label>
+                                        <select name="idCategoria" id="idCategoria" class="form-select">
+                                            <?php foreach ($categorias as $categoria): ?>
+                                                <option value="<?= $categoria->getId() ?>" <?= ($videojuego->getIdCategoria() == $categoria->getId()) ? 'selected' : '' ?>>
+                                                    <?= $categoria->getNombre() ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="fecha_lanzamiento" class="form-label">Fecha de lanzamiento</label>
+                                        <input type="date" name="fecha_lanzamiento" id="fecha_lanzamiento" class="form-control" value="<?= $videojuego->getFechaLanzamiento() ?>" required>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="trailer" class="form-label">Tráiler (iframe de YouTube)</label>
+                                        <textarea name="trailer" id="trailer" rows="4" class="form-control"><?= htmlspecialchars($videojuego->getTrailer()) ?></textarea>
+                                    </div>
+
+                                    <div class="d-grid mb-3">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa-solid fa-floppy-disk me-2"></i>Guardar Cambios
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-5">
+                            <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-secondary">
+                                <i class="fa-solid fa-arrow-left me-2"></i>Volver al Videojuego
+                            </a>
+                        </div>
+                    </div>
+                </div>
             <?php else: ?>
-                <p class="alert alert-warning" role="alert">El videojuego no existe o no se ha especificado.</p>
+                <p class="alert alert-warning text-center" role="alert">El videojuego no existe o no se ha especificado.</p>
             <?php endif; ?>
+
         </main>
     </div>
 

@@ -147,7 +147,7 @@
                                             </div>
                                             <div class="info">
                                                 <h5>
-                                                    <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>">
+                                                    <a href="index.php?accion=ver_videojuego&id=<?= $videojuego->getId() ?>" class="text-decoration-none">
                                                         <?= $videojuego->getTitulo() ?>
                                                     </a>
                                                 </h5>
@@ -172,11 +172,13 @@
                 <p>No hay préstamos registrados.</p>
             <?php endif; ?>
 
-            <div class="mt-4 text-center">
-                <a href="index.php?accion=poner_prestamo" class="text-decoration-none">Añadir Préstamo</a>
+            <div class="mt-5 text-center">
+                <a href="index.php?accion=poner_prestamo" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Añadir Préstamo
+                </a>
             </div>
 
-            <div class="mt-4 text-center">
+            <div class="mt-5 text-center">
                 <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
             </div>
         </main>

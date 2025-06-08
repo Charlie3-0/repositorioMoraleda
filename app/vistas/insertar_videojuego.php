@@ -121,39 +121,68 @@
             <?php endif; ?>
 
             
-            <form action="index.php?accion=insertar_videojuego" method="post" enctype="multipart/form-data">
-                <label for="titulo">Título: </label>
-                <input type="text" name="titulo" id="titulo" placeholder="Titulo">
-                <br>
-                <label for="desarrollador">Desarrollador: </label>
-                <input type="text" name="desarrollador" id="desarrollador" placeholder="Desarrollador">
-                <br>
-                <label for="descripcion">Descripción: </label>
-                <textarea name="descripcion" id="descripcion" placeholder="Descripcion"></textarea>
-                <br>
-                <label for="foto">Imagen: </label>
-                <input type="file" name="foto" id="foto">
-                <br>
-                <label for="idCategoria">Categoría: </label>
-                <select name="idCategoria" id="idCategoria">
-                    <?php foreach ($categorias as $categoria): ?>
-                        <option value="<?= $categoria->getId() ?>"><?= $categoria->getNombre() ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <br>
-                <label>Fecha de lanzamiento:</label>
-                <input type="date" name="fecha_lanzamiento" required>
-                <br>
-                <label>Tráiler (iframe de YouTube):</label>
-                <textarea name="trailer" rows="4" placeholder="Pega aquí el iframe"></textarea>
-                
-                <br>
-                <input type="submit" value="Insertar Videojuego">
-            </form>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="card rounded-4 no-hover">
+                        <div class="card-body p-4">
 
-            <div class="mt-4 text-center">
-                <a href="index.php?accion=configuraciones_videojuegos" class="text-decoration-none">Volver a Configuraciones</a>
+                            <form action="index.php?accion=insertar_videojuego" method="post" enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="titulo" class="form-label">Título</label>
+                                    <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Escribe el Título" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="desarrollador" class="form-label">Desarrollador</label>
+                                    <input type="text" name="desarrollador" id="desarrollador" class="form-control" placeholder="Escribe el Desarrollador" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción</label>
+                                    <textarea name="descripcion" id="descripcion" class="form-control" rows="4" placeholder="Escribe la Descripción" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="foto" class="form-label">Imagen</label>
+                                    <input type="file" name="foto" id="foto" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="idCategoria" class="form-label">Categoría</label>
+                                    <select name="idCategoria" id="idCategoria" class="form-select" required>
+                                        <?php foreach ($categorias as $categoria): ?>
+                                            <option value="<?= $categoria->getId() ?>"><?= $categoria->getNombre() ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="fecha_lanzamiento" class="form-label">Fecha de lanzamiento</label>
+                                    <input type="date" name="fecha_lanzamiento" id="fecha_lanzamiento" class="form-control" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="trailer" class="form-label">Tráiler (iframe de YouTube)</label>
+                                    <textarea name="trailer" id="trailer" class="form-control" rows="4" placeholder="Pega aquí el iframe"></textarea>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa-solid fa-plus me-2"></i>Insertar Videojuego
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="index.php?accion=configuraciones_videojuegos" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left me-2"></i>Volver a Configuraciones
+                        </a>
+                    </div>
+                </div>
             </div>
+
         </main>
     </div>
 

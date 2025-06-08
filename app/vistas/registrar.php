@@ -106,13 +106,39 @@
         <main id="mainContent" class="container py-5">
             <h2 class="py-3 text-center">Registro de Usuario</h2>
 
-            <form action="index.php?accion=registrar" method="post">
-                <input type="email" name="email" placeholder="Email"><br>
-                <input type="password" name="password" placeholder="Password"><br>
-                <input type="submit" value="Registrar">
-                <br><br>
-                <a href="index.php">Volver Atrás</a>
-            </form>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card rounded-4 no-hover">
+                        <div class="card-body p-4">
+                            <form action="index.php?accion=registrar" method="post">
+
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Correo electrónico</label>
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="ejemplo@correo.com" required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="password" class="form-label">Contraseña</label>
+                                    <input type="password" name="password" id="password" class="form-control" placeholder="Mínimo 4 caracteres" required>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa-solid fa-user-plus me-2"></i>Registrar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <a href="index.php" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left me-2"></i>Volver al Inicio
+                        </a>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
     

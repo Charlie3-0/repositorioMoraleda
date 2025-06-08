@@ -17,11 +17,11 @@
 /* ESTILOS VIDEOJUEGO_PROBADO */
 /* Colores personalizados */
 .icono-probado {
-    color: black;
+    color: #712cf9;
 }
 
 .icono-no-probado {
-    color: gray;
+    color: red;
 }
 
 /* Animación rápida al hacer clic */
@@ -53,11 +53,9 @@
 .texto-probado {
     font-size: 1em;
     color: black;
-    /* mismo tono que icono-probado */
     font-weight: bold;
     margin-left: 8px;
     display: inline-block;
-
     opacity: 1;
     visibility: visible;
     /* transition: opacity 0.7s ease, visibility 0.7s ease; */
@@ -69,7 +67,6 @@
 .texto-probado.oculto {
     opacity: 0;
     visibility: hidden;
-
     transform: translateY(-5px);
 }
 
@@ -85,54 +82,73 @@
     display: inline-block;
     cursor: pointer;
 }
-
 .star-rating input {
     display: none;
 }
-
 .star-rating label {
     color: #ddd;
-    font-size: 24px;
+    font-size: clamp(1.1rem, 2.5vw, 2rem); /* ajustable entre móviles y pantallas grandes */
     padding: 0 2px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 .star-rating label:hover,
 .star-rating label:hover~label,
 .star-rating input:checked~label {
     color: #ffc107;
 }
-
-
 .disabled-stars i {
-    font-size: 1.3rem;
+    font-size: clamp(1rem, 2vw, 1.1rem);
     margin-right: 2px;
 }
+/* Fondo para la tarjeta de calificación en tema claro */
+.bg-rating-light {
+    background-color: #fdfdfd;
+}
+/* Fondo para la tarjeta de calificación en tema oscuro */
+.bg-rating-dark {
+    background-color: #2c2c3a;
+}
+
 
 /* ESTILOS COMENTARIOS */
 .comment-section {
     max-width: 800px;
     margin: 2rem auto;
     padding: 20px;
-    background: #f8f9fa;
     border-radius: 15px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
 }
 
 .comment-box {
-    background: white;
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
     transition: transform 0.2s;
     border: 1px solid #e9ecef;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 
 .comment-box:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* Sombra clara en modo oscuro para comentarios */
+[data-bs-theme="dark"] .comment-box {
+    box-shadow: 0 2px 15px rgba(255, 255, 255, 0.08);
+}
+
+[data-bs-theme="dark"] .comment-box:hover {
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.15);
+}
+
+[data-bs-theme="dark"] .comment-section {
+    box-shadow: 0 2px 15px rgba(255, 255, 255, 0.08);
+}
+
 
 .user-avatar {
     width: 50px;
@@ -145,6 +161,7 @@
     border-radius: 20px;
     padding: 15px 20px;
     border: 2px solid #e9ecef;
+    resize: vertical;
     transition: all 0.3s;
 }
 
@@ -171,7 +188,6 @@
 }
 
 .comment-actions a {
-    color: #6c757d;
     text-decoration: none;
     margin-right: 15px;
     transition: color 0.2s;
@@ -186,11 +202,41 @@
     font-size: 0.85rem;
 }
 
+/* Responsive formulario comentario */
+@media (max-width: 576px) {
+    #formComentario .d-flex {
+        flex-direction: column;
+    }
+
+    #formComentario .emailUsuario,
+    #formComentario i {
+        margin-bottom: 0.5rem;
+    }
+
+    #formComentario .text-end {
+        text-align: start !important;
+        margin-top: 1rem;
+    }
+}
+
 .reply-section {
     margin-left: 60px;
     border-left: 2px solid #e9ecef;
     padding-left: 20px;
 }
+/* Comentarios - Tema oscuro */
+.bg-comment-dark {
+    background-color: #2c2c3b !important;
+    color: #f1f1f1 !important;
+    border-color: #3e3e50 !important;
+}
+/* Comentarios - Tema claro */
+.bg-comment-light {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    border-color: #dee2e6 !important;
+}
+
 
 
 /* ESTILOS PARA TEXTO DE VIDEOJUEGO DISPONIBLE EN CONFIGURACIONES */
@@ -270,17 +316,15 @@ input.form-control:focus {
 }
 
 
-/* ESTILOS PARA VIDEOJUEGO DETALLE */
+/* ESTILOS PARA RETIRAR EL EFECTO DE LA CARD DE VIDEOJUEGOS POR CATEGORÍAS */
+.card.no-hover:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
 
 
 /*
 vale,
-ahora organizame la informacion y ponlo para que se vean bien los datos del videojuego en responsive y con los temas que ya tenemos claro y oscuro y se puedan ver todos los datos en ambos temas,
-además centrame los elementos como quede mejor,
-ten en cuenta que el titulo irá centrado arriba,
-la imagen debe ir debajo un poco grande en el lado izquierdo y a su derecha los datos de desarrollador,
-descripcion,
-categoria,
-fecha de lanzamiento
+
 
 */

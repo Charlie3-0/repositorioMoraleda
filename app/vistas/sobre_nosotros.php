@@ -104,12 +104,81 @@
 
     <div id="mainWrapper" class="bg-light text-dark">
         <main id="mainContent" class="container py-5">
-            <div>
-                <h2 class="py-3 text-center">Curriculum Vitae</h2>
-                <p>texto</p>
+
+            <!-- Carta de presentación -->
+            <div class="row justify-content-center mb-5">
+                <div class="col-md-10 col-lg-8">
+                    <div class="card rounded-4 no-hover">
+                        <div class="card-body p-4">
+                            <h2 class="text-center mb-4">Carta de Presentación</h2>
+                            <p>
+                                ¡Hola! Mi nombre es <strong>Nombre Apellido</strong> y soy un apasionado del desarrollo web y la programación. Desde mis primeros proyectos académicos hasta el desarrollo de esta plataforma, me he enfocado en aprender buenas prácticas, escribir código limpio y crear interfaces funcionales y atractivas para los usuarios.
+                            </p>
+                            <p>
+                                Este proyecto forma parte de mi crecimiento profesional y busca no solo demostrar mis habilidades técnicas, sino también mi capacidad para abordar desafíos reales, organizar código en un patrón MVC, y cuidar tanto la experiencia del usuario como la mantenibilidad del sistema.
+                            </p>
+                            <p>
+                                Me entusiasma seguir aprendiendo y evolucionando como desarrollador, con interés especial en tecnologías web modernas, bases de datos relacionales, y experiencia de usuario. ¡Gracias por visitar mi trabajo!
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Currículum Vitae -->
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-lg-8">
+                    <div class="card shadow rounded-4 no-hover">
+                        <div class="card-body p-4">
+                            <h2 class="text-center mb-4">Currículum Vitae</h2>
+
+                            <h5 class="fw-bold mt-3">Datos Personales</h5>
+                            <ul>
+                                <li><strong>Nombre:</strong> Nombre Apellido</li>
+                                <li><strong>Email:</strong> ejemplo@correo.com</li>
+                                <li><strong>Ubicación:</strong> Ciudad, País</li>
+                            </ul>
+
+                            <h5 class="fw-bold mt-4">Formación Académica</h5>
+                            <ul>
+                                <li><strong>Título:</strong> Técnico Superior en Desarrollo de Aplicaciones Web</li>
+                                <li><strong>Centro:</strong> Nombre del Centro Educativo</li>
+                                <li><strong>Año de Finalización:</strong> 2025</li>
+                            </ul>
+
+                            <h5 class="fw-bold mt-4">Experiencia</h5>
+                            <ul>
+                                <li><strong>Proyecto TestPlay:</strong> Plataforma web para alquiler de videojuegos en versión PC. Implementación de funcionalidades como reservas, préstamos, valoraciones, comentarios y gestión por roles de usuario.</li>
+                                <li><strong>Prácticas:</strong> Empresa XYZ - Desarrollo de scripts en PHP y mantenimiento de base de datos MySQL.</li>
+                            </ul>
+
+                            <h5 class="fw-bold mt-4">Habilidades Técnicas</h5>
+                            <ul>
+                                <li>PHP (MVC), JavaScript (AJAX), HTML5, CSS3, Bootstrap</li>
+                                <li>MySQL, diseño de bases de datos</li>
+                                <li>Versionado con Git, GitHub</li>
+                                <li>Trabajo en equipo, resolución de problemas, comunicación</li>
+                            </ul>
+
+                            <h5 class="fw-bold mt-4">Idiomas</h5>
+                            <ul>
+                                <li>Español (nativo)</li>
+                                <li>Inglés (nivel intermedio - B1/B2)</li>
+                            </ul>
+
+                            <div class="text-center mt-4">
+                                <a href="index.php" class="btn btn-secondary">
+                                    <i class="fa-solid fa-arrow-left me-2"></i>Volver al Inicio
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
+
 
     <div id="footerWrapper" class="bg-footer-light text-dark">
         <footer id="footerContent" class="container py-5">

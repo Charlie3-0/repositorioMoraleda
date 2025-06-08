@@ -154,7 +154,7 @@
                 <?php endforeach; ?>
             </div>
 
-            <div class="mt-4 text-center">
+            <div class="mt-5 text-center">
                 <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
             </div>
         </main>

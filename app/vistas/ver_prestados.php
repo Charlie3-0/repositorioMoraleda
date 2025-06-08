@@ -115,7 +115,7 @@
                         </div>
                         <div class="info" style="display: flex; flex-direction: column;">
                             <h3 class="titulo" style="margin: 0 0 10px 0;">
-                                <a href="index.php?accion=ver_videojuego&id=<?= $prestamo->videojuego->getId() ?>">
+                                <a href="index.php?accion=ver_videojuego&id=<?= $prestamo->videojuego->getId() ?>" class="text-decoration-none">
                                     <?= $prestamo->videojuego->getTitulo() ?>
                                 </a>
                             </h3>
@@ -126,15 +126,13 @@
                         <hr>
                     </div>
 
-                    
-
                     <br>
                 <?php endforeach; ?>
             <?php else: ?>
                 <p>No hay videojuegos prestados actualmente.</p>
             <?php endif; ?>
 
-            <div class="mt-4 text-center">
+            <div class="mt-5 text-center">
                 <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
             </div>
         </main>

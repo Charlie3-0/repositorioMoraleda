@@ -85,7 +85,7 @@ function quitarReserva() {
 function actualizarEstadoReserva(estado) {
     const estadoReservaContenedor = document.getElementById('estadoReservaContenedor');
     if (estado === 'reservado') {
-        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado">Videojuego Reservado</strong>';
+        estadoReservaContenedor.innerHTML = '<strong class="estadoReservado text-warning">Videojuego Reservado</strong>';
     } else {
         estadoReservaContenedor.innerHTML = '';
     }
@@ -379,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Crear comentario dinámicamente
                     const nuevoComentario = document.createElement('div');
-                    nuevoComentario.classList.add('comment-box', 'mb-3');
+                    nuevoComentario.classList.add('comment-box', 'comment-card', 'border', 'mb-3');
                     nuevoComentario.setAttribute('data-idComentario', data.idComentario); // para referencia general
                     
             /*      Antes se usaba esto para el texto del comentario dentro del nuevoComentario
@@ -395,7 +395,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         ${formatearTiempoRelativo(data.fecha)}
                                     </span>
                                 </div>
-                                    <p class="mb-2" data-texto="${data.comentario}">${data.comentario.replace(/\n/g, "<br>")}</p>
+                                    <p class="my-3" data-texto="${data.comentario}">${data.comentario.replace(/\n/g, "<br>")}</p>
                                 <div class="comment-actions">
                                     <a href="#" class="editar-comentario text-primary" data-id="${data.idComentario}">Editar</a>
                                     <a href="#" class="eliminar-comentario text-danger" data-id="${data.idComentario}">Eliminar</a>
@@ -404,12 +404,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     `;
 
-                    nuevoComentario.style.opacity = 0;
+                    nuevoComentario.classList.add('agregando');
                     commentSection.prepend(nuevoComentario);
-                    setTimeout(() => {
-                        nuevoComentario.style.transition = 'opacity 0.5s';
-                        nuevoComentario.style.opacity = 1;
-                    }, 10);
+                    requestAnimationFrame(() => {
+                        nuevoComentario.classList.remove('agregando');
+                    });
+
 
                     asignarEventosComentarios();
 
@@ -488,7 +488,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then(data => {
                         if (data.respuesta === 'ok') {
                             const nuevoParrafo = document.createElement('p');
-                            nuevoParrafo.classList.add('mb-2');
+                            nuevoParrafo.classList.add('my-3');
                             nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, "<br>");
                             nuevoParrafo.dataset.texto = data.comentario; // <-- ACTUALIZAMOS AQUÍ para que funcione el editar
 
@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         let contenedorComentarios = document.getElementById('listaComentarios');
                                         if (!contenedorComentarios) {
                                             contenedorComentarios = document.createElement('div');
-                                            contenedorComentarios.classList.add('comment-section');
+                                            contenedorComentarios.classList.add('comment-section', 'comment-card', 'border');
                                             contenedorComentarios.id = 'listaComentarios';
 
                                             // Insertamos debajo del contenedor del formulario
@@ -602,14 +602,6 @@ document.addEventListener("DOMContentLoaded", function () {
     asignarEventosComentarios(); // Inicial
 });
 
-/* function mostrarMensajeComentario(texto, tipo) {
-    const msg = document.createElement('div');
-    msg.className = `alert alert-${tipo} mt-2`;
-    msg.innerText = texto;
-    // document.querySelector('.comment-section').prepend(msg);
-    document.getElementById('listaComentarios').prepend(msg);
-    setTimeout(() => msg.remove(), 3000);
-} */
 
 function mostrarMensajeComentario(texto, tipo) {
     Swal.fire({
@@ -739,12 +731,31 @@ function aplicarTema(theme) {
         wrapperFooter.classList.remove("bg-footer-light", "text-dark");
         wrapperFooter.classList.add("bg-footer-dark", "text-light");
         
+        document.querySelectorAll('.rating-card').forEach(card => {
+            card.classList.remove("bg-rating-light");
+            card.classList.add("bg-rating-dark", "text-light");
+        });
+
+        document.querySelectorAll('.comment-card').forEach(comment => {
+            comment.classList.remove("bg-comment-light", "text-dark");
+            comment.classList.add("bg-comment-dark", "text-light");
+        });
     } else {
         wrapperMain.classList.remove("bg-main-dark", "text-light");
         wrapperMain.classList.add("bg-main-light", "text-dark");
 
         wrapperFooter.classList.remove("bg-footer-dark", "text-light");
         wrapperFooter.classList.add("bg-footer-light", "text-dark");
+
+        document.querySelectorAll('.rating-card').forEach(card => {
+            card.classList.remove("bg-rating-dark", "text-light");
+            card.classList.add("bg-rating-light");
+        });
+
+        document.querySelectorAll('.comment-card').forEach(comment => {
+            comment.classList.remove("bg-comment-dark", "text-light");
+            comment.classList.add("bg-comment-light", "text-dark");
+        });
     }
 
     icon.classList.toggle("fa-sun", theme === "light");

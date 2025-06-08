@@ -113,7 +113,7 @@
                         </div>
                         <div class="info" style="display: flex; flex-direction: column;">
                             <h3 class="titulo" style="margin: 0 0 10px 0;">
-                                <a href="index.php?accion=ver_videojuego&id=<?= $videojuegoProbado->videojuego->getId() ?>">
+                                <a href="index.php?accion=ver_videojuego&id=<?= $videojuegoProbado->videojuego->getId() ?>" class="text-decoration-none">
                                     <?= $videojuegoProbado->videojuego->getTitulo() ?>
                                 </a>
                             </h3>
@@ -127,8 +127,9 @@
                 <p>No hay videojuegos probados actualmente.</p>
             <?php endif; ?>
 
-            <br><br>
-            <a href="index.php">Volver al listado de Categorías</a>
+            <div class="mt-5 text-center">
+                <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
+            </div>
         </main>
     </div>
 

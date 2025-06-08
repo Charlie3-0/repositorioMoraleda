@@ -127,31 +127,48 @@
             <?php endif; ?>
 
 
-            <form action="index.php?accion=poner_prestamo" method="post">
-                <label for="idUsuario">Usuario: </label>
-                <select name="idUsuario" id="idUsuario" class="form-select select-usuario">
-                    <?php foreach ($usuarios as $usuario): ?>
-                        <option value="<?= $usuario->getId() ?>"><?= $usuario->getEmail() ?></option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card rounded-4 no-hover">
+                        <div class="card-body p-4">
+                            <form action="index.php?accion=poner_prestamo" method="post">
 
-                <br>
+                                <div class="mb-3">
+                                    <label for="idUsuario" class="form-label">Seleccionar Usuario</label>
+                                    <select name="idUsuario" id="idUsuario" class="form-select select-usuario">
+                                        <?php foreach ($usuarios as $usuario): ?>
+                                            <option value="<?= $usuario->getId() ?>"><?= $usuario->getEmail() ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-                <label for="idVideojuego">Videojuego: </label>
-                <select name="idVideojuego" id="idVideojuego" class="form-select select-videojuego">
-                    <?php foreach ($videojuegos as $videojuego): ?>
-                        <option value="<?= $videojuego->getId() ?>"><?= $videojuego->getTitulo() ?></option>
-                    <?php endforeach; ?>
-                </select>
+                                <div class="mb-4">
+                                    <label for="idVideojuego" class="form-label">Seleccionar Videojuego</label>
+                                    <select name="idVideojuego" id="idVideojuego" class="form-select select-videojuego">
+                                        <?php foreach ($videojuegos as $videojuego): ?>
+                                            <option value="<?= $videojuego->getId() ?>"><?= $videojuego->getTitulo() ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-                <br>
-                <br>
-                <input type="submit" value="Insertar Préstamo">
-            </form>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fa-solid fa-plus me-2"></i>Insertar Préstamo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
-            <div class="mt-4 text-center">
-                <a href="index.php?accion=ver_todos_prestamos" class="text-decoration-none">Volver a Préstamos</a>
+                    <div class="text-center mt-5">
+                        <a href="index.php?accion=ver_todos_prestamos" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left me-2"></i>Volver a Préstamos
+                        </a>
+                    </div>
+                </div>
             </div>
+
+
         </main>
     </div>
 

@@ -142,7 +142,7 @@
                                             </div>
                                             <div class="info">
                                                 <h5>
-                                                    <a href="index.php?accion=ver_videojuego&id=<?= $info['videojuego']->getId() ?>">
+                                                    <a href="index.php?accion=ver_videojuego&id=<?= $info['videojuego']->getId() ?>" class="text-decoration-none">
                                                         <?= $info['videojuego']->getTitulo() ?>
                                                     </a>
                                                 </h5>
@@ -159,7 +159,7 @@
                 <p>No hay videojuegos probados actualmente.</p>
             <?php endif; ?>
 
-            <div class="mt-4 text-center">
+            <div class="mt-5 text-center">
                 <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
             </div>
         </main>

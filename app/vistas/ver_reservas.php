@@ -114,7 +114,7 @@
                         </div>
                         <div class="info" style="display: flex; flex-direction: column;">
                             <h3 class="titulo" style="margin: 0 0 10px 0;">
-                                <a href="index.php?accion=ver_videojuego&id=<?= $reserva->videojuego->getId() ?>">
+                                <a href="index.php?accion=ver_videojuego&id=<?= $reserva->videojuego->getId() ?>" class="text-decoration-none">
                                     <?= $reserva->videojuego->getTitulo() ?>
                                 </a>
                             </h3>
@@ -128,7 +128,7 @@
                 <p>No hay videojuegos reservados actualmente.</p>
             <?php endif; ?>
 
-            <div class="mt-4 text-center">
+            <div class="mt-5 text-center">
                 <a href="index.php" class="text-decoration-none">Volver al listado de Categorías</a>
             </div>
         </main>

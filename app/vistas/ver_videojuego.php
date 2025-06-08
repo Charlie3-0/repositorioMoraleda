@@ -120,165 +120,156 @@
 
             <div class="ver_videojuego">
                 <?php if ($videojuego!= null) : ?>
-                    <h2 class="titulo text-center"><?= $videojuego->getTitulo() ?> </h2>
-                    <div class="videojuego-detalle d-flex mb-4" style="gap: 2rem; align-items: flex-start;">
-                        <div class="foto">
-                            <img src="web/images/<?= $videojuego->getFoto() ?>" style="height: 400px; border: 1px solid black;">
-                        </div>
-                        <div class="info flex-grow-1">
-                            <div class="desarrollador mb-2">Desarrollador: <?= $videojuego->getDesarrollador() ?> </div>
-                            <div class="nombreCategoria mb-2">Categoría: <?= $categoria->getNombre()?></div>
-                            <div class="fecha_lanzamiento mb-2">Fecha de lanzamiento: <?= $videojuego->getFechaLanzamiento() ?> </div>
-                            <div class="descripcion mb-2">Descripción: <?= $videojuego->getDescripcion() ?> </div>
+                    <h2 class="titulo text-center my-4"><?= $videojuego->getTitulo() ?> </h2>
 
-                            <?php
-                                $daoPU = new PuntuacionesDAO($conn);
-                                $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
-                            ?>
+                    <div class="container mb-5">
+                        <div class="card shadow-sm p-3 bg-body-tertiary rounded no-hover">
+                            <div class="row g-4 align-items-start">
+                                <!-- Imagen -->
+                                <div class="col-md-4 text-center">
+                                    <img src="web/images/<?= $videojuego->getFoto() ?>" class="img-fluid rounded border" alt="Carátula del videojuego">
+                                </div>
 
-                            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                                <?php $puntuacionUsuario = $daoPU->obtenerPuntuacionUsuario($videojuego->getId(), Sesion::getUsuario()->getId()); ?>
-                                <div class="rating-card p-3 border rounded bg-light mb-2">
-                                    <h5 class="mb-3">Calificación de estrellas interactiva</h5>
-                                    <div class="star-rating animated-stars mb-1">
+                                <!-- Info -->
+                                <div class="col-md-8">
+                                    <div class="mb-3"><strong>Desarrollador:</strong> <?= $videojuego->getDesarrollador() ?></div>
+                                    <div class="mb-3"><strong>Descripción:</strong> <?= $videojuego->getDescripcion() ?></div>
+                                    <div class="mb-3"><strong>Categoría:</strong> <?= $categoria->getNombre() ?></div>
+                                    <div class="mb-3"><strong>Fecha de lanzamiento:</strong> <?= $videojuego->getFechaLanzamiento() ?></div>
+
+                                    <?php
+                                        $daoPU = new PuntuacionesDAO($conn);
+                                        $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
+                                    ?>
+
+                                    <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
+                                        <?php $puntuacionUsuario = $daoPU->obtenerPuntuacionUsuario($videojuego->getId(), Sesion::getUsuario()->getId()); ?>
+                                        <div class="rating-card p-3 border rounded bg-rating-light bg-rating-dark mb-3">
+                                            <h5 class="mb-3">Calificación de estrellas</h5>
+                                            <div class="star-rating animated-stars mb-1">
+                                                <?php for ($i = 10; $i >= 1; $i--): ?>
+                                                    <input type="radio" id="star<?= $i ?>" name="rating" value="<?= $i ?>"
+                                                        data-idVideojuego="<?= $videojuego->getId() ?>" <?= ($puntuacionUsuario == $i) ? 'checked' : '' ?>>
+                                                    <label for="star<?= $i ?>" class="bi bi-star-fill"></label>
+                                                <?php endfor; ?>
+                                            </div>
+                                            <p class="text-muted">Haz clic para calificar</p>
+                                            <div id="estadoPuntuacionContenedor">
+                                                <?php if ($puntuacionUsuario): ?>
+                                                    <strong class="estadoPuntuacion text-warning">Tu puntuación: <?= $puntuacionUsuario ?>/10</strong>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <p id="mediaPuntuacion" class="mt-2">
+                                        <?php if ($mediaVideojuego): ?>
+                                            <strong>Media: <?= $mediaVideojuego ?>/10</strong>
+                                        <?php endif; ?>
+                                    </p>
+
+                                    <div id="mediaVisualEstrellas" class="star-rating disabled-stars" style="pointer-events: none;">
                                         <?php for ($i = 10; $i >= 1; $i--): ?>
-                                            <input type="radio"
-                                                id="star<?= $i ?>"
-                                                name="rating"
-                                                value="<?= $i ?>"
-                                                data-idVideojuego="<?= $videojuego->getId() ?>"
-                                                <?= ($puntuacionUsuario == $i) ? 'checked' : '' ?>>
-                                            <label for="star<?= $i ?>" class="bi bi-star-fill"></label>
+                                            <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
                                         <?php endfor; ?>
                                     </div>
-                                    <p class="text-muted">Haga clic para calificar</p>
-                                    <div id="estadoPuntuacionContenedor">
-                                        <?php if ($puntuacionUsuario): ?>
-                                            <strong class="estadoPuntuacion text-warning">Tu puntuación: <?= $puntuacionUsuario ?>/10</strong>
+
+                                    <p id="numeroVotos" class="text-muted small mt-1">
+                                        <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
+                                    </p>
+
+                                    <!-- Estado de reserva y préstamo -->
+                                    <div id="estadoReservaContenedor" class="mt-3">
+                                        <?php if ($videojuegoReservado): ?>
+                                            <?php if (Sesion::getUsuario()->getRol() === 'A' && $usuarioReservado): ?>
+                                                <strong class="estadoReservado text-warning">Reservado por: <i><?= $usuarioReservado->getEmail() ?></i></strong>
+                                            <?php else: ?>
+                                                <strong class="estadoReservado text-warning">Videojuego Reservado</strong>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <strong class="text-success">Disponible para Reserva</strong>
                                         <?php endif; ?>
                                     </div>
-                                </div>
-                            <?php endif; ?>
 
-                            <p id="mediaPuntuacion" class="mt-2">
-                                <?php if ($mediaVideojuego): ?>
-                                    <strong>Media: <?= $mediaVideojuego ?>/10</strong>
-                                <?php endif; ?>
-                            </p>
-                            <div id="mediaVisualEstrellas" class="star-rating disabled-stars" style="pointer-events: none;">
-                                <?php for ($i = 10; $i >= 1; $i--): ?>
-                                    <i class="bi <?= ($mediaVideojuego >= $i) ? 'bi-star-fill text-secondary' : (($mediaVideojuego >= $i - 0.5) ? 'bi-star-half text-secondary' : 'bi-star text-secondary') ?>"></i>
-                                <?php endfor; ?>
-                            </div>
-                            <p id="numeroVotos" class="text-muted small mt-1">
-                                <i class="bi bi-people-fill"></i> <?= $totalVotos ?> voto<?= $totalVotos != 1 ? 's' : '' ?>
-                            </p>
-
-                            <div id="estadoReservaContenedor" class="mt-3">
-                                <?php if ($videojuegoReservado): ?>
-                                    <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
-                                        <?php if ($usuarioReservado): ?>
-                                            <strong class="estadoReservado text-warning">
-                                                Videojuego Reservado <i>por: <?= $usuarioReservado->getEmail() ?></i>
-                                            </strong>
+                                    <div id="estadoPrestamoContenedor" class="mt-2">
+                                        <?php if ($videojuegoPrestado): ?>
+                                            <?php if (Sesion::getUsuario()->getRol() === 'A' && $usuarioPrestamo): ?>
+                                                <strong class="estadoPrestado text-warning">Prestado a: <i><?= $usuarioPrestamo->getEmail() ?></i></strong>
+                                            <?php else: ?>
+                                                <strong class="estadoPrestado text-warning">Videojuego Prestado</strong>
+                                            <?php endif; ?>
                                         <?php else: ?>
-                                            <strong class="text-warning">Videojuego disponible para Reserva</strong>
+                                            <strong class="text-success">Disponible para Préstamo</strong>
                                         <?php endif; ?>
-                                    <?php else: ?>
-                                        <strong class="estadoReservado text-warning">Videojuego Reservado</strong>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    <strong class="text-warning">Videojuego disponible para Reserva</strong>
-                                <?php endif; ?>
-                            </div>
+                                    </div>
 
-                            <div id="estadoPrestamoContenedor" class="mt-2">
-                                <?php if ($videojuegoPrestado): ?>
-                                    <?php if (Sesion::getUsuario()->getRol() === 'A'): ?>
-                                        <?php if ($usuarioPrestamo): ?>
-                                            <strong class="estadoPrestado text-warning">
-                                                Videojuego Prestado <i>a: <?= $usuarioPrestamo->getEmail() ?></i>
-                                            </strong>
-                                        <?php else: ?>
-                                            <strong class="text-warning">Videojuego Disponible para ser Prestado</strong>
+                                    <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
+                                        <div id="estadoProbadoContenedor" class="mt-3">
+                                            <?php if ($marcadoProbado): ?>
+                                                <strong class="estadoProbado text-success">Videojuego Probado</strong>
+                                            <?php endif; ?>
+                                        </div>
+
+                                        <!-- Botones reserva / probado -->
+                                        <?php if (!$videojuegoReservado || $existeReserva): ?>
+                                            <div class="mt-3">
+                                                <?php if ($existeReserva): ?>
+                                                    <button class="quitarReserva btn btn-warning" data-idVideojuego="<?= $videojuego->getId() ?>" id="botonReserva">Quitar Reserva</button>
+                                                <?php else: ?>
+                                                    <button class="ponerReserva btn btn-warning" data-idVideojuego="<?= $videojuego->getId() ?>" id="botonReserva">Poner Reserva</button>
+                                                <?php endif; ?>
+                                            </div>
                                         <?php endif; ?>
-                                    <?php else: ?>
-                                        <strong class="estadoPrestado text-warning">Videojuego Prestado</strong>
+
+                                        <div class="mt-3 estado-probado">
+                                            <?php if ($marcadoProbado): ?>
+                                                <i id="botonProbado" class="fas fa-gamepad quitarProbado icono-probado"
+                                                data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
+                                                title="Desmarcar probado"></i>
+                                            <?php else: ?>
+                                                <i id="botonProbado" class="fas fa-circle-xmark ponerProbado icono-no-probado"
+                                                data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
+                                                title="Marcar como probado"></i>
+                                            <?php endif; ?>
+                                            <span class="texto-probado text-success<?= $marcadoProbado ? '' : ' oculto' ?>">
+                                                <i class="fas fa-check-circle icono-confirmacion" style="font-size: 1.5rem;"></i>
+                                            </span>
+                                        </div>
                                     <?php endif; ?>
-                                <?php else: ?>
-                                    <strong class="text-warning">Videojuego Disponible para ser Prestado</strong>
-                                <?php endif; ?>
+                                </div>
                             </div>
-
-                            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                                <div id="estadoProbadoContenedor" class="mt-3">
-                                    <?php if ($marcadoProbado): ?>
-                                        <strong class="estadoProbado text-success">Videojuego Probado</strong>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U' && ( !$videojuegoReservado || $existeReserva )): ?>
-                                <div class="mt-3">
-                                    <?php if($existeReserva): ?>
-                                        <button class="quitarReserva btn btn-outline-danger" data-idVideojuego="<?= $videojuego->getId()?>" id="botonReserva">Quitar Reserva</button>
-                                    <?php else: ?>
-                                        <button class="ponerReserva btn btn-outline-primary" data-idVideojuego="<?= $videojuego->getId()?>" id="botonReserva">Poner Reserva</button>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
-
-                            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
-                                <div class="mt-3 estado-probado">
-                                    <?php if ($marcadoProbado): ?>
-                                        <i id="botonProbado"
-                                        class="fas fa-gamepad quitarProbado icono-probado"
-                                        data-idVideojuego="<?= $videojuego->getId() ?>"
-                                        style="cursor: pointer; font-size: 1.5rem;"
-                                        title="Desmarcar probado"></i>
-                                    <?php else: ?>
-                                        <i id="botonProbado"
-                                        class="fas fa-circle-xmark ponerProbado icono-no-probado"
-                                        data-idVideojuego="<?= $videojuego->getId() ?>"
-                                        style="cursor: pointer; font-size: 1.5rem;"
-                                        title="Marcar como probado"></i>
-                                    <?php endif; ?>
-                                    <span class="texto-probado<?= $marcadoProbado ? '' : ' oculto' ?>">
-                                        <i class="fas fa-check-circle icono-confirmacion"></i> Probado
-                                    </span>
-                                </div>
-                            <?php endif; ?>
                         </div>
                     </div>
 
-                    <!-- Tráiler debajo del contenedor principal -->
+                    <!-- Tráiler debajo -->
                     <?php if (!empty($videojuego->getTrailer())): ?>
-                        <div class="trailer mb-4">
-                            <h3>Tráiler</h3>
-                            <div class="iframe-container">
-                                <iframe src="<?= $videojuego->getTrailer() ?>" class="border border-3 rounded-3" width="560" height="315" title="YouTube video trailer" frameborder="0" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <div class="container text-center mb-5">
+                            <h3 class="mb-3">Tráiler</h3>
+                            <div class="ratio ratio-16x9">
+                                <iframe src="<?= $videojuego->getTrailer() ?>" class="border border-3 rounded-3"
+                                        title="YouTube video trailer" frameborder="0"
+                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
                         </div>
                     <?php endif; ?>
 
-                    <!-- Botón de editar debajo del contenedor también -->
+                    <!-- Botón editar -->
                     <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                        <div class="row justify-content-center text-center mt-5">
-                            <div class="col-md-4">
-                                <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-warning">Editar Videojuego</a>
-                            </div>
+                        <div class="text-center mb-5">
+                            <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-warning">Editar Videojuego</a>
                         </div>
                     <?php endif; ?>
 
-                <?php else : ?>
-                    <strong class="alert alert-warning" role="alert">Videojuego con id <?= $id ?> no encontrado</strong>
+                <?php else: ?>
+                    <strong class="alert alert-warning d-block text-center" role="alert">
+                        Videojuego con id <?= $id ?> no encontrado
+                    </strong>
                 <?php endif; ?>
 
-                <br><br>
 
                 <!-- Sección de comentarios -->
                 <div class="container mt-5">
-                    <div class="comment-section" id="tituloComentarios">
+                    <div class="comment-section comment-card" id="tituloComentarios">
                         <h4 class="text-center"><span></span> Comentarios</h4>
                     </div>
                 </div>
@@ -286,7 +277,7 @@
 
                 <?php if (Sesion::existeSesion()): ?>
                     <div class="container mt-5">
-                        <div class="comment-section" id="insertarComentario">
+                        <div class="comment-section comment-card border" id="insertarComentario">
                             <!-- Formulario para comentar -->
                             <form id="formComentario" class="mb-4" data-idVideojuego="<?= $videojuego->getId(); ?>">
                                 <div class="d-flex gap-3">
@@ -314,7 +305,7 @@
                     <div class="comment-section" id="listaComentarios">
                         <?php if (!empty($comentarios)): ?>
                             <?php foreach ($comentarios as $comentario): ?>
-                                <div class="comment-box mb-3" data-idComentario="<?= $comentario->id ?>">
+                                <div class="comment-box comment-card border" data-idComentario="<?= $comentario->id ?>">
                                     <div class="d-flex gap-3">
                                         <!-- Avatar del usuario -->
                                         <?php if ($comentario->rol === 'A'): ?>
@@ -330,7 +321,7 @@
                                                 </span>
                                             </div>
                                             <!-- Texto del comentario -->
-                                            <p class="mb-2" data-texto="<?= $comentario->comentario ?>">
+                                            <p class="my-3" data-texto="<?= $comentario->comentario ?>">
                                                 <?= nl2br($comentario->comentario) ?>
                                             </p>
                                             <!-- Mostrar botones solo si es el autor o un administrador -->
@@ -356,8 +347,11 @@
                     </div>
                 </div>
 
-                <br><br>
-                <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>">Volver a la Categoría <?= $categoria->getNombre() ?></a>
+                <div class="mt-5 text-center">
+                    <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>" class="text-decoration-none">
+                        Volver a la Categoría <?= $categoria->getNombre() ?>
+                    </a>
+                </div>
             </div>
         </main>
     </div>
