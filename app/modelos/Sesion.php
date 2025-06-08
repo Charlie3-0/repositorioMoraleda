@@ -2,34 +2,27 @@
 class Sesion {
 
     // MÉTODOS PARA USUARIO
-    static public function getUsuario():Usuario|false{
-        if(isset($_SESSION['usuario'])){
+    static public function getUsuario():Usuario|false {
+        if(isset($_SESSION['usuario'])) {
             return unserialize($_SESSION['usuario']);
-            /*
-            $usuario = unserialize($_SESSION['usuario']);
-            echo "<pre>";
-            var_dump($usuario);
-            echo "</pre>";
-            return $usuario;
-            */ 
-        }else{
+        }else {
             return false;
         }
     }
 
-    static public function iniciarSesion($usuario){
+    static public function iniciarSesion($usuario) {
         $_SESSION['usuario'] = serialize($usuario);
     }
 
-    static public function cerrarSesion(){
+    static public function cerrarSesion() {
         unset($_SESSION['usuario']);
         
     }
 
-    static public function existeSesion(){
-        if(isset($_SESSION['usuario'])){
+    static public function existeSesion() {
+        if(isset($_SESSION['usuario'])) {
             return true;
-        }else{
+        }else {
             return false;
         }
     }

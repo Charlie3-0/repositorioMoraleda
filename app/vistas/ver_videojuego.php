@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-bootstrap-purple border-bottom shadow-sm px-3">
@@ -34,28 +36,40 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="menuUsuario">
                                     <?php if (Sesion::getUsuario()->getRol() === 'U'): ?>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Préstamos</a></li>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Reservas</a></li>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">Videojuegos Probados</a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-handshake me-2"></i>Préstamos
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-calendar-check me-2"></i>Reservas
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-gamepad me-2"></i>Videojuegos Probados
+                                        </a></li>
                                     <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
-                                        <li><h6 class="dropdown-header">Gestión General</h6></li>
+                                        <li>
+                                            <h6 class="dropdown-header">Gestión General</h6>
+                                        </li>
                                         <li><a class="dropdown-item" href="index.php?accion=ver_todos_prestamos">
-                                            <i class="fa-solid fa-handshake me-2"></i>Todos los Préstamos
-                                        </a></li>
+                                                <i class="fa-solid fa-handshake me-2"></i>Todos los Préstamos
+                                            </a></li>
                                         <li><a class="dropdown-item" href="index.php?accion=ver_todas_reservas">
-                                            <i class="fa-solid fa-calendar-check me-2"></i>Todas las Reservas
-                                        </a></li>
+                                                <i class="fa-solid fa-calendar-check me-2"></i>Todas las Reservas
+                                            </a></li>
                                         <li><a class="dropdown-item" href="index.php?accion=ver_todos_videojuegos_probados">
-                                            <i class="fa-solid fa-gamepad me-2"></i>Todos los Videojuegos Probados
-                                        </a></li>
-                                        <li><hr class="dropdown-divider"></li>
+                                                <i class="fa-solid fa-gamepad me-2"></i>Todos los Videojuegos Probados
+                                            </a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
                                         <li><a class="dropdown-item" href="index.php?accion=sobre_nosotros">
-                                            <i class="fa-solid fa-circle-info me-2"></i>Sobre Nosotros
-                                        </a></li>
-                                        <li><hr class="dropdown-divider"></li>
+                                                <i class="fa-solid fa-circle-info me-2"></i>Sobre Nosotros
+                                            </a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
                                         <li><a class="dropdown-item" href="index.php?accion=configuraciones_videojuegos">
-                                            <i class="fa-solid fa-gear me-2"></i> Configuraciones
-                                        </a></li>
+                                                <i class="fa-solid fa-gear me-2"></i> Configuraciones
+                                            </a></li>
                                     <?php endif; ?>
                                 </ul>
                             </li>
@@ -119,7 +133,7 @@
             <?php endif; ?>
 
             <div class="ver_videojuego">
-                <?php if ($videojuego!= null) : ?>
+                <?php if ($videojuego != null) : ?>
                     <h2 class="titulo text-center my-4"><?= $videojuego->getTitulo() ?> </h2>
 
                     <div class="container mb-5">
@@ -138,8 +152,8 @@
                                     <div class="mb-3"><strong>Fecha de lanzamiento:</strong> <?= $videojuego->getFechaLanzamiento() ?></div>
 
                                     <?php
-                                        $daoPU = new PuntuacionesDAO($conn);
-                                        $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
+                                    $daoPU = new PuntuacionesDAO($conn);
+                                    $mediaVideojuego = $daoPU->obtenerPuntuacionMedia($videojuego->getId());
                                     ?>
 
                                     <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
@@ -191,17 +205,28 @@
                                         <?php endif; ?>
                                     </div>
 
-                                    <div id="estadoPrestamoContenedor" class="mt-2">
+                                    <div id="estadoPrestamoContenedor" class="mt-3">
                                         <?php if ($videojuegoPrestado): ?>
-                                            <?php if (Sesion::getUsuario()->getRol() === 'A' && $usuarioPrestamo): ?>
-                                                <strong class="estadoPrestado text-warning">Prestado a: <i><?= $usuarioPrestamo->getEmail() ?></i></strong>
-                                            <?php else: ?>
-                                                <strong class="estadoPrestado text-warning">Videojuego Prestado</strong>
+                                            <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
+                                                <?php if ($usuarioPrestamo != null): ?>
+                                                    <strong class="estadoPrestado text-warning">Videojuego Prestado
+                                                        <i>a: <?= $usuarioPrestamo->getEmail() ?></i>
+                                                    </strong>
+                                                <?php else: ?>
+                                                    <strong class="text-success">Disponible para Préstamo</strong>
+                                                <?php endif; ?>
+                                            <?php elseif (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
+                                                <?php if ($usuarioPrestamo != null): ?>
+                                                    <strong class="estadoPrestado text-warning">Videojuego Prestado</strong>
+                                                <?php else: ?>
+                                                    <strong class="text-success">Disponible para Préstamo</strong>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         <?php else: ?>
                                             <strong class="text-success">Disponible para Préstamo</strong>
                                         <?php endif; ?>
                                     </div>
+
 
                                     <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'U'): ?>
                                         <div id="estadoProbadoContenedor" class="mt-3">
@@ -224,12 +249,12 @@
                                         <div class="mt-3 estado-probado">
                                             <?php if ($marcadoProbado): ?>
                                                 <i id="botonProbado" class="fas fa-gamepad quitarProbado icono-probado"
-                                                data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
-                                                title="Desmarcar probado"></i>
+                                                    data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
+                                                    title="Desmarcar probado"></i>
                                             <?php else: ?>
                                                 <i id="botonProbado" class="fas fa-circle-xmark ponerProbado icono-no-probado"
-                                                data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
-                                                title="Marcar como probado"></i>
+                                                    data-idVideojuego="<?= $videojuego->getId() ?>" style="cursor: pointer; font-size: 2.0rem;"
+                                                    title="Marcar como probado"></i>
                                             <?php endif; ?>
                                             <span class="texto-probado text-success<?= $marcadoProbado ? '' : ' oculto' ?>">
                                                 <i class="fas fa-check-circle icono-confirmacion" style="font-size: 1.5rem;"></i>
@@ -241,22 +266,22 @@
                         </div>
                     </div>
 
+                    <!-- Botón editar -->
+                    <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
+                        <div class="text-center mb-5">
+                            <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-warning">Editar Videojuego</a>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- Tráiler debajo -->
                     <?php if (!empty($videojuego->getTrailer())): ?>
                         <div class="container text-center mb-5">
                             <h3 class="mb-3">Tráiler</h3>
                             <div class="ratio ratio-16x9">
                                 <iframe src="<?= $videojuego->getTrailer() ?>" class="border border-3 rounded-3"
-                                        title="YouTube video trailer" frameborder="0"
-                                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                    title="YouTube video trailer" frameborder="0"
+                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                             </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Botón editar -->
-                    <?php if (Sesion::existeSesion() && Sesion::getUsuario()->getRol() === 'A'): ?>
-                        <div class="text-center mb-5">
-                            <a href="index.php?accion=editar_videojuego&id=<?= $videojuego->getId() ?>" class="btn btn-warning">Editar Videojuego</a>
                         </div>
                     <?php endif; ?>
 
@@ -336,7 +361,7 @@
                                                     <a href="#" class="eliminar-comentario text-danger" data-id="<?= $comentario->id ?>">Eliminar</a>
                                                 </div>
                                             <?php endif; ?>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -347,15 +372,15 @@
                     </div>
                 </div>
 
-                <div class="mt-5 text-center">
-                    <a href="index.php?accion=videojuegos_por_categoria&id=<?=$categoria->getId()?>" class="text-decoration-none">
-                        Volver a la Categoría <?= $categoria->getNombre() ?>
+                <div class="text-center mt-5">
+                    <a href="index.php?accion=videojuegos_por_categoria&id=<?= $categoria->getId() ?>" class="btn btn-secondary">
+                        <i class="fa-solid fa-arrow-left me-2"></i>Volver a la Categoría <?= $categoria->getNombre() ?>
                     </a>
                 </div>
             </div>
         </main>
     </div>
-    
+
     <div id="footerWrapper" class="bg-footer-light text-dark">
         <footer id="footerContent" class="container py-5">
             <div class="row align-items-center">
@@ -393,5 +418,5 @@
         }, 3000);
     </script>
 </body>
-</html>
 
+</html>

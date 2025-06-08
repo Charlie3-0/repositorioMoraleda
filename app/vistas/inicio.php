@@ -35,9 +35,15 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="menuUsuario">
                                     <?php if (Sesion::getUsuario()->getRol() === 'U'): ?>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">Préstamos</a></li>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">Reservas</a></li>
-                                        <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">Videojuegos Probados</a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_prestamos&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-handshake me-2"></i>Préstamos
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_reservas&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-calendar-check me-2"></i>Reservas
+                                        </a></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">
+                                            <i class="fa-solid fa-gamepad me-2"></i>Videojuegos Probados
+                                        </a></li>
                                     <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
                                         <li><h6 class="dropdown-header">Gestión General</h6></li>
                                         <li><a class="dropdown-item" href="index.php?accion=ver_todos_prestamos">

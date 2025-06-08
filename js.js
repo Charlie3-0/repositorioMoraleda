@@ -94,7 +94,6 @@ function actualizarEstadoReserva(estado) {
 
 
 
-
 /* Funciones para marcar y quitar videojuego_probado con AJAX asignando icono */
 let probadoOn = document.querySelector('.quitarProbado');
 if (probadoOn != null) {
@@ -198,7 +197,7 @@ function actualizarEstadoProbado(estado) {
 
     
 
-    
+
 // Script para las puntuaciones
 document.querySelectorAll('.star-rating:not(.readonly) label').forEach(star => {
     star.addEventListener('click', function() {
@@ -323,10 +322,11 @@ function actualizarMediaVisual(media) {
         }
         const estrella = document.createElement('i');
         estrella.className = `bi ${clase}`;
-        estrella.style.marginRight = '6px'; // Espacio entre estrellas
+        estrella.style.marginRight = '6px';
         contenedorEstrellas.appendChild(estrella);
     }
 }
+
 
 
 
@@ -335,7 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const formComentario = document.getElementById('formComentario');
     const contenedorForm = document.getElementById('insertarComentario');
     const sinComentarios = document.querySelector('.sin-comentarios');
-    /* const commentSection = document.querySelector('.comment-section'); */
     const commentSection = document.getElementById('listaComentarios');
     const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
 
@@ -381,9 +380,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     const nuevoComentario = document.createElement('div');
                     nuevoComentario.classList.add('comment-box', 'comment-card', 'border', 'mb-3');
                     nuevoComentario.setAttribute('data-idComentario', data.idComentario); // para referencia general
-                    
-            /*      Antes se usaba esto para el texto del comentario dentro del nuevoComentario
-                    <!--    <p class="mb-2">${data.comentario.replace(/\n/g, "<br>")}</p>   --> */
 
                     nuevoComentario.innerHTML = `
                         <div class="d-flex gap-3">
@@ -410,7 +406,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         nuevoComentario.classList.remove('agregando');
                     });
 
-
                     asignarEventosComentarios();
 
                     actualizarTiemposRelativos();
@@ -432,11 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const comentarioBox = this.closest('.comment-box');
                 const idComentario = comentarioBox.dataset.idcomentario;
                 const p = comentarioBox.querySelector('p');
-            //    const textoOriginal = p.textContent;
-            //    const textoOriginal = p.innerHTML.replace(/<br\s*\/?>/gi, '\n');
                 const textoOriginal = p.dataset.texto;
-
-
 
                 const textarea = document.createElement('textarea');
                 textarea.classList.add('form-control', 'comment-input');
@@ -490,10 +481,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             const nuevoParrafo = document.createElement('p');
                             nuevoParrafo.classList.add('my-3');
                             nuevoParrafo.innerHTML = data.comentario.replace(/\n/g, "<br>");
-                            nuevoParrafo.dataset.texto = data.comentario; // <-- ACTUALIZAMOS AQUÍ para que funcione el editar
+                            nuevoParrafo.dataset.texto = data.comentario;
 
                             textarea.replaceWith(nuevoParrafo);
-                        //    comentarioBox.querySelector('.comment-time').textContent = data.fecha;
                             const spanTiempo = comentarioBox.querySelector('.comment-time');
                             spanTiempo.dataset.fecha = data.fecha;
                             spanTiempo.textContent = formatearTiempoRelativo(data.fecha);
@@ -510,15 +500,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             mostrarMensajeComentario('Comentario editado correctamente', 'success');
 
-                            /* // Crear y añadir el mensaje de edición correcta de comentario
-                            const mensaje = document.createElement('div');
-                            mensaje.className = 'alert alert-success mt-2';
-                            mensaje.innerText = 'Comentario editado correctamente';
-                            // Insertar justo debajo del comentario editado
-                            comentarioBox.appendChild(mensaje);
-                            // Eliminar después de 3 segundos
-                            setTimeout(() => mensaje.remove(), 3000); */
-
                             asignarEventosComentarios();
 
                             actualizarTiemposRelativos();
@@ -533,8 +514,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('.eliminar-comentario').forEach(boton => {
             boton.addEventListener('click', function (e) {
                 e.preventDefault();
-
-                /* if (!confirm('¿Seguro que quieres eliminar el comentario?')) return; */
 
                 const comentarioBox = e.target.closest('.comment-box');
                 const idVideojuego = document.querySelector('[data-idVideojuego]').getAttribute('data-idVideojuego');
@@ -593,8 +572,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             });
                     }
                 });
-                
-                    
+                 
             });
         });
     }
@@ -610,7 +588,6 @@ function mostrarMensajeComentario(texto, tipo) {
         timer: 2500,
         showConfirmButton: false,
         toast: true,
-        /* position: 'top' */
     });
 }
 
@@ -667,6 +644,8 @@ function actualizarTiemposRelativos() {
 }
 
 
+
+
 // Script para buscar videojuegos
 document.addEventListener('DOMContentLoaded', () => {
     const buscador = document.getElementById('buscador-videojuegos');
@@ -705,6 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
+
 // SCRIPT: Toggle entre claro/oscuro solo en main y footer
 const btn = document.getElementById("themeToggle");
 const icon = document.getElementById("themeIcon");
@@ -713,13 +694,7 @@ const footer = document.querySelector("footer");
 const wrapperMain = document.getElementById("mainWrapper");
 const wrapperFooter = document.getElementById("footerWrapper");
 
-// Función para aplicar el tema y actualizar el icono
-/* function aplicarTema(theme) {
-    main.setAttribute("data-bs-theme", theme);
-    footer.setAttribute("data-bs-theme", theme);
-    icon.classList.toggle("fa-sun", theme === "light");
-    icon.classList.toggle("fa-moon", theme === "dark");
-} */
+// Función para aplicar el tema claro u oscuro
 function aplicarTema(theme) {
     main.setAttribute("data-bs-theme", theme);
     footer.setAttribute("data-bs-theme", theme);

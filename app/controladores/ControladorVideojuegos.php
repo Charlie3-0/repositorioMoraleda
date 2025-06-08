@@ -42,7 +42,6 @@ class ControladorVideojuegos {
         $categoriasDAO = new CategoriasDAO($conn);
         $prestamosDAO = new PrestamosDAO($conn);
         $videojuegosProbadosDAO = new Videojuegos_probadosDAO($conn);
-        //$peliculasUsuariosDAO = new Peliculas_usuariosDAO($conn);
         $comentariosDAO = new ComentariosDAO($conn);
         $puntuacionesDAO = new PuntuacionesDAO($conn);
         $usuariosDAO = new UsuariosDAO($conn);
@@ -51,68 +50,42 @@ class ControladorVideojuegos {
         $idVideojuego = htmlspecialchars($_GET['id']);
         $videojuego = $videojuegosDAO->getById($idVideojuego);
 
-        // Obtener el Id de la categoria para obtener el atributo/elemento idCategoria de la clase Videojuego
-        /* $idCategoria = $_GET['id'];
-        $idCategoria = htmlspecialchars($_GET['id']);
-        $categoria = $categoriasDAO->getById($idCategoria); */
-
         // Obtener la categoría del videojuego para poder obtener el nombre de la categoría
         $categoriaId = $videojuego->getIdCategoria();
         $categoria = $categoriasDAO->getById($categoriaId);
-
-        /* $rolUsuario = $usuariosDAO->getRol(); */
 
         // Inicializar variables comunes
         $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0
         $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
         $videojuegoProbado = $videojuegosProbadosDAO->countByIdVideojuego($idVideojuego);
-        /* $puntuacionVideojuego = $puntuacionesDAO->countByIdVideojuego($idVideojuego); */
-        /* $peliculaVista = $peliculasUsuariosDAO->countByIdPelicula($idVideojuego); */
         $marcadoProbado = false;
         $existeReserva = false;
         $usuarioReservado = null;
         $usuarioPrestamo = null;
-
-        //$mediaPelicula = $peliculasUsuariosDAO->obtenerPuntuacionMedia($pelicula->getId());
-        /* $totalVotos = $peliculasUsuariosDAO->contarVotosPelicula($pelicula->getId());
-
-        // Obtener comentarios de esta película
-        $comentarios = $peliculasUsuariosDAO->getComentariosPorPelicula($idPelicula);
-        $comentarioUsuarioActual = $peliculasUsuariosDAO->getComentarioPorUsuario($idPelicula, $usuario->getId()); */
 
         //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
         $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
         // Obtener comentarios de este videojuego
         $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego);
-        /* $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId()); */
 
 
         // Solo si hay sesión
         if (Sesion::existeSesion()) {
             $usuario = Sesion::getUsuario();
-/* 
-            //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
-            $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
-            // Obtener comentarios de este videojuego
-            $comentarios = $comentariosDAO->getComentariosPorVideojuego($idVideojuego); */
-            /* $comentarioUsuarioActual = $comentariosDAO->getComentarioPorUsuario($idVideojuego, $usuario->getId()); */
+            $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego);
 
             if ($usuario->getRol() === 'U') {
                 // Lógica para usuarios normales
                 $existeReserva = $reservasDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego);
-                /* $marcadaVista = $peliculasVistasDAO->estaMarcadaComoVista($usuario->getId(), $idVideojuego); */
                 $marcadoProbado = $videojuegosProbadosDAO->estaMarcadoComoProbado($usuario->getId(), $idVideojuego);
-                /* $videojuegoProbado = $videojuegosProbadosDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego); */
 
             } elseif ($usuario->getRol() === 'A') {
                 // Lógica para admins
                 $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
-                $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego);
             }
         }
-
 
         require 'app/vistas/ver_videojuego.php';
     }
@@ -310,9 +283,6 @@ class ControladorVideojuegos {
                     $_SESSION['mensaje_error'] = "Error al actualizar el videojuego.";
                 }
     
-            /*     // Redireccionamos a la vista del Videojuego
-                header('location: index.php?accion=ver_videojuego&id=' . $videojuego->getId());
-                die(); */
             }
         }
     
@@ -392,38 +362,12 @@ class ControladorVideojuegos {
         // Obtenemos todos los préstamos
         $prestamos = $prestamosDAO->getAll();
 
-        // Obtener el videojuego
-    /*     $idVideojuego = htmlspecialchars($_GET['id']);
-        $videojuego = $videojuegosDAO->getById($idVideojuego); */
-
-        // Obtener la categoría del videojuego
-        /* $idCategoria = $_GET['id'];
-        $idCategoria = htmlspecialchars($_GET['id']);
-        $categoria = $categoriasDAO->getById($idCategoria); */
-
-        // Obtener la categoría del videojuego para poder obtener el nombre de la categoría
-        /* $categoriaId = $videojuego->getIdCategoria();
-        $categoria = $categoriasDAO->getById($categoriaId); */
-
         // Inicializar variables comunes
-    /*     $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0
-        $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego); */
         $existeReserva = false;
         $usuarioReservado = null;
         $usuarioPrestamo = null;
         $prestamoActivo = false;
 
-        // Solo si hay sesión
-        if (Sesion::existeSesion()) {
-            $usuario = Sesion::getUsuario();
-
-            if ($usuario->getRol() === 'A') {
-                // Lógica para administradores
-       /*          $existeReserva = $reservasDAO->existByIdUsuarioIdVideojuego($usuario->getId(), $idVideojuego);
-                $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
-                $usuarioPrestamo = $prestamosDAO->getUsuarioPrestamoPorVideojuegoId($idVideojuego); */
-            }
-        }
 
         require 'app/vistas/configuraciones.php';
     }
@@ -436,7 +380,6 @@ class ControladorVideojuegos {
         }
     
         // Crear conexión a la base de datos
-    //    require_once 'app/core/ConnexionDB.php'; // Asegúrate de incluirlo si no está incluido
         $connexionDB = new ConnexionDB(MYSQL_USER, MYSQL_PASS, MYSQL_HOST, MYSQL_DB);
         $conn = $connexionDB->getConnexion();
     

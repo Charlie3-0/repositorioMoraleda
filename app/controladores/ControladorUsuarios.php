@@ -103,7 +103,6 @@ class ControladorUsuarios {
             </script>";
         }
 
-        
     }
 
     public function logout(){
