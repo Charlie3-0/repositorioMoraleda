@@ -197,12 +197,17 @@ class VideojuegosDAO {
     
         $videojuegos = [];
         while ($row = $result->fetch_assoc()) {
-            $videojuegos[] = $this->crearDesdeFila($row); // O el método que uses para crear objetos Videojuego
+            $videojuegos[] = $this->crearDesdeFila($row); // Método que usamos para crear objetos Videojuego
         }
         return $videojuegos;
     }
     
 
+    /**
+     * Método auxiliar para crear un objeto Videojuego a partir de una fila de la base de datos
+     * @param array $fila Array asociativo con los datos del videojuego
+     * @return Videojuego Objeto Videojuego creado a partir de la fila
+     */
     private function crearDesdeFila(array $fila): Videojuego {
         $videojuego = new Videojuego();
         $videojuego->setId($fila['id']);
@@ -216,7 +221,6 @@ class VideojuegosDAO {
         return $videojuego;
     }
     
-
 
 }
 

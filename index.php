@@ -161,5 +161,3 @@ $metodo = $mapa[$accion]['metodo'];
 $objeto = new $controlador();
 $objeto->$metodo();
 
-
-

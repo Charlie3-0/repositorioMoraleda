@@ -1,6 +1,6 @@
 # 🎮 TestPlay
 
-**TestPlay** es una plataforma web de alquiler temporal y prueba de videojuegos digitales, desarrollada con **PHP** siguiendo el patrón **MVC**. Aunque se incluyen títulos también disponibles en consolas como PlayStation o Xbox, **solo están disponibles en su versión para PC**, ya que estamos iniciando en el sector y nos centramos exclusivamente en juegos para ordenador (Windows).
+**TestPlay** es una plataforma(aplicación) web de alquiler temporal y prueba de videojuegos digitales, desarrollada con **PHP** siguiendo el patrón **MVC**. Aunque se incluyen títulos también disponibles en consolas como PlayStation o Xbox, **solo están disponibles en su versión para PC**, ya que estamos iniciando en el sector y nos centraríamos exclusivamente en juegos para ordenador (Windows).
 
 ---
 
@@ -72,10 +72,10 @@
 
 4. Configura el archivo config.php con los datos de tu base de datos:
 
-- `define('BD_USUARIO', 'root');`
-- `define('BD_PASSWORD', '');`
-- `define('BD_NOMBRE_BD', 'TestPlayMVC');`
-- `define('BD_SERVIDOR', 'localhost');`
+- `define('MYSQL_USER', 'root');`
+- `define('MYSQL_PASS', '');`
+- `define('MYSQL_DB', 'TestPlayMVC');`
+- `define('MYSQL_HOST', 'localhost');`
 
 #### 🚀 Ejecutar el proyecto
 - Abre tu navegador y ve a:
