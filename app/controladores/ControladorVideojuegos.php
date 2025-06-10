@@ -63,7 +63,7 @@ class ControladorVideojuegos {
         $usuarioReservado = null;
         $usuarioPrestamo = null;
 
-        //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
+        // Obtener el total de votos del videojuego
         $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
         // Obtener comentarios de este videojuego
@@ -189,7 +189,7 @@ class ControladorVideojuegos {
                     $_SESSION['mensaje_error'] = "Error al cargar la foto.";
                 }
     
-
+                // Insertamos el videojuego en la base de datos
                 if ($videojuegosDAO->insert($videojuego)) {
                     $_SESSION['mensaje_ok'] = "El videojuego se ha creado correctamente.";
                     header('location: index.php?accion=videojuegos_por_categoria&id=' . $videojuego->getIdCategoria());
