@@ -22,7 +22,7 @@ class ControladorVideojuegos {
     }
 
 
-    // FUNCIÓN PARA VER CADA VIDEOJUEGO PARA USUARIOS
+    // FUNCIÓN PARA VER CADA VIDEOJUEGO
     public function verVideojuego(){
         // Comprobamos si hay sesión y si hay un usuario conectado
         $usuario = Sesion::getUsuario();
@@ -55,7 +55,7 @@ class ControladorVideojuegos {
         $categoria = $categoriasDAO->getById($categoriaId);
 
         // Inicializar variables comunes
-        $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego); // Solo 1 o 0
+        $videojuegoReservado = $reservasDAO->countByIdVideojuego($idVideojuego);
         $videojuegoPrestado = $prestamosDAO->countByIdVideojuego($idVideojuego);
         $videojuegoProbado = $videojuegosProbadosDAO->countByIdVideojuego($idVideojuego);
         $marcadoProbado = false;
@@ -82,7 +82,7 @@ class ControladorVideojuegos {
                 $marcadoProbado = $videojuegosProbadosDAO->estaMarcadoComoProbado($usuario->getId(), $idVideojuego);
 
             } elseif ($usuario->getRol() === 'A') {
-                // Lógica para admins
+                // Lógica para administradores
                 $usuarioReservado = $videojuegoReservado ? $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego) : null;
             }
         }
@@ -91,7 +91,7 @@ class ControladorVideojuegos {
     }
 
 
-    // FUNCIÓN PARA VER LOS VIDEOJUEGOS POR CATEGORÍA PARA USUARIOS
+    // FUNCIÓN PARA VER LOS VIDEOJUEGOS POR CATEGORÍA
     public function verVideojuegosPorCategoria() {
         // Comprobamos si hay sesión y si hay un usuario conectado
         $usuario = Sesion::getUsuario();
@@ -123,7 +123,6 @@ class ControladorVideojuegos {
         $idCategoria = htmlspecialchars($_GET['id']);
         $categoria = $categoriasDAO->getById($idCategoria);
 
-        //$mediaVideojuego = $puntuacionesDAO->obtenerPuntuacionMedia($videojuego->getId());
         $totalVotos = $puntuacionesDAO->contarVotosVideojuego($videojuego->getId());
 
         // Incluir la vista de videojuegos por categoría
@@ -157,7 +156,7 @@ class ControladorVideojuegos {
             $descripcion = htmlspecialchars($_POST['descripcion']);
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
             $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
-            $trailer = htmlspecialchars($_POST['trailer']); // Permitimos iframe, así que usamos htmlspecialchars para evitar XSS
+            $trailer = htmlspecialchars($_POST['trailer']);
 
             // Aquí manejamos la foto
             $foto_nombre = $_FILES['foto']['name'];   // Nombre de la foto
@@ -167,7 +166,6 @@ class ControladorVideojuegos {
     
             // Validamos los datos
             if (empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento) || empty($trailer) || empty($foto_nombre)) {
-            //    $error = "Todos los campos son obligatorios.";
                 $_SESSION['mensaje_error'] = "Todos los campos son obligatorios.";
             } else {
 
@@ -240,9 +238,8 @@ class ControladorVideojuegos {
             $idCategoria = htmlspecialchars($_POST['idCategoria']);
             $fechaLanzamiento = htmlspecialchars($_POST['fecha_lanzamiento']);
             $trailer = htmlspecialchars($_POST['trailer']);
-          //  $trailer = $_POST['trailer'];
 
-    
+
             // Validamos los datos
             if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento) || empty($trailer)) {
              //   $error = "Todos los campos son obligatorios.";
@@ -252,7 +249,6 @@ class ControladorVideojuegos {
                 $videojuego->setTitulo($titulo);
                 $videojuego->setDesarrollador($desarrollador);
                 $videojuego->setDescripcion($descripcion);
-                // $videojuego->setFoto($foto); // Aquí manejamos la foto
                 $videojuego->setIdCategoria($idCategoria);
                 $videojuego->setFechaLanzamiento($fechaLanzamiento);
                 $videojuego->setTrailer($trailer);
@@ -268,13 +264,11 @@ class ControladorVideojuegos {
                     if(move_uploaded_file($foto_temporal, $ruta_destino)){
                         $videojuego->setFoto($foto_nombre);
                     }else{
-                     //   $error = "Error al subir la imagen.";
                         $_SESSION['mensaje_error'] = "Error al subir la imagen.";
                     }
                 }
     
                 if ($videojuegosDAO->update($videojuego)) {
-                 //   echo "El videojuego se ha actualizado correctamente.";
                     $_SESSION['mensaje_ok'] = "El videojuego se ha actualizado correctamente.";
                     header('location: index.php?accion=ver_videojuego&id=' . $videojuego->getId());
                     die();
@@ -319,7 +313,7 @@ class ControladorVideojuegos {
             exit;
         }
 
-        // Intentamos eliminar el videojuego
+        // Tratamos de eliminar el videojuego
         if ($videojuegosDAO->delete($idVideojuego)) {
             $_SESSION['mensaje_ok'] = 'Videojuego eliminado correctamente.';
         } else {
@@ -399,8 +393,5 @@ class ControladorVideojuegos {
         echo json_encode($respuesta);
     }
     
-    
-    
-
 
 }

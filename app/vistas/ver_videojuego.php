@@ -45,6 +45,10 @@
                                         <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">
                                             <i class="fa-solid fa-gamepad me-2"></i>Videojuegos Probados
                                         </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=sobre_nosotros">
+                                            <i class="fa-solid fa-circle-info me-2"></i>Sobre Nosotros
+                                        </a></li>
                                     <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
                                         <li>
                                             <h6 class="dropdown-header">Gestión General</h6>

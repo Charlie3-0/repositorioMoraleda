@@ -45,6 +45,10 @@
                                         <li><a class="dropdown-item" href="index.php?accion=ver_videojuegos_probados&id=<?=Sesion::getUsuario()->getId()?>">
                                             <i class="fa-solid fa-gamepad me-2"></i>Videojuegos Probados
                                         </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="index.php?accion=sobre_nosotros">
+                                            <i class="fa-solid fa-circle-info me-2"></i>Sobre Nosotros
+                                        </a></li>
                                     <?php elseif (Sesion::getUsuario()->getRol() === 'A'): ?>
                                         <li>
                                             <h6 class="dropdown-header">Gestión General</h6>
@@ -126,13 +130,16 @@
                         <div class="card-body p-4">
                             <h2 class="text-center mb-4">Carta de Presentación</h2>
                             <p>
-                                ¡Hola! Mi nombre es <strong>Carlos Moraleda</strong> y soy un apasionado del desarrollo web y la programación. Desde mis primeros proyectos académicos hasta el desarrollo de esta plataforma, me he enfocado en aprender buenas prácticas, escribir código limpio y crear interfaces funcionales y atractivas para los usuarios.
+                                ¡Hola! Mi nombre es <strong>Carlos Moraleda</strong> y soy una persona con formación en desarrollo web y programación, aún con poca experiencia práctica, pero con muchas ganas de seguir aprendiendo y creciendo en este ámbito.
                             </p>
                             <p>
-                                Este proyecto forma parte de mi crecimiento profesional y busca no solo demostrar mis habilidades técnicas, sino también mi capacidad para abordar desafíos reales, organizar código en un patrón MVC, y cuidar tanto la experiencia del usuario como la mantenibilidad del sistema.
+                                Desde los proyectos académicos hasta el desarrollo de esta plataforma, he buscado aplicar lo aprendido para escribir código estructurado, seguir buenas prácticas y diseñar interfaces que sean funcionales para el usuario.
                             </p>
                             <p>
-                                Me entusiasma seguir aprendiendo y evolucionando como desarrollador, con interés especial en tecnologías web modernas, bases de datos relacionales, y experiencia de usuario. ¡Gracias por visitar mi trabajo!
+                                Este proyecto representa un paso importante en mi desarrollo como profesional, donde he trabajado organizando el código en base al patrón MVC y cuidando tanto el funcionamiento como la claridad del sistema.
+                            </p>
+                            <p>
+                                Estoy comprometido con seguir mejorando mis habilidades técnicas, especialmente en tecnologías web, bases de datos y experiencia de usuario. ¡Gracias por visitar mi trabajo!
                             </p>
                         </div>
                     </div>
