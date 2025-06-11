@@ -85,22 +85,6 @@ class ComentariosDAO {
 
 
     /**
-     * Edita exclusivamente un comentario existente
-     */
-    /* public function editarComentario($idUsuario, $idVideojuego, $comentario) {
-        $fechaComentario = date('c');
-
-        $sql = "UPDATE comentarios 
-                SET comentario = ?, fecha_comentario = ? 
-                WHERE idUsuario = ? AND idVideojuego = ?";
-        
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssii", $comentario, $fechaComentario, $idUsuario, $idVideojuego);
-
-        return $stmt->execute();
-    } */
-
-    /**
      * Elimina un comentario concreto por su ID
      */
     public function quitarComentario($comentario) {

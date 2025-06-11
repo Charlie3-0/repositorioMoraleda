@@ -213,15 +213,6 @@ class PuntuacionesDAO {
         return round($result['media'], 1); // ejemplo: 8.3
     }
     
-    /* public function obtenerPuntuacionMedia($idVideojuego) {
-        $sql = "SELECT AVG(puntuacion) as media FROM puntuaciones WHERE idVideojuego = ? AND puntuacion IS NOT NULL";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $idVideojuego);
-        $stmt->execute();
-        $result = $stmt->get_result()->fetch_assoc();
-        return $result['media'] !== null ? round($result['media'], 1) : null;
-    } */
-    
 
     /**
      * Obtener la cantidad de votos (puntuaciones) de un videojuego

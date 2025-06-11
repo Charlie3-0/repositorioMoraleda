@@ -58,62 +58,6 @@ class CategoriasDAO {
     }
     
     
-    /**
-     * Borrar la categoria de la tabla categorias del id pasado por parámetro
-     * @return true si ha borrado la categoria y false si no la ha borrado (por que no existia)
-     */
-    function delete($id):bool{
-
-        if(!$stmt = $this->conn->prepare("DELETE FROM categorias WHERE id = ?"))
-        {
-            echo "Error en la SQL: " . $this->conn->error;
-        }
-        //Asociar las variables a las interrogaciones(parámetros)
-        $stmt->bind_param('i',$id);
-        //Ejecutamos la SQL
-        $stmt->execute();
-        //Comprobamos si ha borrado algún registro o no
-        if($stmt->affected_rows==1){
-            return true;
-        }
-        else{
-            return false;
-        }
-        
-    }
-
-
-    /**
-     * Insertar en la base de datos la categoria que recibe como parámetro
-     * @return idCategoria Devuelve el id autonumérico que se le ha asignado a la categoria o false en caso de error
-     */
-    function insert(Categoria $categoria): int|bool{
-        if(!$stmt = $this->conn->prepare("INSERT INTO categorias (nombre) VALUES (?)")){
-            die("Error al preparar la consulta insert: " . $this->conn->error );
-        }
-        $nombre = $categoria->getNombre();
-        $stmt->bind_param('s',$nombre);
-        if($stmt->execute()){
-            return $stmt->insert_id;
-        }
-        else{
-            return false;
-        }
-    }
-
-
-    /**
-     * Editar en la base de datos la categoria
-     */
-    function update($categoria){
-        if(!$stmt = $this->conn->prepare("UPDATE categorias SET nombre=? WHERE id=?")){
-            die("Error al preparar la consulta update: " . $this->conn->error );
-        }
-        $nombre = $categoria->getNombre();
-        $id = $categoria->getId();
-        $stmt->bind_param('si',$nombre, $id);
-        return $stmt->execute();
-    }
 
 }
 

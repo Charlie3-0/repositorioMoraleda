@@ -22,7 +22,6 @@ class ControladorPrestamos {
 
         $idUsuario =htmlspecialchars($_GET['id']);
         $usuario = $usuariosDAO->getById($idUsuario);
-        //var_dump($_GET);
 
         // Obtener los préstamos
         $prestamos = $prestamosDAO->obtenerPrestamosByIdUsuario($idUsuario);
@@ -100,7 +99,7 @@ class ControladorPrestamos {
             $stmt->close();
 
     
-            // Validamos los datos(modificar esto para que permita insertar los prestamos si el videojuego no tiene prestamos o el prestamo tenga el videojuego devuelto)
+            // Validamos los datos
             if (empty($idUsuario) || empty($idVideojuego)) {
                 $_SESSION['mensaje_error'] = "Los campos de usuario y videojuego son obligatorios.";
             } elseif ($videojuegoPrestado > 0) {

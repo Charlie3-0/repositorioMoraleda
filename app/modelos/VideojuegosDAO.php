@@ -186,7 +186,11 @@ class VideojuegosDAO {
     }
     
 
-        
+    /**
+     * Buscar videojuegos por título
+     * @param string $texto Texto a buscar en los títulos de los videojuegos
+     * @return array Array de objetos Videojuego que coinciden con el texto buscado
+     */
     public function buscarPorTitulo($texto) {
         $sql = "SELECT * FROM videojuegos WHERE titulo LIKE ? ORDER BY titulo ASC LIMIT 10";
         $stmt = $this->conn->prepare($sql);

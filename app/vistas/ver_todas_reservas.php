@@ -14,7 +14,6 @@
     <!-- SweetAlert2 CSS y JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-bootstrap-purple border-bottom shadow-sm px-3">

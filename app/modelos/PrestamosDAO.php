@@ -59,6 +59,10 @@ class PrestamosDAO {
     }
 
 
+    /**
+     * Obtener todos los préstamos agrupados por usuario, ordenados por fecha de préstamo
+     * @return array Devuelve un array de préstamos agrupados por usuario
+     */
     public function getPrestamosAgrupadosPorUsuario() {
         $sql = "SELECT * FROM prestamos ORDER BY idUsuario, fecha_prestamo DESC";
         $result = $this->conn->query($sql);

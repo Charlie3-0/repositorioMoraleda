@@ -130,6 +130,7 @@ class ControladorVideojuegos {
     }
     
 
+    // Función para insertar un nuevo videojuego
     public function insertarVideojuego() {
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
@@ -205,6 +206,7 @@ class ControladorVideojuegos {
     }
     
 
+    // Función para editar un videojuego
     public function editarVideojuego(){
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
@@ -242,7 +244,6 @@ class ControladorVideojuegos {
 
             // Validamos los datos
             if(empty($titulo) || empty($desarrollador) || empty($descripcion) || empty($idCategoria) || empty($fechaLanzamiento) || empty($trailer)) {
-             //   $error = "Todos los campos son obligatorios.";
                 $_SESSION['mensaje_error'] = "Todos los campos son obligatorios.";
             }else{
                 // Actualizamos los datos del videojuego
@@ -273,7 +274,6 @@ class ControladorVideojuegos {
                     header('location: index.php?accion=ver_videojuego&id=' . $videojuego->getId());
                     die();
                 } else {
-                 //   echo "Error al actualizar el videojuego.";
                     $_SESSION['mensaje_error'] = "Error al actualizar el videojuego.";
                 }
     
@@ -285,6 +285,7 @@ class ControladorVideojuegos {
     }
 
 
+    // Función para eliminar un videojuego
     public function eliminarVideojuego(){
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
@@ -327,6 +328,7 @@ class ControladorVideojuegos {
     }
 
 
+    // Función para mostrar la página de configuraciones de videojuegos
     public function configuracionesVideojuegos() {
         // Comprobamos si hay sesión y si el usuario es administrador
         $usuario = Sesion::getUsuario();
@@ -367,6 +369,7 @@ class ControladorVideojuegos {
     }
 
 
+    // Función para buscar videojuegos mediante AJAX
     public function buscarVideojuegosAjax() {
         if (!Sesion::getUsuario()) {
             echo json_encode([]);

@@ -196,9 +196,9 @@
                     <?php foreach ($videojuegos as $videojuego): ?>
                         <?php
                             $idVideojuego = $videojuego->getId();
-                            $usuarioReservado = $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego); // Puede ser null
+                            $usuarioReservado = $reservasDAO->getUsuarioReservaPorVideojuegoId($idVideojuego);
                             $reservaActiva = $usuarioReservado !== null;
-                            $prestamo = $prestamosDAO->getPrestamoActivoPorVideojuegoId($idVideojuego); // devuelve Prestamo o null
+                            $prestamo = $prestamosDAO->getPrestamoActivoPorVideojuegoId($idVideojuego); // devuelve Prestamo o null si no hay préstamo activo
                             $prestamoActivo = $prestamo !== null; // ya está activo si no es null
 
                         ?>

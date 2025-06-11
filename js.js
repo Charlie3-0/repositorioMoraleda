@@ -528,7 +528,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Lógica para eliminar el comentario aquí...
+                        // Lógica para eliminar el comentario
                         fetch('index.php?accion=eliminar_comentario&id=' + idComentario)
                             .then(response => response.json())
                             .then(data => {
@@ -627,7 +627,7 @@ function formatearTiempoRelativo(fechaISO) {
     return "justo ahora";
 }
 
-// Actualizar el tiempo relativo cada segundo o menos
+// Actualizar el tiempo relativo cada menos de un segundo para que se vea dinámico
 setInterval(() => {
     document.querySelectorAll('.comment-time[data-fecha]').forEach(span => {
         const fecha = span.getAttribute('data-fecha');
