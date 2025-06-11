@@ -1,0 +1,7 @@
+Rutas para acceder al Backend y Frontend de la aplicación:
+
+- Backend: "app/modelos" donde están los DAOs y las clases y "app/controladores" donde están los controladores.
+
+- Frontend: "app/vistas" donde están las vistas y "js.js" que se encuentra al inicio es el JavaScript.
+
+
