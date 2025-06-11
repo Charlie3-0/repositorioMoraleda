@@ -1,0 +1,15 @@
+- Usuario:carlos@gmail.com	Password:1234
+
+- Usuario:paco@gmail.com	Password:1234
+
+- Usuario:jose@gmail.com	Password:1234
+
+- Usuario:pepe@gmail.com	Password:1234
+
+- Usuario:juan@gmail.com	Password:1234
+
+- Administrador:admin@gmail.com	Password:1234 (fijo ya que hemos puesto que no pueda cambiarse el rol)
+
+- Administrador:charlie3-0@testplay.com	Password:1234
+
+
