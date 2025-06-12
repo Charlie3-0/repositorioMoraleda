@@ -83,7 +83,7 @@
   ```bash
   http://localhost/TestPlay/index.php
 
-✅ ¡Listo! Ya puedes comenzar a utilizar TestPlay, la plataforma de prueba y alquiler de videojuegos para PC.
+¡Listo! Ya puedes comenzar a utilizar TestPlay, la plataforma de prueba y alquiler de videojuegos para PC.
 
 ---
 
